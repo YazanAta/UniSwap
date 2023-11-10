@@ -19,7 +19,7 @@ import { MasonryGridTwoComponent } from './portfolio/masonry-grid-two/masonry-gr
 import { MasonryGridThreeComponent } from './portfolio/masonry-grid-three/masonry-grid-three.component';
 import { MasonryGridFourComponent } from './portfolio/masonry-grid-four/masonry-grid-four.component';
 import { MasonryFullWidthComponent } from './portfolio/masonry-full-width/masonry-full-width.component';
-import { authGuard } from '../services/guards/auth.guard';
+import { authGuardNotUser, authGuardUser } from '../services/guards/auth.guard';
 
 const routes: Routes = [
   { 
@@ -33,12 +33,12 @@ const routes: Routes = [
   { 
     path: 'login',
     component: LoginComponent  ,
-    canActivate: [!authGuard]
+    canActivate: [authGuardUser]
   },
   { 
     path: 'register', 
     component: RegisterComponent  ,
-    canActivate: [!authGuard]
+    canActivate: [authGuardUser]
   },
   { 
     path: 'forget/password', 
@@ -47,7 +47,7 @@ const routes: Routes = [
   { 
     path: 'profile', 
     component: ProfileComponent ,
-    canActivate: [authGuard]
+    canActivate: [authGuardNotUser]
   },
   { 
     path: 'aboutus', 

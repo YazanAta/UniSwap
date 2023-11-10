@@ -32,13 +32,13 @@ export class HomeComponent {
   }
 
   public sliders = [{
-    title: 'Be A Renter',
-    subTitle: 'Rent Now ..',
-    image: 'assets/images/slider/28.jpg'
+    title: 'Unleash the UniSwap Experience!',
+    subTitle: 'Give, Swap, Buy',
+    image: 'assets/images/slider/31.jpg'
   }, {
-    title: 'Be A Buyer',
-    subTitle: 'Buy Now ..',
-    image: 'assets/images/slider/29.jpg'
+    title: 'More Than a Swap, It\'s a Community Sharing Platform',
+    subTitle: 'UniSwap',
+    image: 'assets/images/slider/30.jpg'
   }];
 
   // Collection banner

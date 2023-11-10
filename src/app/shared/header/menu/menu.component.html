@@ -1,0 +1,71 @@
+<div class="main-navbar">
+  <div id="mainnav">
+    <div class="toggle-nav" (click)="mainMenuToggle()">
+      <i class="fa fa-bars sidebar-bar"></i>
+    </div>
+    <ul class="nav-menu" [class.opennav]="navServices?.mainMenuToggle">
+
+      <li class="back-btn">
+        <div class="mobile-back text-end" (click)="mainMenuToggle()">
+          <span>Back</span>
+          <i class="fa fa-angle-right ps-2" aria-hidden="true"></i>
+        </div>
+      </li>
+
+      <li>
+        <!-- Link -->
+        <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link" >
+          Home
+        </a>
+      </li>
+
+      <li>
+        <!-- Sub -->
+        <a href="javascript:void(0)" class="nav-link"
+        (click)="toggletNavActive()">
+        Categories
+        <span class="sub-arrow"></span>
+        </a>
+        <!-- 2nd Level Menu -->
+        <ul class="nav-submenu" [class.opensubmenu]="active" *ngIf="active">
+          <li>
+            <!-- Link -->
+            <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+              Category 1
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li>
+        <!-- Link -->
+        <a routerLink="/pages/aboutus" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link" >
+          About
+        </a>
+      </li>
+
+      <li>
+        <!-- Link -->
+        <a routerLink="/pages/profile" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link" *ngIf="isUser">
+          Profile
+        </a>
+      </li>
+
+      <li>
+        <!-- Link -->
+        <a routerLink="/pages/login" routerLinkActive="active" 
+        [routerLinkActiveOptions]="{exact: true}" class="nav-link" *ngIf="!isUser">
+          Login
+        </a>
+      </li>
+    
+      <li>
+        <!-- Link -->
+        <a type="button" class="nav-link" *ngIf="isUser" (click)="logout()">
+        Logout
+        </a>
+      </li>
+
+    </ul>
+  </div>
+</div>

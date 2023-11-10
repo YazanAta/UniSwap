@@ -11,12 +11,12 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 export class MenuComponent implements OnInit {
 
   public menuItems: Menu[];
+  public menuToggle: boolean = false;
   isUser: boolean 
 
-  constructor(private router: Router, public navServices: NavService, private as: AuthService) {
-    this.navServices.items.subscribe(menuItems => this.menuItems = menuItems );
+  constructor(private router: Router, private as: AuthService) {
     this.router.events.subscribe((event) => {
-      this.navServices.mainMenuToggle = false;
+      this.menuToggle = false;
     });
   }
 
@@ -33,8 +33,8 @@ export class MenuComponent implements OnInit {
     })
   }
 
-  mainMenuToggle(): void {
-    this.navServices.mainMenuToggle = !this.navServices.mainMenuToggle;
+  mainMenuToggleFunction(): void {
+    this.menuToggle = !this.menuToggle;
   }
 
   // Click Toggle menu (Mobile)

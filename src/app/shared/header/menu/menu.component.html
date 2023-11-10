@@ -1,12 +1,12 @@
 <div class="main-navbar">
   <div id="mainnav">
-    <div class="toggle-nav" (click)="mainMenuToggle()">
+    <div class="toggle-nav" (click)="mainMenuToggleFunction()">
       <i class="fa fa-bars sidebar-bar"></i>
     </div>
-    <ul class="nav-menu" [class.opennav]="navServices?.mainMenuToggle">
+    <ul class="nav-menu" [class.opennav]="menuToggle">
 
       <li class="back-btn">
-        <div class="mobile-back text-end" (click)="mainMenuToggle()">
+        <div class="mobile-back text-end" (click)="mainMenuToggleFunction()">
           <span>Back</span>
           <i class="fa fa-angle-right ps-2" aria-hidden="true"></i>
         </div>

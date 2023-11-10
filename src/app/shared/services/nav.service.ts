@@ -20,8 +20,8 @@ export class NavService {
 	constructor() { }
 
 	public screenWidth: any;
-	public leftMenuToggle: boolean = false;
-	public mainMenuToggle: boolean = false;
+	//public leftMenuToggle: boolean = false;
+	//public mainMenuToggle: boolean = false;
 
 	// Windows width
 	@HostListener('window:resize', ['$event'])

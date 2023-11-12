@@ -36,6 +36,7 @@ import { TapToTopComponent } from './components/tap-to-top/tap-to-top.component'
 
 // Pipes
 import { DiscountPipe } from './pipes/discount.pipe';
+import { SkeletonProductBoxComponent } from './components/product/skeleton/skeleton-product-box/skeleton-product-box.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { DiscountPipe } from './pipes/discount.pipe';
     ProductBoxFiveComponent,
     ProductBoxVerticalComponent,
     ProductBoxVerticalSliderComponent,
+    SkeletonProductBoxComponent
   ],
   imports: [
     CommonModule,
@@ -98,6 +100,8 @@ import { DiscountPipe } from './pipes/discount.pipe';
     ProductBoxFiveComponent,
     ProductBoxVerticalComponent,
     ProductBoxVerticalSliderComponent,
+    SkeletonProductBoxComponent,
+
   ]
 })
 export class SharedModule { }

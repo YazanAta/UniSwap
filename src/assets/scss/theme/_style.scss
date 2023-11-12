@@ -1928,17 +1928,12 @@ button {
                 }
             }
         }
-        p {
-            display: none;
-        }
         h6 {
             line-height: 1;
             margin-bottom: 3px;
-            padding-top: 0;
-            padding-bottom: 5px;
             transition: all 0.5s ease;
             font-size: 16px;
-            margin-top: 0;
+            color: $dark-font;
         }
         h4 {
             font-size: 18px;
@@ -8317,7 +8312,6 @@ footer {
 
 
 .portfolio-section {
-    padding-bottom: 40px;
     .article-title {
         position: absolute;
         width: 100%;
@@ -8371,6 +8365,17 @@ footer {
                 align-items: center;
                 justify-content: center;
             }
+            h4{
+                position: absolute;
+                top: 70%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: var(--theme-deafult);
+                padding: 10px;
+                background-color: rgba(255, 255, 255, 0.3);
+                border-radius: 6px;
+                display: none;
+            }
         }
         &:hover {
             img {
@@ -8389,6 +8394,10 @@ footer {
                 background-color: rgba(var(--theme-deafult), 0.2);
                 transition: all 0.4s ease;
                 i {
+                    display: flex;
+                    transition: all 0.4s ease;
+                }
+                h4{
                     display: flex;
                     transition: all 0.4s ease;
                 }

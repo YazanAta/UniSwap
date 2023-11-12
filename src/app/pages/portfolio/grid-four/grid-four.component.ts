@@ -32,41 +32,6 @@ export class GridFourComponent implements OnInit {
     // Load items into the lightbox gallery ref
     lightboxRef.load(this.items);
   }
-
-  filter(term) {
-    if (term == 'all') {
-      this.imageData = AllImage
-    } else if (term == 'fashion') {
-      this.imageData = FashionImage
-    } else if (term == 'bags') {
-      this.imageData = BagImages
-    } else if (term == 'shoes') {
-      this.imageData = ShoesImages
-    } else if (term == 'watch') {
-      this.imageData = WatchImages
-    }
-
-    console.log("image", this.imageData);
-
-    this.items = this.imageData.map(item => new ImageItem({ src: item.srcUrl, thumb: item.previewUrl }));
-
-
-    /** Lightbox Example */
-
-    // Get a lightbox gallery ref
-    const lightboxRef = this.gallery.ref('lightbox');
-
-    // Add custom gallery config to the lightbox (optional)
-    lightboxRef.setConfig({
-      imageSize: ImageSize.Cover,
-      thumbPosition: ThumbnailsPosition.Top
-    });
-
-    // Load items into the lightbox gallery ref
-    lightboxRef.load(this.items);
-
-    this.galleryFilter = term
-  }
 }
 
 const AllImage = [

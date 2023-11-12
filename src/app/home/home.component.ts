@@ -14,7 +14,6 @@ export class HomeComponent {
 
   public products: Product[] = [];
   public productCollections: any[] = [];
-  public active;
 
   public ProductSliderConfig: any = ProductSlider;
 
@@ -43,15 +42,26 @@ export class HomeComponent {
 
   // Collection banner
   public collections = [{
-    image: 'assets/images/collection/marijuana/1.jpg',
-    save: 'save 50%',
-    title: 'oils',
+    image: 'assets/collection1.png',
+    title: 'Give',
     link: '/home/left-sidebar/collection/marijuana',
     class: 'p-left'
   }, {
-    image: 'assets/images/collection/marijuana/2.jpg',
-    save: 'save 20%',
-    title: 'liquid',
+    image: 'assets/collection2.png',
+    title: 'Excahnge',
+    link: '/home/left-sidebar/collection/marijuana',
+    class: 'p-right'
+  }];
+
+  //Categories
+  public categories = [{
+    image: 'assets/images/categories/17.jpeg',
+    title: 'Text Books',
+    link: '/home/left-sidebar/collection/marijuana',
+    class: 'p-left'
+  }, {
+    image: 'assets/images/categories/18.jpeg',
+    title: 'Uniforms',
     link: '/home/left-sidebar/collection/marijuana',
     class: 'p-right'
   }];
@@ -60,15 +70,6 @@ export class HomeComponent {
   }
 
   ngOnDestroy(): void {
-  }
-
-  // Product Tab collection
-  getCollectionProducts(collection) {
-    return this.products.filter((item) => {
-      if (item.collection.find(i => i === collection)) {
-        return item
-      }
-    })
   }
 
 }

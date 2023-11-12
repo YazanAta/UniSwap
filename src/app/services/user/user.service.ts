@@ -22,4 +22,8 @@ export class UserService {
     )
   }
 
+  getUserInfo(userId: string) {
+    return this.fs.doc(`users/${userId}`).valueChanges();
+  }
+  
 }

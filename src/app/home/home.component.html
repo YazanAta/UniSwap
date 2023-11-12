@@ -50,7 +50,7 @@
       <div class="col-md-6" *ngFor="let collection of collections">
         <a [routerLink]="collection.link">
           <div class="collection-banner text-center" [ngClass]="collection.class">
-            <img [src]="collection.image" class="img-fluid" alt="collection-banner">
+            <img [src]="collection.image" class="img-fluid opacity-75" alt="collection-banner">
             <div class="contain-banner">
               <div>
                 <h4>{{collection.save}}</h4>
@@ -65,60 +65,57 @@
 </section>
 <!-- collection banner End -->
 
-<!-- product slider start -->
-<div class="title3 section-t-space">
-    <h4>special offer</h4>
-    <h2 class="title-inner3">new products</h2>
+
+<section class="full-banner parallax portfolio-section grid-portfolio" [ngStyle]="{'background-image': 'url(assets/images/slider/30.jpg)'}">
+  <div class="title3 section-t-space">
+    <h4>Choose Your</h4>
+    <h2 class="title-inner3">Category</h2>
     <div class="line"></div>
-</div>
-<section class="p-t-0 section-b-space tools-grey border-box">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <owl-carousel-o [options]="ProductSliderConfig" class="product-5 product-m no-arrow">
-                    <ng-container *ngFor="let product of products">
-                      <ng-template carouselSlide>
-                        <div class="product-box product-wrap">
-                            <app-product-box-three 
-                              [product]="product" 
-                              [currency]="productService?.Currency">
-                            </app-product-box-three>
-                        </div>
-                      </ng-template>
-                    </ng-container>
-                </owl-carousel-o>
-            </div>
-        </div>
-    </div>
+  </div>
+  
+  <div class="container">
+      <div class="row">
+          <div class="isotopeSelector col-lg-3 col-sm-6" *ngFor="let category of categories">
+              <div class="overlay">
+                  <div class="border-portfolio">
+                      <a href="javascript:void(0)">
+                          <div class="overlay-background">
+                              <i class="fa fa-plus" aria-hidden="true"></i>
+                              <h4>{{category.title}}</h4>
+                          </div>
+                          <img [src]="category.image">
+                      </a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
 </section>
-<!-- product slider end -->
 
 <!-- parallax product section start -->
+<!--
 <section class="full-banner parallax tools-parallax-product tools-grey border-box"
   [ngStyle]="{'background-image': 'url(assets/images/parallax/10.jpg)'}">
   <div class="container">
     <div class="row">
       <div class="col theme-tab">
-        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="tabs tab-title justify-content-center nav nav-pills" >
+        <ul ngbNav #nav="ngbNav" class="tabs tab-title justify-content-center nav nav-pills" >
           <li *ngFor="let collection of productCollections" [ngbNavItem]="collection">
-            <a ngbNavLink>
-               {{ collection }}
-            </a>
-            <ng-template ngbNavContent>
+            
               <div class="no-slider row">
-                  <ng-container *ngFor="let product of getCollectionProducts(collection) | slice:0:4">
+                  <ng-container *ngFor="let product of products | slice:0:4">
                       <div class="product-box">
                           <app-product-box-three [product]="product" [currency]="productService?.Currency">
                           </app-product-box-three>
                       </div>
                   </ng-container>
               </div>
-            </ng-template>
+              
           </li>
         </ul>
       <div [ngbNavOutlet]="nav" class="mt-2"></div>
       </div>
     </div>
   </div>
-</section>
+</section> -->
 <!-- parallax product section end -->

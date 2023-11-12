@@ -1,83 +1,57 @@
 <app-breadcrumb [title]="'Profile'" [breadcrumb]="'Profile'"></app-breadcrumb>
 <!-- personal deatail section start -->
-<section class="contact-page register-page">
+<section>
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
                 <h3>PERSONAL DETAIL</h3>
-                <form class="theme-form">
+                <div class="theme-form">
                     <div class="row">
                         <div class="col-md-6">
-                            <label for="name">First Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="Enter Your name" required="">
+                            <div class="fw-bold">First Name</div>
+                            <div class="border p-3 my-1">{{userData?.firstName | titlecase}}</div>
                         </div>
                         <div class="col-md-6">
-                            <label for="email">Last Name</label>
-                            <input type="text" class="form-control" id="last-name" placeholder="Email" required="">
+                            <div class="fw-bold">Last Name</div>
+                            <div class="border p-3 my-1">{{userData?.lastName | titlecase}}</div>
                         </div>
                         <div class="col-md-6">
-                            <label for="review">Phone number</label>
-                            <input type="text" class="form-control" id="review" placeholder="Enter your number" required="">
+                            <div class="fw-bold">Email</div>
+                            <div class="border p-3 my-1">{{userData?.email}}</div>
                         </div>
                         <div class="col-md-6">
-                            <label for="email">Email</label>
-                            <input type="text" class="form-control" id="email" placeholder="Email" required="">
+                            <div class="fw-bold">Gender</div>
+                            <div class="border p-3 my-1">{{userData?.gender | titlecase}}</div>
                         </div>
-                        <div class="col-md-12">
-                            <label for="review">Write Your Message</label>
-                            <textarea class="form-control mb-0" placeholder="Write Your Message" id="exampleFormControlTextarea1" rows="6"></textarea>
+                        <div class="col-md-6">
+                            <div class="fw-bold">Points</div>
+                            <div class="border p-3 my-1">{{userData?.points}}</div>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
-</section>
-<!-- Section ends -->
-<!-- address section start -->
-<section class="contact-page register-page section-b-space">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <h3>SHIPPING ADDRESS</h3>
-                <form class="theme-form">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="name">flat / plot</label>
-                            <input type="text" class="form-control" id="home-ploat" placeholder="company name" required="">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="name">Address *</label>
-                            <input type="text" class="form-control" id="address-two" placeholder="Address" required="">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="email">Zip Code *</label>
-                            <input type="text" class="form-control" id="zip-code" placeholder="zip-code" required="">
-                        </div>
-                        <div class="col-md-6 select_input">
-                            <label for="review">Country *</label>
-                            <select class="form-control" size="1">
-                                <option value="India">India</option>
-                                <option value="UAE">UAE</option>
-                                <option value="U.K">U.K</option>
-                                <option value="US">US</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="review">City *</label>
-                            <input type="text" class="form-control" id="city" placeholder="City" required="">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="review">Region/State *</label>
-                            <input type="text" class="form-control" id="region-state" placeholder="Region/state" required="">
-                        </div>
-                        <div class="col-md-12">
-                            <button class="btn btn-sm btn-solid" type="submit">Save setting</button>
+
+            <!-- product section start -->
+        <section class="section-b-space">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 product-related">
+                        <h2>My Posts</h2>
+                    </div>
+                </div>
+                <div class="row search-product">
+                    <div class="col-xl-2 col-md-4 col-sm-6"  *ngFor="let post of posts">
+                        <div class="product-box">
+                            <app-product-box-one [loader]="true" [post]="post">
+                            </app-product-box-one>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
+        </section>
+        <!-- product section end -->
+        
     </div>
 </section>
 <!-- Section ends -->

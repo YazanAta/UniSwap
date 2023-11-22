@@ -17,7 +17,7 @@
             </a>
         </div>
         <div class="cart-info">
-            <button title="Add to cart" (click)="CartModal.openModal(product)" 
+            <button title="Add to cart"
                 *ngIf="cartModal">
                 <i class="ti-shopping-cart"></i>
             </button>
@@ -56,6 +56,5 @@
   </div>
   
   <app-quick-view #quickView [product]="product" [currency]="currency"></app-quick-view>
-  <app-cart-modal #cartModal [product]="product" [currency]="currency" *ngIf="cartModal"></app-cart-modal>
   
   

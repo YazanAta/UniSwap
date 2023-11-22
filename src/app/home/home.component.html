@@ -41,32 +41,62 @@
         </div>
     </div>
 </section>
-<!-- About section end -->
 
-<!-- collection banner start-->
+<!-- About banner start-->
 <section class="p-t-0 section-b-space">
   <div class="container">
     <div class="row partition2">
       <div class="col-md-6" *ngFor="let collection of collections">
-        <a [routerLink]="collection.link">
-          <div class="collection-banner text-center" [ngClass]="collection.class">
-            <img [src]="collection.image" class="img-fluid opacity-75" alt="collection-banner">
-            <div class="contain-banner">
-              <div>
-                <h4>{{collection.save}}</h4>
-                <h2>{{collection.title}}</h2>
-              </div>
+        <div class="collection-banner text-center" [ngClass]="collection.class">
+          <img [src]="collection.image" class="img-fluid opacity-75" alt="collection-banner">
+          <div class="contain-banner">
+            <div>
+              <h4>{{collection.save}}</h4>
+              <h2>{{collection.title}}</h2>
             </div>
           </div>
-        </a>
+        </div>
       </div>
     </div>
   </div>
 </section>
-<!-- collection banner End -->
+<!-- About banner End -->
+<!-- About section end -->
 
 
-<section class="full-banner parallax portfolio-section grid-portfolio" [ngStyle]="{'background-image': 'url(assets/images/slider/30.jpg)'}">
+<!-- Categories section start -->
+
+<!--Categories 1 Section Start (If User)-->
+<section class="full-banner parallax portfolio-section grid-portfolio" [ngStyle]="{'background-image': 'url(assets/images/slider/30.jpg)'}" *ngIf="isUser">
+  <div class="container-fluid">
+      <div class="row category-border">
+
+          <div class="title3 section-t-space">
+            <h4>Choose Your</h4>
+            <h2 class="title-inner3">Category</h2>
+            <div class="line"></div>
+          </div>
+
+          <div class="col-sm-4 border-padding" *ngFor="let category of categories">
+              <div class="category-banner" (click)="openPostsPage(category)">
+                  <div>
+                      <img [src]="category.image" class="img-fluid" alt="">
+                  </div>
+                  <div class="category-box">
+                      <a [routerLink]="['/shop/collection/left/sidebar']" [queryParams]="{ category: category.linkParam}">
+                          <h2>{{category.name}}</h2>
+                      </a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+<!--Categories 1 Section End (If User)-->
+
+
+<!--Categories 2 Section Start (If User)
+<section class="full-banner parallax portfolio-section grid-portfolio" [ngStyle]="{'background-image': 'url(assets/images/slider/30.jpg)'}" *ngIf="isUser">
   <div class="title3 section-t-space">
     <h4>Choose Your</h4>
     <h2 class="title-inner3">Category</h2>
@@ -76,12 +106,12 @@
   <div class="container">
       <div class="row">
           <div class="isotopeSelector col-lg-3 col-sm-6" *ngFor="let category of categories">
-              <div class="overlay">
+              <div class="overlay" (click)="openPostsPage(category)">
                   <div class="border-portfolio">
                       <a href="javascript:void(0)">
                           <div class="overlay-background">
                               <i class="fa fa-plus" aria-hidden="true"></i>
-                              <h4>{{category.title}}</h4>
+                              <h4>{{category.name}}</h4>
                           </div>
                           <img [src]="category.image">
                       </a>
@@ -91,31 +121,14 @@
       </div>
   </div>
 </section>
+Categories 2 Section End (If User)-->
 
-<!-- parallax product section start -->
-<!--
-<section class="full-banner parallax tools-parallax-product tools-grey border-box"
-  [ngStyle]="{'background-image': 'url(assets/images/parallax/10.jpg)'}">
-  <div class="container">
-    <div class="row">
-      <div class="col theme-tab">
-        <ul ngbNav #nav="ngbNav" class="tabs tab-title justify-content-center nav nav-pills" >
-          <li *ngFor="let collection of productCollections" [ngbNavItem]="collection">
-            
-              <div class="no-slider row">
-                  <ng-container *ngFor="let product of products | slice:0:4">
-                      <div class="product-box">
-                          <app-product-box-three [product]="product" [currency]="productService?.Currency">
-                          </app-product-box-three>
-                      </div>
-                  </ng-container>
-              </div>
-              
-          </li>
-        </ul>
-      <div [ngbNavOutlet]="nav" class="mt-2"></div>
-      </div>
-    </div>
+<!-- Section (If Not User)-->
+<section class="full-banner parallax portfolio-section grid-portfolio" [ngStyle]="{'background-image': 'url(assets/images/slider/30.jpg)'}" *ngIf="!isUser">
+  <div class="title3 section-t-space">
+    <h4>Create Your Account Now With Your Ju Email</h4>
+    <h2 class="title-inner3">And Be Our Guest</h2>
+    <div class="line"></div>
   </div>
-</section> -->
-<!-- parallax product section end -->
+</section>
+<!--Categories Section End-->

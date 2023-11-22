@@ -37,7 +37,6 @@ import { TapToTopComponent } from './components/tap-to-top/tap-to-top.component'
 // Pipes
 import { DiscountPipe } from './pipes/discount.pipe';
 import { SkeletonProductBoxComponent } from './components/product/skeleton/skeleton-product-box/skeleton-product-box.component';
-
 @NgModule({
   declarations: [
     HeaderComponent,
@@ -100,8 +99,7 @@ import { SkeletonProductBoxComponent } from './components/product/skeleton/skele
     ProductBoxFiveComponent,
     ProductBoxVerticalComponent,
     ProductBoxVerticalSliderComponent,
-    SkeletonProductBoxComponent,
-
+    SkeletonProductBoxComponent
   ]
 })
 export class SharedModule { }

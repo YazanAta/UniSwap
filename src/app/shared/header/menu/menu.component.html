@@ -19,7 +19,7 @@
         </a>
       </li>
 
-      <li>
+      <li *ngIf="isUser">
         <!-- Sub -->
         <a href="javascript:void(0)" class="nav-link"
         (click)="toggletNavActive()">
@@ -28,10 +28,10 @@
         </a>
         <!-- 2nd Level Menu -->
         <ul class="nav-submenu" [class.opensubmenu]="active" *ngIf="active">
-          <li>
+          <li *ngFor="let category of categories">
             <!-- Link -->
-            <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-              Category 1
+            <a routerLink="shop/collection/left/sidebar" [queryParams]="{category: category.name}" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+              {{category.name}}
             </a>
           </li>
         </ul>

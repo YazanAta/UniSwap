@@ -1,10 +1,12 @@
-<app-breadcrumb [title]="'Collection'" [breadcrumb]="'Collection'"></app-breadcrumb>
+<app-breadcrumb [title]="'Posts'" [breadcrumb]="'Posts'"></app-breadcrumb>
 <!-- section start -->
 <section class="section-b-space">
     <div class="collection-wrapper">
         <div class="container">
             <div class="row">
+                <!--Side Section Start-->
                 <div class="col-lg-3">
+                    
                     <div class="collection-filter" [class.openFilterbar]="mobileSidebar">
                         <!-- side-bar colleps block stat -->
                         <div class="collection-filter-block">
@@ -14,43 +16,82 @@
                                 </span>
                             </div>
                             <!-- Category filter start -->
-                            <app-categories></app-categories>
+                            <div class="collection-collapse-block border-0" [class.open]="collapse1">
+                                <h3 class="collapse-block-title" (click)="collapse1 = !collapse1">Category</h3>
+                                <div class="collection-collapse-block-content">
+                                    <div class="collection-brand-filter">
+                                        <ul class="category-list">
+                                            <li *ngFor="let category of categories">
+                                                <a (click)="selectCategory(category)">
+                                                    {{ category.name }}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Category filter start -->
                         </div>
                         <!-- silde-bar colleps block end here -->
+
                         <!-- side-bar colleps block stat -->
-                        <div class="collection-filter-block">
-                            <!-- brand filter start -->
-                            <app-brands [products]="products" [brands]="brands" (brandsFilter)="updateFilter($event)">
-                            </app-brands>
-                            <!-- color filter start here -->
-                            <app-colors [products]="products" [colors]="colors" (colorsFilter)="updateFilter($event)">
-                            </app-colors>
-                            <!-- size filter start here -->
-                            <app-size [products]="products" [size]="size" (sizeFilter)="updateFilter($event)">
-                            </app-size>
-                            <!-- price filter start here -->
-                            <app-price [min]="minPrice" [max]="maxPrice" (priceFilter)="updateFilter($event)">
-                            </app-price>
+                        <div class="collection-filter-block" *ngIf="selectedCategory">
+
+                            <!-- SubCategory Filter Start -->
+                            <div class="collection-collapse-block border-0" [class.open]="collapse2">
+                                <h3 class="collapse-block-title" (click)="collapse2 = !collapse2">Sub Categories</h3>
+                                <div class="collection-collapse-block-content">
+                                    <div class="collection-brand-filter">
+                                        <ul class="category-list">
+                                            <li *ngFor="let subcategory of selectedCategory.subCategory" >
+                                                <a (click)="selectSubCategory(subcategory)">
+                                                    {{ subcategory.name }}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- SubCategory Filter End -->
+
+                            <!-- SubCategory2 Filter Start -->
+                            <div class="collection-collapse-block border-0" [class.open]="collapse3" *ngIf="selectedSubCategory?.subCategory">
+                                <h3 class="collapse-block-title" (click)="collapse3 = !collapse3">Sub Category 2</h3>
+                                <div class="collection-collapse-block-content">
+                                    <div class="collection-brand-filter">
+                                        <ul class="category-list">
+                                            <li *ngFor="let subSubcategory of selectedSubCategory.subCategory">
+                                                <a (click)="selectSubSubCategory(subSubcategory)">
+                                                    {{ subSubcategory.name }}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div> 
+                            <!-- SubCategory2 Filter Start -->
+
                         </div>
                         <!-- silde-bar colleps block end here -->
+
                     </div>
+                    
                 </div>
+                <!--Side Section End-->
                 <div class="collection-content col">
                     <div class="page-main-content">
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="top-banner-wrapper">
                                     <a [routerLink]="['/shop/collection/left/sidebar']">
-                                        <img src="assets/images/collection-banner.jpg" class="img-fluid " alt="">
+                                        <img src="assets/images/posts-banner.jpeg" class="img-fluid " alt="">
                                     </a>
                                     <div class="top-banner-content small-section">
-                                        <h4>fashion</h4>
-                                        <h5>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                        <h4>Posts</h4>
+                                        <h5>Welcome to our Posts page!
                                         </h5>
                                         <p>
-                                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has
-                                            survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
-                                            and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                                            This is a dedicated space for you to explore, swap, and exchange items with fellow students. Whether you’re looking for textbooks for your next semester, uniforms, or tools for your new project, you’ll find it all here. Our community thrives on the principle of sharing and recycling resources. You can choose to swap items for free or at a nominal cost. So go ahead, browse through the posts, and you might just find the item you need or find a new home for the things you no longer use. Happy swapping!
                                         </p>
                                     </div>
                                 </div>
@@ -63,39 +104,26 @@
                                         </div>
                                     </div>
                                 </div>
-                                <ul class="product-filter-tags">
-                                    <li class="me-1" *ngFor="let tag of tags">
-                                        <a href="javascript:void(0)" class="filter_tag">
-                                            {{tag}} <i class="ti-close" (click)="removeTag(tag)"></i>
-                                        </a>
-                                    </li>
-                                    <li class="clear_filter" *ngIf="tags.length > 0">
-                                        <a href="javascript:void(0)" class="clear_filter" (click)="removeAllTags()">
-                                            Clear all
-                                        </a>
-                                    </li>
-                                </ul>
                                 <div class="collection-product-wrapper" id="products">
-                                    <app-grid [products]="products" [paginate]="paginate" [layoutView]="layoutView" [sortBy]="sortBy" (setGrid)="updateGridLayout($event)" (setLayout)="updateLayoutView($event)" (sortedBy)="sortByFilter($event)">
-                                    </app-grid>
+                                    <!--<app-grid [products]="products" [paginate]="paginate" [layoutView]="layoutView" [sortBy]="sortBy" (setGrid)="updateGridLayout($event)" (setLayout)="updateLayoutView($event)" (sortedBy)="sortByFilter($event)">
+                                    </app-grid>-->
                                     <div class="product-wrapper-grid" [ngClass]="layoutView">
                                         <div class="row">
-                                            <div class="col-grid-box" [ngClass]="grid" *ngFor="let product of products">
+                                            <div class="col-grid-box" [ngClass]="grid" *ngFor="let post of filteredPosts">
                                                 <div class="product-box">
-                                                    <app-product-box-one [loader]="true">
-                                                    </app-product-box-one>
+                                                    <app-product-box-three [loader]="true" [post]="post"></app-product-box-three>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-12 text-center section-b-space mt-5 no-found" *ngIf="!products.length">
+                                            <div class="col-sm-12 text-center section-b-space mt-5 no-found" *ngIf="!filteredPosts.length">
                                                 <img src="assets/images/empty-search.jpg" class="img-fluid mb-4">
-                                                <h3>Sorry! Couldn't find the product you were looking For!!! </h3>
+                                                <h3>Sorry! Couldn't find any post you were looking For!!! </h3>
                                                 <p>Please check if you have misspelt something or try searching with other words.</p>
                                                 <a [routerLink]="['/shop/collection/left/sidebar']" class="btn btn-solid">continue shopping</a>
                                             </div>
                                         </div>
                                     </div>
-                                    <app-pagination [products]="products" [paginate]="paginate" (setPage)="setPage($event)">
-                                    </app-pagination>
+                                    <!--<app-pagination [products]="products" [paginate]="paginate" (setPage)="setPage($event)">
+                                    </app-pagination>-->
                                 </div>
                             </div>
                         </div>

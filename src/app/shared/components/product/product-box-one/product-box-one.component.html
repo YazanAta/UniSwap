@@ -3,13 +3,13 @@
     <div class="front">
       <a>
         <img 
-          [defaultImage]="'assets/images/product/placeholder.jpg'" 
-          [lazyLoad]="'assets/images/slider/31.jpg'" 
+          [defaultImage]="'/assets/logo.png'" 
+          [lazyLoad]="post.image" 
           class="img-fluid lazy-loading"  />
       </a>
     </div>
     <div class="cart-info cart-wrap">
-      <a href="javascript:void(0)" title="Quick View" (click)="QuickView.openModal()">
+      <a href="javascript:void(0)" title="Quick View">
         <i class="ti-search" aria-hidden="true"></i>
       </a>
       <a href="javascript:void(0)" title="Compare">
@@ -18,15 +18,18 @@
     </div>
   </div>
   <div class="product-detail">
-    <div>
-      <bar-rating [rate]="5" [readOnly]="true"></bar-rating>
-    
-      <h6 class="m-3" dir="rtl">{{post.title}}</h6>
+    <div>    
+      <h4 class="m-3 text-center">{{post.title}}</h4>
       <hr>
-      <h4>Description</h4>
-      <p>{{post.description}}</p>
-      <h4>{{post.price}} JD</h4>
-      
+      <div class="description">
+        <h4>Description :</h4>
+        <div>{{post.description}}</div>
+      </div>
+      <div class="price">
+        <h4>Price: </h4>
+        <h6 *ngIf="post.type == 'Free'">Free</h6>
+        <h6 *ngIf="post.type == 'Sale'">{{post.price}} JD</h6>
+      </div>
     </div>
   </div>
 </div>

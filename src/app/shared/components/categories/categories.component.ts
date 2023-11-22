@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Product } from '../../classes/product';
 import { ProductService } from '../../services/product.service';
+import { CATEGORIES, Category } from 'src/app/interfaces/category.interface';
 
 @Component({
   selector: 'app-categories',
@@ -9,19 +10,25 @@ import { ProductService } from '../../services/product.service';
 })
 export class CategoriesComponent implements OnInit {
 
-  public products: Product[] = [];
-  public collapse: boolean = true;
+  @Input('selectedCategory') selectedCategory: string;
 
-  constructor(public productService: ProductService) { 
-    this.productService.getProducts.subscribe(product => this.products = product);
-  }
+  public collapse: boolean = true;
+  allCategories: Category[] = CATEGORIES;
+
+  subCategories: Category[];
+
+  constructor() {}
 
   ngOnInit(): void {
+    this.getThisCategory(this.selectedCategory)
   }
 
-  get filterbyCategory() {
-    const category = [...new Set(this.products.map(product => product.type))]
-    return category
+  getThisCategory(category: string) {
+    this.allCategories.map((categories) => {
+      if (categories.name === category) {
+        this.subCategories = categories.subCategory;
+      }
+    })
   }
 
 }

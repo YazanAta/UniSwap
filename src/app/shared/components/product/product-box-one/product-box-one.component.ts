@@ -4,6 +4,7 @@ import { CartModalComponent } from "../../modal/cart-modal/cart-modal.component"
 import { Product } from "../../../classes/product";
 import { ProductService } from "../../../services/product.service";
 import { Post } from 'src/app/interfaces/post.interface';
+import { pid } from 'process';
 
 @Component({
   selector: 'app-product-box-one',
@@ -13,10 +14,10 @@ import { Post } from 'src/app/interfaces/post.interface';
 export class ProductBoxOneComponent implements OnInit {
 
   @Input() loader: boolean = false;
-  @Input() post: Post;
+  @Input() post: any;
   @ViewChild("quickView") QuickView: QuickViewComponent;
+  @ViewChild("addPost") AddPost: CartModalComponent;
 
-  public ImageSrc : string
 
   constructor(private productService: ProductService) { }
 
@@ -25,5 +26,6 @@ export class ProductBoxOneComponent implements OnInit {
       setTimeout(() => { this.loader = false; }, 2000); // Skeleton Loader
     }
   }
+
 
 }

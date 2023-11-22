@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { User } from 'src/app/interfaces/user.interface';
+import { AuthService } from '../auth/auth.service';
+import { switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-
-  constructor(private fs: AngularFirestore) { }
+  
+  constructor(private fs: AngularFirestore, private authService: AuthService) { }
 
   addNewUser(userId: string, user: User) {
     return this.fs.doc(`users/${userId}`).set(
@@ -22,8 +24,12 @@ export class UserService {
     )
   }
 
-  getUserInfo(userId: string) {
-    return this.fs.doc(`users/${userId}`).valueChanges();
+  getUserInfo() {
+    return this.authService.user.pipe(
+      switchMap(user => {
+        return this.fs.doc(`users/${user.uid}`).valueChanges();
+      })
+    );
   }
   
 }

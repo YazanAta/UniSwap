@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { Product } from '../shared/classes/product';
 import { ProductSlider } from '../shared/data/slider';
 import { ProductService } from '../shared/services/product.service';
+import { CATEGORIES, Category } from '../interfaces/category.interface';
+import { AuthService } from '../services/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -14,10 +17,14 @@ export class HomeComponent {
 
   public products: Product[] = [];
   public productCollections: any[] = [];
+  isUser: boolean 
+  
+  //Categories
+  public categories : Category[] = CATEGORIES
 
   public ProductSliderConfig: any = ProductSlider;
 
-  constructor(public productService: ProductService) {
+  constructor(public productService: ProductService, private as: AuthService, private router: Router) {
     this.productService.getProducts.subscribe(response => {
       this.products = response.filter(item => item.type == 'marijuana');
       // Get Product Collection
@@ -53,23 +60,27 @@ export class HomeComponent {
     class: 'p-right'
   }];
 
-  //Categories
-  public categories = [{
-    image: 'assets/images/categories/17.jpeg',
-    title: 'Text Books',
-    link: '/home/left-sidebar/collection/marijuana',
-    class: 'p-left'
-  }, {
-    image: 'assets/images/categories/18.jpeg',
-    title: 'Uniforms',
-    link: '/home/left-sidebar/collection/marijuana',
-    class: 'p-right'
-  }];
-
   ngOnInit(): void {
+    this.as.user.subscribe(user => {
+      if (user) {
+        this.isUser = true
+        this.as.userId = user.uid         
+      }
+      else {
+        this.isUser = false
+        this.as.userId = ''
+      }
+    })
   }
 
   ngOnDestroy(): void {
+  }
+
+  openPostsPage(category) {
+    this.router.navigate(
+      ['/shop/collection/left/sidebar'],
+      { queryParams: { category: category.linkParam } }
+    );
   }
 
 }

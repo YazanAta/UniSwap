@@ -3,6 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ViewportScroller } from '@angular/common';
 import { ProductService } from "../../../shared/services/product.service";
 import { Product } from '../../../shared/classes/product';
+import { Post } from 'src/app/interfaces/post.interface';
+import { PostsService } from 'src/app/services/posts/posts.service';
+import { CATEGORIES, Category } from 'src/app/interfaces/category.interface';
 
 @Component({
   selector: 'app-collection-left-sidebar',
@@ -13,131 +16,123 @@ export class CollectionLeftSidebarComponent implements OnInit {
   
   public grid: string = 'col-xl-3 col-md-6';
   public layoutView: string = 'grid-view';
-  public products: Product[] = [];
-  public brands: any[] = [];
-  public colors: any[] = [];
-  public size: any[] = [];
-  public minPrice: number = 0;
-  public maxPrice: number = 1200;
-  public tags: any[] = [];
-  public category: string;
-  public pageNo: number = 1;
-  public paginate: any = {}; // Pagination use only
   public sortBy: string; // Sorting Order
   public mobileSidebar: boolean = false;
   public loader: boolean = true;
 
+  public posts: Post[] = []
+  public filteredPosts: Post[] = []
+
+  public collapse1: boolean = true;
+  public collapse2: boolean = true;
+  public collapse3: boolean = true;
+
+
   constructor(private route: ActivatedRoute, private router: Router,
-    private viewScroller: ViewportScroller, public productService: ProductService) {   
-      // Get Query params..
+    private viewScroller: ViewportScroller, public productService: ProductService, private postsService: PostsService) {   
+
+      // Get My Query Params
       this.route.queryParams.subscribe(params => {
+        if(this.selectedCategory == null){
+          this.selectedCategory = this.categories.find(category => category.name == params.category);
+        }else{
+          this.selectedCategory = this.categories.find(category => category.name == params.category);
+          this.filterPostsByCategory();
+        }
+      });
 
-        this.brands = params.brand ? params.brand.split(",") : [];
-        this.colors = params.color ? params.color.split(",") : [];
-        this.size  = params.size ? params.size.split(",")  : [];
-        this.minPrice = params.minPrice ? params.minPrice : this.minPrice;
-        this.maxPrice = params.maxPrice ? params.maxPrice : this.maxPrice;
-        this.tags = [...this.brands, ...this.colors, ...this.size]; // All Tags Array
-        
-        this.category = params.category ? params.category : null;
-        this.sortBy = params.sortBy ? params.sortBy : 'ascending';
-        this.pageNo = params.page ? params.page : this.pageNo;
-
-        // Get Filtered Products..
-        this.productService.filterProducts(this.tags).subscribe(response => {         
-          // Sorting Filter
-          this.products = this.productService.sortProducts(response, this.sortBy);
-          // Category Filter
-          if(params.category)
-            this.products = this.products.filter(item => item.type == this.category);
-          // Price Filter
-          this.products = this.products.filter(item => item.price >= this.minPrice && item.price <= this.maxPrice) 
-          // Paginate Products
-          this.paginate = this.productService.getPager(this.products.length, +this.pageNo);     // get paginate object from service
-          this.products = this.products.slice(this.paginate.startIndex, this.paginate.endIndex + 1); // get current page of items
-        })
-      })
   }
 
   ngOnInit(): void {
-  }
-
-
-  // Append filter value to Url
-  updateFilter(tags: any) {
-    tags.page = null; // Reset Pagination
-    this.router.navigate([], { 
-      relativeTo: this.route,
-      queryParams: tags,
-      queryParamsHandling: 'merge', // preserve the existing query params in the route
-      skipLocationChange: false  // do trigger navigation
-    }).finally(() => {
-      this.viewScroller.setOffset([120, 120]);
-      this.viewScroller.scrollToAnchor('products'); // Anchore Link
+    this.getAllPosts().then(() => {
+      this.filterPostsByCategory();
+      console.log(this.filteredPosts);
     });
   }
 
-  // SortBy Filter
-  sortByFilter(value) {
-    this.router.navigate([], { 
-      relativeTo: this.route,
-      queryParams: { sortBy: value ? value : null},
-      queryParamsHandling: 'merge', // preserve the existing query params in the route
-      skipLocationChange: false  // do trigger navigation
-    }).finally(() => {
-      this.viewScroller.setOffset([120, 120]);
-      this.viewScroller.scrollToAnchor('products'); // Anchore Link
-    });
+  getAllPosts() {
+    return new Promise((resolve, reject) => {
+      this.postsService.getAllPosts().subscribe(posts => {
+        this.posts = posts.map(post => {
+          return {
+            postId: post.payload.doc.id,
+            userId : post.payload.doc.ref.parent.parent?.id, // Get the user ID from the document path
+            ...post.payload.doc.data() as Post
+          }
+        });
+        
+        if(this.filteredPosts.length == 0) {
+          this.filteredPosts = this.posts;
+        }
+        resolve(true);
+      }, error => {
+        reject(error);
+      })
+    })
+    
   }
 
-  // Remove Tag
-  removeTag(tag) {
-  
-    this.brands = this.brands.filter(val => val !== tag);
-    this.colors = this.colors.filter(val => val !== tag);
-    this.size = this.size.filter(val => val !== tag );
+  // Categories Section Start
+  public categories: Category[] = CATEGORIES;
 
-    let params = { 
-      brand: this.brands.length ? this.brands.join(",") : null, 
-      color: this.colors.length ? this.colors.join(",") : null, 
-      size: this.size.length ? this.size.join(",") : null
+  selectedCategory = null;
+  selectedSubCategory = null;
+  selectedSubSubCategory = null;
+
+  // Those Two Functions For Selecting Category Stuff 
+  // Those For Loading Of Sub Categories
+  selectCategory(category) {
+    if (this.selectedSubCategory != null || this.selectedSubSubCategory != null) {
+      this.selectedSubCategory = null;
+      this.selectedSubSubCategory = null;
     }
-
-    this.router.navigate([], { 
-      relativeTo: this.route,
-      queryParams: params,
-      queryParamsHandling: 'merge', // preserve the existing query params in the route
-      skipLocationChange: false  // do trigger navigation
-    }).finally(() => {
-      this.viewScroller.setOffset([120, 120]);
-      this.viewScroller.scrollToAnchor('products'); // Anchore Link
-    });
+    this.selectedCategory = category
+    this.filterPostsByCategory();
   }
 
-  // Clear Tags
-  removeAllTags() {
-    this.router.navigate([], { 
-      relativeTo: this.route,
-      queryParams: {},
-      skipLocationChange: false  // do trigger navigation
-    }).finally(() => {
-      this.viewScroller.setOffset([120, 120]);
-      this.viewScroller.scrollToAnchor('products'); // Anchore Link
-    });
+  selectSubCategory(category) {
+    if (this.selectedSubSubCategory != null) {
+      this.selectedSubSubCategory = null;
+    }
+    this.selectedSubCategory = category
+    this.filterPostsByCategory();
   }
 
-  // product Pagination
-  setPage(page: number) {
-    this.router.navigate([], { 
-      relativeTo: this.route,
-      queryParams: { page: page },
-      queryParamsHandling: 'merge', // preserve the existing query params in the route
-      skipLocationChange: false  // do trigger navigation
-    }).finally(() => {
-      this.viewScroller.setOffset([120, 120]);
-      this.viewScroller.scrollToAnchor('products'); // Anchore Link
-    });
+  selectSubSubCategory(category){
+    this.selectedSubSubCategory = category
+    this.filterPostsByCategory();
   }
+
+  // Categories Section End
+
+  /*filterPostsByCategory() {
+    if (this.selectedSubcategory == null && this.selectedSubSubCategory == null) { 
+      this.filteredPosts = this.posts.filter(post => post.category == this.selectedCategory.name);
+      console.log(this.selectedCategory?.name, this.selectedSubcategory?.name, this.selectedSubSubCategory?.name);
+    }else if (this.selectedSubcategory != null && this.selectedSubSubCategory == null) {
+      this.filteredPosts = this.posts.filter(post => post.category == this.selectedCategory.name && post.subCategory == this.selectedSubcategory.name); 
+      console.log(this.selectedCategory?.name, this.selectedSubcategory?.name, this.selectedSubSubCategory?.name);
+    }else { 
+      this.filteredPosts = this.posts.filter(post => post.category == this.selectedCategory.name && post.subCategory == this.selectedSubcategory.name && post.subSubCategory == this.selectedSubSubCategory.name); 
+      console.log(this.selectedCategory?.name, this.selectedSubcategory?.name, this.selectedSubSubCategory?.name);
+    } 
+    console.log(this.filteredPosts);
+  }
+*/
+  filterPostsByCategory() {
+    if (this.selectedCategory && this.selectedSubCategory == null && this.selectedSubSubCategory == null) {
+      this.filteredPosts = this.posts.filter(post => post.category == this.selectedCategory.name);
+      console.log(this.selectedCategory?.name, this.selectedSubCategory?.name, this.selectedSubSubCategory?.name);
+    } else if (this.selectedCategory && this.selectedSubCategory && this.selectedSubSubCategory == null) {
+      this.filteredPosts = this.posts.filter(post => post.category == this.selectedCategory.name && post.subCategory == this.selectedSubCategory.name); 
+      console.log(this.selectedCategory?.name, this.selectedSubCategory?.name, this.selectedSubSubCategory?.name);
+    } else if (this.selectedCategory && this.selectedSubCategory && this.selectedSubSubCategory) {
+      this.filteredPosts = this.posts.filter(post => post.category == this.selectedCategory.name && post.subCategory == this.selectedSubCategory.name && post.subSubCategory == this.selectedSubSubCategory.name); 
+      console.log(this.selectedCategory?.name, this.selectedSubCategory?.name, this.selectedSubSubCategory?.name);
+    }
+    console.log(this.selectedCategory);
+  }
+
 
   // Change Grid Layout
   updateGridLayout(value: string) {

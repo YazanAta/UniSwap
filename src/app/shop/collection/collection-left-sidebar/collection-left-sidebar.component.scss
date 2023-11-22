@@ -1,0 +1,7 @@
+.category-list li{
+    cursor: pointer;
+}
+
+.category-list li :hover{
+    color: var(--theme-deafult);
+}

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { switchMap } from 'rxjs';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { PostsService } from 'src/app/services/posts/posts.service';
 import { UserService } from 'src/app/services/user/user.service';
+import { AddPostModalComponent } from 'src/app/shared/components/modal/add-post-modal/add-post-modal.component';
 
 @Component({
   selector: 'app-profile',
@@ -15,19 +17,19 @@ export class ProfileComponent implements OnInit {
   userData: any
   posts: any[] = []
 
-  constructor(private userService: UserService, private authService: AuthService, private postsService: PostsService) {}
+  constructor(private userService: UserService, private authService: AuthService, private postsService: PostsService, private modalService: NgbModal) {}
 
   ngOnInit(): void {
     this.getUserData()
     this.getUserPosts()
   }
 
+  openModal() {
+    this.modalService.open(AddPostModalComponent);
+  }
+
   getUserData() {
-    this.authService.user.pipe(
-      switchMap((user) => {
-        return this.userService.getUserInfo(user.uid);
-      })
-    ).subscribe({
+    this.userService.getUserInfo().subscribe({
       next: (data) => {
         this.userData = data;
         console.log(data);
@@ -40,11 +42,7 @@ export class ProfileComponent implements OnInit {
   }
 
   getUserPosts() {
-    this.authService.user.pipe(
-      switchMap((user) => {
-        return this.postsService.getUserPosts(user.uid);
-      })
-    ).subscribe({
+    this.postsService.getUserPosts().subscribe({
       next: (data: Array<any>) => {
         this.posts = data.map((e) => {
           return {

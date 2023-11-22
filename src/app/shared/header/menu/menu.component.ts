@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavService, Menu } from '../../services/nav.service';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { CATEGORIES, Category } from 'src/app/interfaces/category.interface';
 
 @Component({
   selector: 'app-menu',
@@ -11,6 +12,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 export class MenuComponent implements OnInit {
 
   public menuItems: Menu[];
+  public categories: Category[] = CATEGORIES
   public menuToggle: boolean = false;
   isUser: boolean 
 

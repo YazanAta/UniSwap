@@ -49,12 +49,12 @@ export class HomeComponent {
 
   // Collection banner
   public collections = [{
-    image: 'assets/collection1.png',
+    image: 'assets/collection3.png',
     title: 'Give',
     link: '/home/left-sidebar/collection/marijuana',
     class: 'p-left'
   }, {
-    image: 'assets/collection2.png',
+    image: 'assets/collection4.png',
     title: 'Excahnge',
     link: '/home/left-sidebar/collection/marijuana',
     class: 'p-right'

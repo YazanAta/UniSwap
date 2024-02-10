@@ -11,6 +11,7 @@ import { CheckoutComponent } from './checkout/checkout.component';
 import { SuccessComponent } from './checkout/success/success.component';
 
 import { Resolver } from '../shared/services/resolver.service';
+import { authGuardUser } from '../services/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -22,7 +23,8 @@ const routes: Routes = [
   },
   {
     path: 'collection/left/sidebar',
-    component: CollectionLeftSidebarComponent
+    component: CollectionLeftSidebarComponent,
+    canActivate: [authGuardUser]
   },
   {
     path: 'cart',

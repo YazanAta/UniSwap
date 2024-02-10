@@ -5,6 +5,12 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { Product } from "../../../classes/product";
 import { ProductService } from '../../../../shared/services/product.service';
+import { Post } from 'src/app/interfaces/post.interface';
+import { UserService } from 'src/app/services/user/user.service';
+import { User } from 'src/app/interfaces/user.interface';
+import { WishlistService } from 'src/app/services/wishlist/wishlist.service';
+import { ToastrService } from 'ngx-toastr';
+import { NotificationsService } from 'src/app/services/notifications/notifications.service';
 
 @Component({
   selector: 'app-quick-view',
@@ -13,20 +19,21 @@ import { ProductService } from '../../../../shared/services/product.service';
 })
 export class QuickViewComponent implements OnInit, OnDestroy  {
 
-  @Input() product: Product;
-  @Input() currency: any;  
+  @Input() product: Post;
   @ViewChild("quickView", { static: false }) QuickView: TemplateRef<any>;
 
   public closeResult: string;
-  public ImageSrc: string;
-  public counter: number = 1;
   public modalOpen: boolean = false;
 
+  ownerInfo: User;
+
   constructor(@Inject(PLATFORM_ID) private platformId: Object,
-    private router: Router, private modalService: NgbModal,
-    public productService: ProductService) { }
+    private router: Router, private modalService: NgbModal, private us: UserService, private ws: WishlistService, private notification: NotificationsService) { }
 
   ngOnInit(): void {
+    this.us.getUserInfoById(this.product.ownerId).subscribe((userData) => {
+      this.ownerInfo = userData;
+    })
   }
 
   openModal() {
@@ -55,57 +62,16 @@ export class QuickViewComponent implements OnInit, OnDestroy  {
     }
   }
 
-  // Get Product Color
-  Color(variants) {
-    const uniqColor = []
-    for (let i = 0; i < Object.keys(variants).length; i++) {
-      if (uniqColor.indexOf(variants[i].color) === -1 && variants[i].color) {
-        uniqColor.push(variants[i].color)
-      }
-    }
-    return uniqColor
-  }
-
-  // Get Product Size
-  Size(variants) {
-    const uniqSize = []
-    for (let i = 0; i < Object.keys(variants).length; i++) {
-      if (uniqSize.indexOf(variants[i].size) === -1 && variants[i].size) {
-        uniqSize.push(variants[i].size)
-      }
-    }
-    return uniqSize
-  }
-
-  // Change Variants
-  ChangeVariants(color, product) {
-    product.variants.map((item) => {
-      if (item.color === color) {
-        product.images.map((img) => {
-          if (img.image_id === item.image_id) {
-            this.ImageSrc = img.src
-          }
-        })
-      }
-    })
-  }
-
-  // Increament
-  increment() {
-    this.counter++ ;
-  }
-
-  // Decrement
-  decrement() {
-    if (this.counter > 1) this.counter-- ;
-  }
-
-  // Add to cart
-  async addToCart(product: any) {
-    product.quantity = this.counter || 1;
-    const status = await this.productService.addToCart(product);
-    if(status)
-      this.router.navigate(['/shop/cart']);
+  addToWishlist(id: string): void {
+    this.ws.addToWishlist(id)
+    .then(
+      (value) => {
+        this.notification.show(value,'Wishlist',"success");
+      })
+    .catch(
+      (err) => {
+        this.notification.show(err,'Wishlist',"error");
+      })
   }
 
   ngOnDestroy() {

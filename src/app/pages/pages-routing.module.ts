@@ -20,6 +20,7 @@ import { MasonryGridThreeComponent } from './portfolio/masonry-grid-three/masonr
 import { MasonryGridFourComponent } from './portfolio/masonry-grid-four/masonry-grid-four.component';
 import { MasonryFullWidthComponent } from './portfolio/masonry-full-width/masonry-full-width.component';
 import { authGuardNotUser, authGuardUser } from '../services/guards/auth.guard';
+import { ChatPageComponent } from './chat-page/chat-page.component';
 
 const routes: Routes = [
   { 
@@ -33,12 +34,12 @@ const routes: Routes = [
   { 
     path: 'login',
     component: LoginComponent  ,
-    canActivate: [authGuardUser]
+    canActivate: [authGuardNotUser]
   },
   { 
     path: 'register', 
     component: RegisterComponent  ,
-    canActivate: [authGuardUser]
+    canActivate: [authGuardNotUser]
   },
   { 
     path: 'forget/password', 
@@ -47,7 +48,7 @@ const routes: Routes = [
   { 
     path: 'profile', 
     component: ProfileComponent ,
-    canActivate: [authGuardNotUser]
+    canActivate: [authGuardUser]
   },
   { 
     path: 'aboutus', 
@@ -96,6 +97,10 @@ const routes: Routes = [
   { 
     path: 'portfolio/masonry/full-width', 
     component: MasonryFullWidthComponent 
+  },
+  {
+    path: 'chats',
+    component: ChatPageComponent,
   }
 ];
 

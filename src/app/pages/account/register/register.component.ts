@@ -47,26 +47,42 @@ export class RegisterComponent implements OnInit {
 
 
   async register(form: FormGroup){
-
     const data: User = form.value;
 
     await this.auth.register(data.email, data.password)
+    //register user with firebase auth
     .then(result => {
 
       this.errorMessage = ''
       this.modalService = this.injector.get(NgbModal);
 
+      // add user to database with user service
       this.userService.addNewUser(result.user.uid, data)
       .then(() => {
+        // send verification email to user and log them out of the app until they verify their email
+        result.user.sendEmailVerification().then(() => {
+
+          this.modalService.open("Open Your Email To Verify Your Account");
+          this.auth.logout();
+          
+        })
+        // if there is an error sending the verification email, log the user out
+        .catch(error => {
+          this.modalService.open("Error Sending Verification Email", error);
+        })
+
         result.user.updateProfile({
           displayName: `${data.firstName} ${data.lastName}`
         })
-        result.user.sendEmailVerification().then(() => {
-          this.modalService.open("Open Your Email To Verify Your Account");
-        });
+
       })
+      // if there is an error adding the user to the database
+      .catch((error) => {
+        this.modalService.open("Error Adding User To Database", error);
+      });
 
     })
+    // if there is an error registering the user with firebase auth
     .catch(error => {
       this.errorMessage = error.message
     })

@@ -1,5 +1,6 @@
 export interface Post {
     id?: string;
+    ownerId?: string;
     title?: string;
     description?: string;
     category?: string;

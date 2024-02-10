@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { switchMap, from} from 'rxjs';
+import { AngularFirestore, DocumentChangeAction } from '@angular/fire/compat/firestore';
+import { switchMap, from, Observable} from 'rxjs';
 import { Post } from 'src/app/interfaces/post.interface';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { collection, increment } from "firebase/firestore";
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,21 +15,46 @@ export class PostsService {
   // Inject the AuthService, AngularFirestore, and AngularFireStorage
   constructor(private authService: AuthService, private firestore: AngularFirestore, private storage: AngularFireStorage) { }
 
+  
+
   // Get all posts from the current user
   // Use the switchMap operator to get the current user from the AuthService
   // Return the observable from Firestore
   getUserPosts() {
     return this.authService.user.pipe(
       switchMap(user => {
-        return this.firestore.collection(`users/${user.uid}/posts`).snapshotChanges();
+        // Get the posts collection from Firestore where the ownerId field equals the current user's uid
+        return this.firestore.collection(`posts`, ref => ref.where('ownerId', '==', user.uid)).snapshotChanges();
       })
     );
   }
 
   // Get all posts from all users
-  getAllPosts() {
-    return this.firestore.collectionGroup('posts').snapshotChanges();
+  getAllPosts(): Observable<DocumentChangeAction<unknown>[]> {
+    return new Observable((observer) => {
+      this.authService.getUserId().then((uid) => {
+        const subscription = this.firestore.collection('posts', (ref) =>
+          ref.where('ownerId', '!=', uid)
+        )
+        .snapshotChanges()
+        .subscribe(
+          (posts) => {
+            observer.next(posts);
+            observer.complete();
+          },
+          (error) => {
+            observer.error(error);
+          }
+        );
+        return () => {
+          if (subscription) {
+            subscription.unsubscribe();
+          }
+        };
+      });
+    });
   }
+
 
   addPost(post: Post, image: File) {
     // Get the current user and add the post to their posts collection in Firestore
@@ -43,28 +70,45 @@ export class PostsService {
             return fileRef.getDownloadURL().toPromise();
           })).pipe(
             switchMap(url => {
-              return this.firestore.collection(`users/${user.uid}/posts`).add(
+              return this.firestore.collection(`posts`).add(
                 {
-                  ...post,
                   image: url,
-                  createdAt: new Date()
+                  createdAt: new Date(),
+                  ...post,
+                  ownerId: user.uid
                 }
-              );
+              ).then(() => { 
+                if(post.type === 'Free'){
+                  this.firestore.doc(`users/${user.uid}`).update({
+                    points: increment(1)
+                  });
+                }
+              });
             })
           );
         } else {
           // Handle the case where image is null
           return this.firestore.collection(`users/${user.uid}/posts`).add(
             {
-              ...post,
               image: null,
-              createdAt: new Date()
+              createdAt: new Date(),
+              ...post,
+              ownerId: user.uid
             }
-          );
+          ).then(() => { 
+            if(post.type === 'Free'){
+              this.firestore.doc(`users/${user.uid}`).update({
+                points: increment(1)
+              });
+            }
+          });
         }
       })
     )
   }
 
+  deletePost(postId){
+    return this.firestore.doc(`posts/${postId}`).delete();
+  }
 
 }

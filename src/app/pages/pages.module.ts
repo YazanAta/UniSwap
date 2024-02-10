@@ -34,6 +34,7 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth'
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AuthService } from '../services/auth/auth.service';
 import { UserService } from '../services/user/user.service';
+import { ChatPageComponent } from './chat-page/chat-page.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { UserService } from '../services/user/user.service';
     MasonryGridThreeComponent,
     MasonryGridFourComponent,
     MasonryFullWidthComponent,
+    ChatPageComponent,
   ],
   imports: [
     CommonModule,

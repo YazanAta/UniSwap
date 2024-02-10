@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { User } from 'src/app/interfaces/user.interface';
 import { AuthService } from '../auth/auth.service';
-import { switchMap } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,18 +18,21 @@ export class UserService {
         lastName: user.lastName,
         email: user.email,
         gender: user.gender,
-        verified: false,
         points: 0   //you can put => name and address by themself because the name of property is the same ass var
       }
     )
   }
 
-  getUserInfo() {
+  getUserInfo(){
     return this.authService.user.pipe(
       switchMap(user => {
-        return this.fs.doc(`users/${user.uid}`).valueChanges();
+        return (this.fs.doc(`users/${user.uid}`).valueChanges());
       })
     );
+  }
+
+  getUserInfoById(id: string){
+    return (this.fs.doc(`users/${id}`).valueChanges());
   }
   
 }

@@ -15,6 +15,7 @@ export class MenuComponent implements OnInit {
   public categories: Category[] = CATEGORIES
   public menuToggle: boolean = false;
   isUser: boolean 
+  isVerified: boolean
 
   constructor(private router: Router, private as: AuthService) {
     this.router.events.subscribe((event) => {
@@ -25,11 +26,15 @@ export class MenuComponent implements OnInit {
   ngOnInit(): void {
     this.as.user.subscribe(user => {
       if (user) {
+        if(user.emailVerified){
+          this.isVerified = true
+        }
         this.isUser = true
         this.as.userId = user.uid         
       }
       else {
         this.isUser = false
+        this.isVerified = false
         this.as.userId = ''
       }
     })

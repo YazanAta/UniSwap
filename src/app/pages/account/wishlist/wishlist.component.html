@@ -1,8 +1,13 @@
-<app-breadcrumb [title]="'Register'" [breadcrumb]="'Register'"></app-breadcrumb>
+<app-breadcrumb [title]="'wishlist'" [breadcrumb]="'wishlist'"></app-breadcrumb>
 <!-- section start -->
 <section class="wishlist-section section-b-space">
     <div class="container">
-        <div class="row">
+        <div class="col-md-12 empty-cart-cls text-center" *ngIf='!wishlist.length'>
+            <img src="assets/images/empty-wishlist.png" alt="Empty cart" title="Emprt cart">
+            <h3 class="mt-4"><b>Wishlist is Empty</b></h3>
+            <h4>Explore more shortlist some items.</h4>
+        </div>
+        <div class="row" *ngIf='wishlist.length'>
             <div class="col-sm-12">
                 <table class="table cart-table table-responsive-xs">
                     <thead>
@@ -15,19 +20,19 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr *ngFor="let post of wishlist">
                             <td>
                                 <a [routerLink]="['/shop/product/left/sidebar/trim-dress']">
-                                    <img src="assets/images/product/fashion/1.jpg" alt="fashion">
+                                    <img [src]="post.image" alt="fashion">
                                 </a>
                             </td>
-                            <td><a [routerLink]="['/shop/product/left/sidebar/trim-dress']">cotton shirt</a>
+                            <td><a [routerLink]="['/shop/product/left/sidebar/trim-dress']">{{post.title}}</a>
                                 <div class="mobile-cart-content row">
                                     <div class="col">
                                         <p>in stock</p>
                                     </div>
                                     <div class="col">
-                                        <h2 class="td-color">$63.00</h2>
+                                        <h2 class="td-color">{{post.price || post.type}}</h2>
                                     </div>
                                     <div class="col">
                                         <h2 class="td-color">
@@ -41,27 +46,27 @@
                                     </div>
                                 </div>
                             </td>
-                            <td><h2>$63.00</h2></td>
-                            <td >
+                            <td>
+                                <h2 *ngIf="post.price">{{ post.price + " JD"}}</h2>
+                                <ng-container *ngIf="!post.price">
+                                  <h2>{{ post.type }}</h2>
+                                </ng-container>
+                            </td>
+                              
+                            <td>
                                 <p>in stock</p>
                             </td>
                             <td>
-                                <a [routerLink]="['/shop/product/left/sidebar/trim-dress']" class="icon me-3">
+                                <a class="icon me-3" (click)="removeFromWishlist(post.id)">
                                     <i class="ti-close"></i>
                                 </a>
-                                <a [routerLink]="['/shop/product/left/sidebar/trim-dress']" class="cart">
+                                <a class="cart">
                                     <i class="ti-shopping-cart"></i>
                                 </a>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
-        <div class="row wishlist-buttons">
-            <div class="col-12">
-                <a [routerLink]="['/shop/collection/left/sidebar']" class="btn btn-solid">continue shopping</a>
-                <a [routerLink]="['/shop/checkout']" class="btn btn-solid">check out</a>
             </div>
         </div>
     </div>

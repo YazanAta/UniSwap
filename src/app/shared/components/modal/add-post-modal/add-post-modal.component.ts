@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CATEGORIES, Category } from 'src/app/interfaces/category.interface';
 import { PostsService } from 'src/app/services/posts/posts.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-add-post-modal',
@@ -26,7 +27,7 @@ export class AddPostModalComponent implements OnInit{
   types = ['Sale', 'Free'];
 
   // Inject the FormBuilder, NgbActiveModal, and PostsService
-  constructor(private fb: FormBuilder, public activeModal: NgbActiveModal, private postsService: PostsService) { }
+  constructor(private fb: FormBuilder, public activeModal: NgbActiveModal, private postsService: PostsService, private firestore: AngularFirestore) { }
 
 
   ngOnInit(): void {
@@ -115,7 +116,7 @@ export class AddPostModalComponent implements OnInit{
   // Subscribe to the observable and close the modal
   addPost(postForm: FormGroup){
     if(this.selectedFile){
-        this.postsService.addPost(postForm.value, this.selectedFile).subscribe(() => {
+      this.postsService.addPost(postForm.value, this.selectedFile).subscribe(() => {
         this.activeModal.close();
       });
     } else {

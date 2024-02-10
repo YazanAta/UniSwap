@@ -6,42 +6,30 @@
             </a>
         </div>
         <div class="cart-box">
-            <button title="Add to cart">
-                <i class="ti-shopping-cart"></i> 
-            </button>
-            <a href="javascript:void(0)" title="Add to Wishlist">
+            <a href="javascript:void(0)" title="Add to Wishlist" (click)="addToWishlist(post.id)">
                 <i class="ti-heart" aria-hidden="true"></i>
             </a>
             <a href="javascript:void(0)" class="mobile-quick-view" (click)="QuickView.openModal()" title="Quick View">
                 <i class="ti-search" aria-hidden="true"></i>
             </a>
-            <a href="javascript:void(0)" title="Compare">
-                <i class="ti-reload" aria-hidden="true"></i>
+            <a href="javascript:void(0)" title="Start Chat">
+                <i class="ti-comment-alt" aria-hidden="true"></i>
             </a>
         </div>
     </div>
-    <div class="product-detail" *ngIf="!loader">
-        <div>    
-          <h4 class="m-3 text-center">{{post.title}}</h4>
-          <hr>
-          <div class="description">
-            <h4>Description :</h4>
-            <div class="text-center p-1">{{post.description}}</div>
-          </div>
-          <hr>
-          <div class="price">
-            <span class="h4">Price: </span>
-            <span class="h6" *ngIf="post.type == 'Free'">Free</span>
-            <span class="h6" *ngIf="post.type == 'Sale'">{{post.price}} JD</span>
-          </div>
-          <hr>
-          <div class="ownerEmail">
-            <div class="h4">Student Email: </div>
-            <span class="small">{{getOwnerEmail(post.userId)}}</span>
-          </div>
+    <div class="product-detail">
+        <div>
+            
+            <h5 class="product-title">{{ post?.title | titlecase }}</h5>
+            
+
+            <h6 *ngIf="post.type == 'Free'">Price: Free</h6>
+            <h6 *ngIf="post.type == 'Sale'">Price: {{post.price}} JD</h6>
+            
+            <small>Posted: {{getTimeDifference(post?.createdAt)}} Ago</small>
         </div>
     </div>
 </div>
-<!--<app-quick-view #quickView [product]="product" [currency]="currency"></app-quick-view>-->
+<app-quick-view #quickView [product]="post"></app-quick-view>
 <app-skeleton-product-box *ngIf="loader"></app-skeleton-product-box>
 

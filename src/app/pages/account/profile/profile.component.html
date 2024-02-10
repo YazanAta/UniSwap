@@ -9,30 +9,30 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="fw-bold">First Name</div>
-                            <div class="border p-3 my-1">{{userData?.firstName | titlecase}}</div>
+                            <div class="border p-3 my-1">{{(userData$ | async)?.firstName | titlecase}}</div>
                         </div>
                         <div class="col-md-6">
                             <div class="fw-bold">Last Name</div>
-                            <div class="border p-3 my-1">{{userData?.lastName | titlecase}}</div>
+                            <div class="border p-3 my-1">{{(userData$ | async)?.lastName | titlecase}}</div>
                         </div>
                         <div class="col-md-6">
                             <div class="fw-bold">Email</div>
-                            <div class="border p-3 my-1">{{userData?.email}}</div>
+                            <div class="border p-3 my-1">{{(userData$ | async)?.email}}</div>
                         </div>
                         <div class="col-md-6">
                             <div class="fw-bold">Gender</div>
-                            <div class="border p-3 my-1">{{userData?.gender | titlecase}}</div>
+                            <div class="border p-3 my-1">{{(userData$ | async)?.gender | titlecase}}</div>
                         </div>
                         <div class="col-md-6">
                             <div class="fw-bold">Points</div>
-                            <div class="border p-3 my-1">{{userData?.points}}</div>
+                            <div class="border p-3 my-1">{{(userData$ | async)?.points}}</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-            <!-- product section start -->
+        <!-- product section start -->
         <section class="section-b-space">
             <div class="container">
                 <div class="row">

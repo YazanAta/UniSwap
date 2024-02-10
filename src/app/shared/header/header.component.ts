@@ -8,7 +8,7 @@ import { Component, Input, HostListener } from '@angular/core';
 export class HeaderComponent {
   
   @Input() class: string;
-  @Input() themeLogo: string = 'assets/logo.png'; // Default Logo
+  @Input() themeLogo: string = 'assets/logo2.png'; // Default Logo
   @Input() sticky: boolean = false; // Default false
   
   public stick: boolean = false;

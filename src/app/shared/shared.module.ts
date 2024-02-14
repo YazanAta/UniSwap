@@ -37,6 +37,8 @@ import { TapToTopComponent } from './components/tap-to-top/tap-to-top.component'
 // Pipes
 import { DiscountPipe } from './pipes/discount.pipe';
 import { SkeletonProductBoxComponent } from './components/product/skeleton/skeleton-product-box/skeleton-product-box.component';
+import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
+import { DashboardLayoutComponent } from './layouts/dashboard-layout/dashboard-layout.component';
 @NgModule({
   declarations: [
     HeaderComponent,
@@ -59,6 +61,8 @@ import { SkeletonProductBoxComponent } from './components/product/skeleton/skele
     ProductBoxVerticalComponent,
     ProductBoxVerticalSliderComponent,
     SkeletonProductBoxComponent,
+    MainLayoutComponent,
+    DashboardLayoutComponent,
   ],
   imports: [
     CommonModule,
@@ -100,6 +104,8 @@ import { SkeletonProductBoxComponent } from './components/product/skeleton/skele
     ProductBoxVerticalComponent,
     ProductBoxVerticalSliderComponent,
     SkeletonProductBoxComponent,
+    MainLayoutComponent,
+    DashboardLayoutComponent
   ],
   providers: [
     DatePipe

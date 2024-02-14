@@ -1,13 +1,14 @@
-import { Component, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, PLATFORM_ID, Inject, OnInit } from '@angular/core';
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { map, delay, withLatestFrom } from 'rxjs/operators';
+import { AuthService } from './services/auth/auth.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent{
   
   // For Progressbar
   loaders = this.loader.progress$.pipe(
@@ -16,6 +17,5 @@ export class AppComponent {
     map(v => v[1]),
   );
   
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private loader: LoadingBarService) {}
-
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private loader: LoadingBarService, private auth: AuthService) {}
 }

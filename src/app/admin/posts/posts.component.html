@@ -1,0 +1,47 @@
+<!-- Container-fluid starts -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Digital Products</h5>
+                </div>
+                <div class="card-body">
+                    <div id="batchDelete" class="category-table custom-datatable">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                <th scope="col">#</th>
+                                <th scope="col" sortable="img">Image</th>
+                                <th scope="col" sortable="product_name">Name</th>
+                                <th scope="col" sortable="price">Price</th>
+                                <th scope="col" sortable="status">Status</th>
+                                <th scope="col" sortable="category">Category</th>
+                                <th scope="col" sortable="action">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                <th scope="row">{{ "catgory.id" }}</th>
+                                <td>
+                                    <img [src]="'catgory.img'" class="imgTable" style="width: 20px">
+                                </td>
+                                    <td>{{ "catgory.product_name" }}</td>
+                                <td>{{ "catgory.price" }}</td>
+                                <td><i class='fa fa-circle {{"catgory.status"}} f-12'></i></td>
+                                <td>{{ "catgory.category"}}</td>
+                                <td>
+                                    <a href="javascript:void(0)"><i class='fa fa-edit f-12'></i></a>&nbsp;
+                                    <a href="javascript:void(0)"><i class="fa fa-trash-o"></i></a>
+                                </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

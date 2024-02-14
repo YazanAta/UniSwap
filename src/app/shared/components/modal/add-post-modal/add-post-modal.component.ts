@@ -25,6 +25,8 @@ export class AddPostModalComponent implements OnInit{
   subCategories: Category[] = [];
   subSubCategories: Category[] = [];
   types = ['Sale', 'Free'];
+  isSubmitting = false;
+
 
   // Inject the FormBuilder, NgbActiveModal, and PostsService
   constructor(private fb: FormBuilder, public activeModal: NgbActiveModal, private postsService: PostsService, private firestore: AngularFirestore) { }
@@ -115,14 +117,28 @@ export class AddPostModalComponent implements OnInit{
   // Pass the postForm value and the selectedFile
   // Subscribe to the observable and close the modal
   addPost(postForm: FormGroup){
-    if(this.selectedFile){
-      this.postsService.addPost(postForm.value, this.selectedFile).subscribe(() => {
-        this.activeModal.close();
-      });
+
+    if (this.isSubmitting) {
+      return; // Do nothing if already submitting
+    }
+    this.isSubmitting = true;
+
+
+    const onComplete = () => {
+      this.isSubmitting = false;
+      this.activeModal.close();
+    };
+
+    if (this.selectedFile) {
+      this.postsService.addPost(postForm.value, this.selectedFile).subscribe(
+        onComplete,
+        onComplete // Handle errors in case the request fails
+      );
     } else {
-        this.postsService.addPost(postForm.value, null).subscribe(() => {
-        this.activeModal.close();
-      });
+      this.postsService.addPost(postForm.value, null).subscribe(
+        onComplete,
+        onComplete // Handle errors in case the request fails
+      );
     }
   }
 }

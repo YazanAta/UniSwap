@@ -10457,3 +10457,71 @@ footer {
         }
     }
 }
+
+
+// Admin
+
+.category-table {
+    .table-responsive {
+      width: 100%;
+    }
+    table {
+      border-color: #e8efff;
+      tr {
+        td, th {
+          border-color: #e8efff;
+        }
+      }
+      tr {
+        .fa-edit {
+          color: #22af47;
+        }
+        .fa-trash-o {
+          color: #ff5370;
+        }
+        .fa-circle {
+          font-size: 14px;
+        }
+        i {
+          font-size: 20px;
+        }
+        td, th {
+          text-align: center;
+          vertical-align: baseline;
+          &:nth-child(2) {
+            text-align: left;
+          }
+        }
+      }
+    }
+  }
+
+
+  @media only screen and (max-width: 1199px) {
+    .category-table {
+        table {
+          tr {
+            td, th {
+              width: 120px !important;
+              &:nth-child(2) {
+                width: 500px !important;
+              }
+            }
+          }
+        }
+      }
+  }
+
+  @media screen and (max-device-width: 1366px) and (min-device-width: 1200px){
+    .category-table {
+        table {
+            tr {
+            td, th {
+                &:first-child {
+                width: 90px !important;
+                }
+            }
+            }
+        }
+    }
+  }

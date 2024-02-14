@@ -13,62 +13,42 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent {
 
-  public themeFooterLogo: string = 'assets/images/icon/logo-9.png';
-
-  public products: Product[] = [];
-  public productCollections: any[] = [];
   isUser: boolean 
   
   //Categories
   public categories : Category[] = CATEGORIES
 
-  public ProductSliderConfig: any = ProductSlider;
-
-  constructor(public productService: ProductService, private as: AuthService, private router: Router) {
-    this.productService.getProducts.subscribe(response => {
-      this.products = response.filter(item => item.type == 'marijuana');
-      // Get Product Collection
-      this.products.filter((item) => {
-        item.collection.filter((collection) => {
-          const index = this.productCollections.indexOf(collection);
-          if (index === -1) this.productCollections.push(collection);
-        })
-      })
-    });
-  }
+  constructor(private authService: AuthService, private router: Router) { }
 
   public sliders = [{
     title: 'Unleash the UniSwap Experience!',
     subTitle: 'Give, Swap, Buy',
-    image: 'assets/images/slider/31.jpg'
+    image: 'assets/images/slider/slider1.png'
   }, {
     title: 'More Than a Swap, It\'s a Community Sharing Platform',
     subTitle: 'UniSwap',
-    image: 'assets/images/slider/30.jpg'
+    image: 'assets/images/slider/slider2.png'
   }];
 
   // Collection banner
   public collections = [{
-    image: 'assets/collection3.png',
+    image: 'assets/collection1.png',
     title: 'Give',
     link: '/home/left-sidebar/collection/marijuana',
     class: 'p-left'
   }, {
-    image: 'assets/collection4.png',
+    image: 'assets/collection2.png',
     title: 'Excahnge',
     link: '/home/left-sidebar/collection/marijuana',
     class: 'p-right'
   }];
 
   ngOnInit(): void {
-    this.as.user.subscribe(user => {
-      if (user) {
-        this.isUser = true
-        this.as.userId = user.uid         
-      }
-      else {
-        this.isUser = false
-        this.as.userId = ''
+    this.authService.user$.subscribe((data) => {
+      if(data){
+        this.isUser = true;
+      }else{
+        this.isUser = false;
       }
     })
   }

@@ -19,13 +19,16 @@ import { MasonryGridTwoComponent } from './portfolio/masonry-grid-two/masonry-gr
 import { MasonryGridThreeComponent } from './portfolio/masonry-grid-three/masonry-grid-three.component';
 import { MasonryGridFourComponent } from './portfolio/masonry-grid-four/masonry-grid-four.component';
 import { MasonryFullWidthComponent } from './portfolio/masonry-full-width/masonry-full-width.component';
-import { authGuardNotUser, authGuardUser } from '../services/guards/auth.guard';
 import { ChatPageComponent } from './chat-page/chat-page.component';
+import { authGuard } from '../services/guards/auth.guard';
+import { guestGuard } from '../services/guards/guest.guard';
+import { userGuard } from '../services/guards/user.guard';
 
 const routes: Routes = [
   { 
     path: 'wishlist', 
-    component: WishlistComponent 
+    component: WishlistComponent ,
+    canActivate: [userGuard]
   },
   { 
     path: 'dashboard', 
@@ -33,26 +36,28 @@ const routes: Routes = [
   },
   { 
     path: 'login',
-    component: LoginComponent  ,
-    canActivate: [authGuardNotUser]
+    component: LoginComponent,
+    canActivate: [authGuard]
   },
   { 
     path: 'register', 
-    component: RegisterComponent  ,
-    canActivate: [authGuardNotUser]
+    component: RegisterComponent,
+    canActivate: [authGuard]
   },
   { 
     path: 'forget/password', 
-    component: ForgetPasswordComponent 
+    component: ForgetPasswordComponent,
+    canActivate: [authGuard]
   },
   { 
     path: 'profile', 
-    component: ProfileComponent ,
-    canActivate: [authGuardUser]
+    component: ProfileComponent,
+    canActivate: [userGuard] 
   },
   { 
     path: 'aboutus', 
-    component: AboutUsComponent 
+    component: AboutUsComponent,
+    canActivate: [guestGuard]
   },
   { 
     path: 'review', 

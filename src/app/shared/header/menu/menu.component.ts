@@ -29,13 +29,11 @@ export class MenuComponent implements OnInit {
         if(user.emailVerified){
           this.isVerified = true
         }
-        this.isUser = true
-        this.as.userId = user.uid         
+        this.isUser = true  
       }
       else {
         this.isUser = false
         this.isVerified = false
-        this.as.userId = ''
       }
     })
   }

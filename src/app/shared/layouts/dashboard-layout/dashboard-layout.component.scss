@@ -1,0 +1,28 @@
+#sidebar {
+    height: 100vh;
+    background-color: #343a40;
+    color: white;
+    cursor: pointer;
+}
+#sidebar .nav-link {
+    color: white;
+}
+#sidebar .nav-link {
+    color: white;
+}
+#sidebar :hover{
+    color: #343a40;
+}
+/* Custom style for the hover effect on the Profile link */
+#sidebar .nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+}
+/* Logo styles */
+#logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+#logo img {
+    max-width: 80%; /* Adjust the width as needed */
+    height: auto;
+}

@@ -94,35 +94,6 @@
 </section>
 <!--Categories 1 Section End (If User)-->
 
-
-<!--Categories 2 Section Start (If User)
-<section class="full-banner parallax portfolio-section grid-portfolio" [ngStyle]="{'background-image': 'url(assets/images/slider/30.jpg)'}" *ngIf="isUser">
-  <div class="title3 section-t-space">
-    <h4>Choose Your</h4>
-    <h2 class="title-inner3">Category</h2>
-    <div class="line"></div>
-  </div>
-  
-  <div class="container">
-      <div class="row">
-          <div class="isotopeSelector col-lg-3 col-sm-6" *ngFor="let category of categories">
-              <div class="overlay" (click)="openPostsPage(category)">
-                  <div class="border-portfolio">
-                      <a href="javascript:void(0)">
-                          <div class="overlay-background">
-                              <i class="fa fa-plus" aria-hidden="true"></i>
-                              <h4>{{category.name}}</h4>
-                          </div>
-                          <img [src]="category.image">
-                      </a>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-</section>
-Categories 2 Section End (If User)-->
-
 <!-- Section (If Not User)-->
 <section class="full-banner parallax portfolio-section grid-portfolio" [ngStyle]="{'background-image': 'url(assets/images/slider/backimage.png)'}" *ngIf="!isUser">
   <div class="title3 section-t-space">

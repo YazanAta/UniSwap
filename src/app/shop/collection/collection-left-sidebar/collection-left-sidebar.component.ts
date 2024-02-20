@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ViewportScroller } from '@angular/common';
-import { ProductService } from "../../../shared/services/product.service";
-import { Post } from 'src/app/interfaces/post.interface';
+import { Post } from 'src/app/shared/interfaces/post.interface';
 import { PostsService } from 'src/app/services/posts/posts.service';
-import { CATEGORIES, Category } from 'src/app/interfaces/category.interface';
+import { CATEGORIES, Category } from 'src/app/shared/interfaces/category.interface';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -47,7 +46,7 @@ export class CollectionLeftSidebarComponent implements OnInit {
 
   async getAllPosts() {
     try {
-      const posts = await this.postsService.getAllPosts().toPromise();
+      const posts = await this.postsService.getAllPosts();
       this.posts = posts.map((post) => {
         return {
           id: post.payload.doc.id,

@@ -1,0 +1,41 @@
+<!-- Container-fluid starts -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Digital Products</h5>
+                </div>
+                <div class="card-body">
+                    <div id="batchDelete" class="category-table custom-datatable">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                <th scope="col" sortable="product_name">Name</th>
+                                <th scope="col" sortable="price">Type</th>
+                                <th scope="col" sortable="state">State</th>
+                                <th scope="col" sortable="category">Category</th>
+                                <th scope="col" sortable="action">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let post of posts">
+                                <th>{{ post.title }}</th>
+                                <td>{{ post.type }}</td>
+                                <td><i class='fa fa-circle f-12' [ngStyle]="{'color': getCircleColor(post.state)}"></i>{{post.state | titlecase}}</td>
+                                <td>{{ post.category }}</td>
+                                <td>
+                                    <a (click)="managePostsModal.openModal()"><i class='fa fa-edit f-12'></i></a>&nbsp;
+                                </td>
+                                <app-manage-post-modal #managePostsModal [post]="post" style="display: none;"></app-manage-post-modal>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

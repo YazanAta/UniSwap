@@ -4,9 +4,8 @@ import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { CATEGORIES, Category } from 'src/app/interfaces/category.interface';
+import { CATEGORIES, Category } from 'src/app/shared/interfaces/category.interface';
 import { PostsService } from 'src/app/services/posts/posts.service';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-add-post-modal',
@@ -24,12 +23,12 @@ export class AddPostModalComponent implements OnInit{
   categories: Category[] = CATEGORIES;
   subCategories: Category[] = [];
   subSubCategories: Category[] = [];
-  types = ['Sale', 'Free'];
+  types = ['sale', 'free'];
   isSubmitting = false;
 
 
   // Inject the FormBuilder, NgbActiveModal, and PostsService
-  constructor(private fb: FormBuilder, public activeModal: NgbActiveModal, private postsService: PostsService, private firestore: AngularFirestore) { }
+  constructor(private fb: FormBuilder, public activeModal: NgbActiveModal, private postsService: PostsService) { }
 
 
   ngOnInit(): void {
@@ -53,7 +52,7 @@ export class AddPostModalComponent implements OnInit{
     // Enable the price field if the type is Sale
     // Subscribe to the type field value changes
     this.postForm.get('type').valueChanges.subscribe(value => {
-      if (value === 'Sale') {
+      if (value === 'sale') {
         this.postForm.get('price').enable();
       } else {
         this.postForm.get('price').disable();
@@ -116,12 +115,14 @@ export class AddPostModalComponent implements OnInit{
   // Use the addPost method from the PostsService
   // Pass the postForm value and the selectedFile
   // Subscribe to the observable and close the modal
-  addPost(postForm: FormGroup){
+  addPost(){
 
     if (this.isSubmitting) {
       return; // Do nothing if already submitting
     }
+    
     this.isSubmitting = true;
+    const postData = this.postForm.value;
 
 
     const onComplete = () => {
@@ -129,16 +130,20 @@ export class AddPostModalComponent implements OnInit{
       this.activeModal.close();
     };
 
-    if (this.selectedFile) {
-      this.postsService.addPost(postForm.value, this.selectedFile).subscribe(
-        onComplete,
-        onComplete // Handle errors in case the request fails
-      );
-    } else {
-      this.postsService.addPost(postForm.value, null).subscribe(
-        onComplete,
-        onComplete // Handle errors in case the request fails
-      );
+    try{
+      if (this.selectedFile) {
+        this.postsService.addPost(postData, this.selectedFile).then(
+          onComplete,
+          error => onComplete // Handle errors in case the request fails
+        );
+      } else {
+        this.postsService.addPost(postData, null).then(
+          onComplete,
+          error => onComplete // Handle errors in case the request fails
+        );
+      }
+    }catch(error) {
+      console.log(error)
     }
   }
 }

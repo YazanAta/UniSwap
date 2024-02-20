@@ -2,24 +2,12 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { WishlistComponent } from './account/wishlist/wishlist.component';
-import { DashboardComponent } from './account/dashboard/dashboard.component';
 import { LoginComponent } from './account/login/login.component';
 import { RegisterComponent } from './account/register/register.component';
 import { ForgetPasswordComponent } from './account/forget-password/forget-password.component';
 import { ProfileComponent } from './account/profile/profile.component';
 import { AboutUsComponent } from './about-us/about-us.component';
-import { ReviewComponent } from './review/review.component';
-import { CollectionComponent } from './collection/collection.component';
 import { ErrorComponent } from './error/error.component';
-import { FaqComponent } from './faq/faq.component';
-import { GridTwoComponent } from './portfolio/grid-two/grid-two.component';
-import { GridThreeComponent } from './portfolio/grid-three/grid-three.component';
-import { GridFourComponent } from './portfolio/grid-four/grid-four.component';
-import { MasonryGridTwoComponent } from './portfolio/masonry-grid-two/masonry-grid-two.component';
-import { MasonryGridThreeComponent } from './portfolio/masonry-grid-three/masonry-grid-three.component';
-import { MasonryGridFourComponent } from './portfolio/masonry-grid-four/masonry-grid-four.component';
-import { MasonryFullWidthComponent } from './portfolio/masonry-full-width/masonry-full-width.component';
-import { ChatPageComponent } from './chat-page/chat-page.component';
 import { authGuard } from '../services/guards/auth.guard';
 import { guestGuard } from '../services/guards/guest.guard';
 import { userGuard } from '../services/guards/user.guard';
@@ -29,10 +17,6 @@ const routes: Routes = [
     path: 'wishlist', 
     component: WishlistComponent ,
     canActivate: [userGuard]
-  },
-  { 
-    path: 'dashboard', 
-    component: DashboardComponent 
   },
   { 
     path: 'login',
@@ -60,53 +44,9 @@ const routes: Routes = [
     canActivate: [guestGuard]
   },
   { 
-    path: 'review', 
-    component: ReviewComponent 
-  },
-  { 
-    path: 'collection', 
-    component: CollectionComponent 
-  },
-  { 
     path: '404', 
     component: ErrorComponent 
   },
-  { 
-    path: 'faq', 
-    component: FaqComponent 
-  },
-  { 
-    path: 'portfolio/grid/two', 
-    component: GridTwoComponent 
-  },
-  { 
-    path: 'portfolio/grid/three', 
-    component: GridThreeComponent 
-  },
-  { 
-    path: 'portfolio/grid/four', 
-    component: GridFourComponent 
-  },
-  { 
-    path: 'portfolio/masonry/grid/two', 
-    component: MasonryGridTwoComponent 
-  },
-  { 
-    path: 'portfolio/masonry/grid/three', 
-    component: MasonryGridThreeComponent 
-  },
-  { 
-    path: 'portfolio/masonry/grid/four', 
-    component: MasonryGridFourComponent 
-  },
-  { 
-    path: 'portfolio/masonry/full-width', 
-    component: MasonryFullWidthComponent 
-  },
-  {
-    path: 'chats',
-    component: ChatPageComponent,
-  }
 ];
 
 @NgModule({

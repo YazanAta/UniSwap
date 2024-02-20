@@ -13,10 +13,11 @@
     <div>
         
         <h5 class="product-title">{{ post?.title | titlecase }}</h5>
+        <h5>State: {{post?.state | titlecase}}</h5>
         
         <div class="d-flex justify-content-between p-2 mt-2">
-          <button class="btn btn-sm btn-danger rounded-start" (click)="openDeleteConfirmationModal(post?.id, post?.title)">Delete</button>
-          <button class="btn btn-sm btn-warning rounded-end">Edit</button>
+          <button class="btn btn-sm btn-danger rounded-start" (click)="openDeleteConfirmationModal(post, post?.title)">Delete</button>
+          <button class="btn btn-sm btn-warning rounded-end" (click)="openEditModal(post)" *ngIf="post.state === 'pending'">Edit</button>
         </div>
     </div>
   </div>

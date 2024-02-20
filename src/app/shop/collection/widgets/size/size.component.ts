@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Product } from '../../../../shared/classes/product';
 
 @Component({
   selector: 'app-size',

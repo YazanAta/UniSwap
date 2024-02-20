@@ -1,11 +1,8 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { QuickViewComponent } from "../../modal/quick-view/quick-view.component";
-import { CartModalComponent } from "../../modal/cart-modal/cart-modal.component";
-import { DatePipe } from '@angular/common';
-import { ProductService } from "../../../services/product.service";
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { WishlistService } from 'src/app/services/wishlist/wishlist.service';
 import { ToastrService } from 'ngx-toastr';
+import { CustomToastrService } from 'src/app/services/toastr/custom-toastr.service';
 
 @Component({
   selector: 'app-product-box-three',
@@ -17,9 +14,8 @@ export class ProductBoxThreeComponent implements OnInit {
   @Input() loader: boolean = false;
   @Input() post: any;
   @ViewChild("quickView") QuickView: QuickViewComponent;
-  @ViewChild("addPost") AddPost: CartModalComponent;
 
-  constructor(private productService: ProductService, private wishlist: WishlistService, private toastr: ToastrService) { }
+  constructor(private wishlist: WishlistService, private toastr: CustomToastrService) { }
 
   ngOnInit(): void {
 
@@ -55,11 +51,11 @@ export class ProductBoxThreeComponent implements OnInit {
     this.wishlist.addToWishlist(id)
     .then(
       (value) => {
-        this.toastr.success(value,'Wishlist');
+        this.toastr.show(value,'Wishlist', 'success');
       })
     .catch(
       (err) => {
-        this.toastr.error(err, "Wishlist")
+        this.toastr.show(err, "Wishlist", 'error')
       })
   }
 }

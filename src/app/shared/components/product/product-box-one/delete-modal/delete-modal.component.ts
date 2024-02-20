@@ -11,7 +11,6 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class DeleteModalComponent {
   
-  @Input() postId: number; // Accept post ID as an input
   @Input() title: string;
   
   constructor(public activeModal: NgbActiveModal) {}

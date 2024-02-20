@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, switchMap } from 'rxjs';
-import { User } from 'src/app/interfaces/user.interface';
+import { User } from 'src/app/shared/interfaces/user.interface';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { PostsService } from 'src/app/services/posts/posts.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -14,7 +14,7 @@ import { AddPostModalComponent } from 'src/app/shared/components/modal/add-post-
 })
 export class ProfileComponent implements OnInit {
 
-  userData$ = this.userService.getUserInfo();
+  userData$ = this.authService.userAuthState$;
   posts: any[] = []
 
   constructor(private userService: UserService, private authService: AuthService, private postsService: PostsService, private modalService: NgbModal) {}

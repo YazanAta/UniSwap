@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
-import { Post } from 'src/app/interfaces/post.interface';
-import { NotificationsService } from 'src/app/services/notifications/notifications.service';
+import { Post } from 'src/app/shared/interfaces/post.interface';
 import { PostsService } from 'src/app/services/posts/posts.service';
+import { CustomToastrService } from 'src/app/services/toastr/custom-toastr.service';
 import { WishlistService } from 'src/app/services/wishlist/wishlist.service';
 
 @Component({
@@ -13,7 +12,7 @@ import { WishlistService } from 'src/app/services/wishlist/wishlist.service';
 })
 export class WishlistComponent implements OnInit, OnDestroy{
 
-  constructor(private ws: WishlistService, private ps: PostsService, private notification: NotificationsService) { }
+  constructor(private ws: WishlistService, private ps: PostsService, private toastr: CustomToastrService) { }
 
   wishlist: Post[] = [];
   subscription$: Subscription;
@@ -50,11 +49,11 @@ export class WishlistComponent implements OnInit, OnDestroy{
     this.ws.removeFromWishlist(id)
     .then(
       (value) => {
-        this.notification.show(value,'Wishlist', "success");
+        this.toastr.show(value,'Wishlist', "success");
       })
     .catch(
       (err) => {
-        this.notification.show(err, "Wishlist", "error")
+        this.toastr.show(err, "Wishlist", "error")
       })
   }
 }

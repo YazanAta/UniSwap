@@ -1,0 +1,63 @@
+<ng-template class="theme-modal" #managePosts let-modal>
+    <div class="modal-content quick-view-modal">
+        <div class="modal-body">
+            <button type="button" class="close float-end border-0" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="row">
+                <div class="col-lg-6 col-xs-12">
+                    <div class="quick-view-img">
+                        <img [src]="post.image" class="img-fluid">
+                    </div>
+                </div>
+                <div class="col-lg-6 rtl-text">
+                    <div class="product-right">
+                        <h2>{{ post.title | titlecase }}</h2>
+                        <h3>{{ post?.type }}</h3>
+                        <div class="border-product">
+                            {{ post?.category }}
+                        </div>
+                        <div class="border-product">
+                            <h6 class="product-title">Item Description</h6>
+                            <p>{{ post.description.substring(0, 200) + '...' }}</p>
+                        </div>
+                        <div class="border-product">
+                            <h5>
+                                <!-- Owner Name: {{ ownerInfo.firstName + " " + ownerInfo.lastName }} -->
+                            </h5>
+                        </div>
+
+                        <!-- Post State Management as a Form -->
+                        <div class="border-product mt-3">
+                            <h5 class="product-title">Post State</h5>
+                          
+                            <form [formGroup]="postStateForm">
+                              <div class="form-check" *ngFor="let state of ['Pending', 'Approved', 'Rejected', 'Deleted']">
+                                <input class="form-check-input" type="radio" [id]="state.toLowerCase()" [value]="state.toLowerCase()" formControlName="state">
+                                <label class="form-check-label" [for]="state.toLowerCase()">{{ state }}</label>
+                              </div>
+                          
+                              <!-- Conditional Text Field for Rejection Message -->
+                              <div *ngIf="postStateForm.get('state').value === 'rejected' || postStateForm.get('state').value === 'approved'" class="mb-3">
+                                <label for="message" class="form-label">Message:</label>
+                                <textarea id="message" class="form-control" formControlName="message"></textarea>
+                              </div>
+                          
+                              <!-- Add a button to submit the form -->
+                              <button type="button" class="btn btn-info mt-2" (click)="changePostState()">Change State</button>
+                            </form>
+                          </div>
+                          
+
+
+                        <!-- Display Price if the type is sale -->
+                        <div *ngIf="post.type === 'Sale'" class="border-product mt-3">
+                            <h5 class="product-title">Price</h5>
+                            <p>{{ post.price | currency:'JOD':'symbol':'1.2-2' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import { Product } from '../shared/classes/product';
-import { ProductSlider } from '../shared/data/slider';
-import { ProductService } from '../shared/services/product.service';
-import { CATEGORIES, Category } from '../interfaces/category.interface';
+import { CATEGORIES, Category } from '../shared/interfaces/category.interface';
 import { AuthService } from '../services/auth/auth.service';
 import { Router } from '@angular/router';
 
@@ -44,7 +41,7 @@ export class HomeComponent {
   }];
 
   ngOnInit(): void {
-    this.authService.user$.subscribe((data) => {
+    this.authService.userAuthState$.subscribe((data) => {
       if(data){
         this.isUser = true;
       }else{

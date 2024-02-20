@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ShopComponent } from './shop/shop.component';
 import { PagesComponent } from './pages/pages.component';
-import { ElementsComponent } from './elements/elements.component';
 import { AdminComponent } from './admin/admin.component';
 import { MainLayoutComponent } from './shared/layouts/main-layout/main-layout.component';
 import { DashboardLayoutComponent } from './shared/layouts/dashboard-layout/dashboard-layout.component';
@@ -11,6 +10,7 @@ import { adminGuard } from './services/guards/admin.guard';
 import { authGuard } from './services/guards/auth.guard';
 import { userGuard } from './services/guards/user.guard';
 import { guestGuard } from './services/guards/guest.guard';
+import { ErrorComponent } from './pages/error/error.component';
 
 const routes: Routes = [
   {
@@ -18,7 +18,7 @@ const routes: Routes = [
     component: MainLayoutComponent,
     children: [
       {
-        path: 'home',
+        path: '',
         loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
         canActivate: [guestGuard]
       },
@@ -32,11 +32,7 @@ const routes: Routes = [
         path: 'pages',
         component: PagesComponent,
         loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule) 
-      },
-      { 
-        path: 'elements', 
-        component: ElementsComponent,
-        loadChildren: () => import('./elements/elements.module').then(m => m.ElementsModule) }
+      }
     ]
   },
   { 
@@ -53,7 +49,7 @@ const routes: Routes = [
   },
   {
     path: '**', // Navigate to Home Page if not found any page
-    redirectTo: 'home',
+    component: ErrorComponent
   },
 ];
 

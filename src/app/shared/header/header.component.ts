@@ -1,4 +1,7 @@
-import { Component, Input, HostListener } from '@angular/core';
+import { Component, Input, HostListener, ViewChild } from '@angular/core';
+import { NotificationsModalComponent } from '../components/modal/notifications-modal/notifications-modal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -10,12 +13,25 @@ export class HeaderComponent {
   @Input() class: string;
   @Input() themeLogo: string = 'assets/logo.png'; // Default Logo
   @Input() sticky: boolean = false; // Default false
-  
-  public stick: boolean = false;
 
-  constructor() { }
+  showNotification: boolean = false;
+  toggleNotification() {
+    this.showNotification = !this.showNotification;
+  }
+
+  public stick: boolean = false;
+  isUser: Boolean = false;
+
+  constructor(private auth: AuthService) { }
 
   ngOnInit(): void {
+    this.auth.user$.subscribe((user) => {
+      if(user){
+        this.isUser = true
+      }else{
+        this.isUser = false
+      }
+    })
   }
 
   // @HostListener Decorator
@@ -29,5 +45,7 @@ export class HeaderComponent {
   	}
   }
 
+
+  
 
 }

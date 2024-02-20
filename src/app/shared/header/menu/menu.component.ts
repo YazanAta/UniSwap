@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavService, Menu } from '../../services/nav.service';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { CATEGORIES, Category } from 'src/app/interfaces/category.interface';
+import { CATEGORIES, Category } from 'src/app/shared/interfaces/category.interface';
 
 @Component({
   selector: 'app-menu',
@@ -24,7 +24,7 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.as.user.subscribe(user => {
+    this.as.user$.subscribe(user => {
       if (user) {
         if(user.emailVerified){
           this.isVerified = true

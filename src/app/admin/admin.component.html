@@ -9,24 +9,5 @@
     <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#ECF0F1">UniSwap Admin</text>
     <circle cx="90%" cy="20%" r="10" fill="#ECF0F1" />
 </svg>  
-<form [formGroup]="adminForm" (ngSubmit)="registerAdmin()">
-  <div>
-    <label for="email">Email:</label>
-    <input type="email" id="email" formControlName="email" required>
-    <div *ngIf="adminForm.get('email').hasError('email') && adminForm.get('email').touched">
-      Invalid email address.
-    </div>
-  </div>
-
-  <div>
-    <label for="password">Password:</label>
-    <input type="password" id="password" formControlName="password" required>
-    <div *ngIf="adminForm.get('password').hasError('minlength') && adminForm.get('password').touched">
-      Password must be at least 6 characters long.
-    </div>
-  </div>
-
-  <button type="submit" [disabled]="!adminForm.valid">Register Admin</button>
-</form>
 
 <router-outlet></router-outlet>

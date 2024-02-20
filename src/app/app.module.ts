@@ -12,7 +12,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ShopComponent } from './shop/shop.component';
 import { PagesComponent } from './pages/pages.component';
-import { ElementsComponent } from './elements/elements.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
 
@@ -22,7 +21,6 @@ import { environment } from 'src/environments/environment';
     AppComponent,
     ShopComponent,
     PagesComponent,
-    ElementsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -33,8 +31,8 @@ import { environment } from 'src/environments/environment';
     LoadingBarRouterModule,
     ToastrModule.forRoot({
       timeOut: 3000,
-      progressBar: false,
-      enableHtml: true,
+      progressBar: true,
+      enableHtml: true
     }),
     SharedModule,
     AppRoutingModule,

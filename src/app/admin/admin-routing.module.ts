@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
-import { PostsComponent } from './posts/posts.component';
-import { UsersComponent } from './users/users.component';
+import { ManagePostsComponent } from './manage-posts/manage-posts.component';
+import { ManageUsersComponent } from './manage-users/manage-users.component';
+import { ManageAdminsComponent } from './manage-admins/manage-admins.component';
 
 const routes: Routes = [
   {
@@ -11,11 +12,15 @@ const routes: Routes = [
   },
   {
     path: "posts",
-    component: PostsComponent
+    component: ManagePostsComponent
   },
   {
     path: "users",
-    component: UsersComponent
+    component: ManageUsersComponent
+  },
+  {
+    path: "admins",
+    component: ManageAdminsComponent
   }
 ];
 

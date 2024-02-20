@@ -4,20 +4,28 @@ import { CommonModule } from '@angular/common';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminComponent } from './admin.component';
 import { SharedModule } from '../shared/shared.module';
-import { PostsComponent } from './posts/posts.component';
-import { UsersComponent } from './users/users.component';
+import { ManageAdminsComponent } from './manage-admins/manage-admins.component';
+import { ManagePostsComponent } from './manage-posts/manage-posts.component';
+import { ManageUsersComponent } from './manage-users/manage-users.component';
+import { ManagePostModalComponent } from './modals/manage-post-modal/manage-post-modal.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
     declarations: [
         AdminComponent,
-        PostsComponent,
-        UsersComponent,
+        ManageAdminsComponent,
+        ManagePostsComponent,
+        ManageUsersComponent,
+        ManagePostModalComponent,
     ],
     imports: [
         CommonModule,
         AdminRoutingModule,
-        SharedModule
+        ReactiveFormsModule,
+        NgbModule,
+        FormsModule
     ]
 })
 export class AdminModule { }

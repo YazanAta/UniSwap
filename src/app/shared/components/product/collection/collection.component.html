@@ -1,0 +1,17 @@
+<!--section start-->
+<div class="collection-block" *ngIf="!loader">
+    <img 
+        [defaultImage]="'/assets/logo.png'"
+        [lazyLoad]="post.image"
+        class="img-fluid" alt="">
+    <div class="collection-content">
+        <h4>{{ "State : " + post.state }}</h4>
+        <h3>{{ post.title | titlecase }}</h3>
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-outline btn-sm" style="letter-spacing: 5px;" (click)="openEditModal(post)" *ngIf="post.state === 'pending'">Edit</button>
+            <button class="btn btn-outline btn-sm"(click)="openDeleteConfirmationModal(post, post?.title)">Delete</button>
+        </div>
+    </div>
+</div>
+<!--Section ends-->
+<app-skeleton-product-box *ngIf="loader"></app-skeleton-product-box>

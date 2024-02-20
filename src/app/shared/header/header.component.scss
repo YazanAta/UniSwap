@@ -40,3 +40,14 @@ header {
     }
 }
 
+.notification-section {
+    position: fixed;
+    top: 10px; /* Adjust the top distance as needed */
+    right: 10px; /* Adjust the right distance as needed */
+    z-index: 1000; /* Adjust the z-index as needed to ensure it appears above other elements */
+    background-color: #ffffff; /* Set background color as needed */
+    border: 1px solid #ccc; /* Add border as needed */
+    padding: 10px; /* Add padding as needed */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add box shadow as needed */
+}
+  

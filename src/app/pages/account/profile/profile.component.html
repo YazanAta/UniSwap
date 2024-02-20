@@ -41,11 +41,12 @@
                         <h4 (click)="openModal()">Add Post <i class="ti-plus p-1"></i></h4>
                     </div>
                 </div>
-                <div class="row search-product">
-                    <div class="col-xl-2 col-md-4 col-sm-6"  *ngFor="let post of posts">
-                        <div class="product-box">
-                            <app-product-box-one [loader]="true" [post]="post">
-                            </app-product-box-one>
+                <div class="collection section-b-space">
+                    <div class="container">
+                        <div class="row partition-collection">
+                            <div class="col-lg-3 col-md-6" *ngFor="let post of posts">
+                                <app-collection [loader]="true" [post]="post"></app-collection>
+                            </div>
                         </div>
                     </div>
                 </div>

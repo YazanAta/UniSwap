@@ -12,14 +12,18 @@
               <div>
                 <app-menu></app-menu>
               </div>
-              <!-- Notification Section -->
-              <div class="notification-section p-0" *ngIf="isUser">
-                <button class="btn btn-link" (click)="toggleNotification()" *ngIf="!showNotification">
-                    <i class="fa fa-bell"></i>
+              <!-- Top Right Section -->
+              <div class="notification-section p-0 d-flex" *ngIf="isUser">
+                <button class="btn btn-link" (click)="toggleNotification()" *ngIf="!showNotification && !showChatList">
+                  <i class="fa fa-bell" style="font-size: 20px; margin-right: 10px;"></i>
                 </button>
-                <!-- Notification Section -->
+                <button class="btn btn-link" (click)="toggleChatList()" *ngIf="!showChatList && !showNotification">
+                  <i class="fa fa-comment" style="font-size: 20px;"></i>
+                </button>
                 <app-notifications-section *ngIf="showNotification" (toggleNotificationEvent)="toggleNotification()"></app-notifications-section>
+                <app-chatlist *ngIf="showChatList" (toggleChatListEvent)="toggleChatList()"></app-chatlist>
               </div>
+              
             </div>
           </div>
         </div>

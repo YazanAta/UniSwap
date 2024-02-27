@@ -13,23 +13,38 @@
                 <div class="col-lg-6 rtl-text">
                     <div class="product-right">
                         <h2>{{ post.title | titlecase }}</h2>
-                        <h3>{{ post?.type }}</h3>
                         <div class="border-product">
-                            {{ post?.category }}
+                            <h6 class="product-title">Item Information</h6>
+                            <p class="mt-1">
+                                Description: {{ post.description }} .
+                            </p>
+                            <p class="mt-1">
+                                Category: {{ post?.category }}
+                            </p>
+                            <p class="mt-1">
+                                Type: {{ post?.type }}
+                            </p>
+                            <p *ngIf="post.type === 'sale'" class="mt-1">
+                                Price: {{ post?.price | currency:'JOD':'symbol':'1.2-2' }}
+                            </p>
+
                         </div>
                         <div class="border-product">
-                            <h6 class="product-title">Item Description</h6>
-                            <p>{{ post.description.substring(0, 200) + '...' }}</p>
-                        </div>
-                        <div class="border-product">
-                            <h5>
-                                <!-- Owner Name: {{ ownerInfo.firstName + " " + ownerInfo.lastName }} -->
-                            </h5>
+                            <h6 class="product-title">Owner Information</h6>
+                            <p>
+                                Name: {{ (ownerData.firstName | titlecase) + " " + (ownerData.lastName | titlecase) }}
+                            </p>
+                            <p>
+                                Email: {{ (ownerData.email | titlecase) }}
+                            </p>
+                            <p>
+                                Points: {{ ownerData.points }}
+                            </p>
                         </div>
 
                         <!-- Post State Management as a Form -->
                         <div class="border-product mt-3">
-                            <h5 class="product-title">Post State</h5>
+                            <h5 class="product-title py-2">Post State</h5>
                           
                             <form [formGroup]="postStateForm">
                               <div class="form-check" *ngFor="let state of ['Pending', 'Approved', 'Rejected', 'Deleted']">
@@ -39,22 +54,15 @@
                           
                               <!-- Conditional Text Field for Rejection Message -->
                               <div *ngIf="postStateForm.get('state').value === 'rejected' || postStateForm.get('state').value === 'approved'" class="mb-3">
-                                <label for="message" class="form-label">Message:</label>
+                                <label for="message" class="form-label">Enter Custom Message To the User: <small>(optional)</small></label>
                                 <textarea id="message" class="form-control" formControlName="message"></textarea>
                               </div>
                           
                               <!-- Add a button to submit the form -->
                               <button type="button" class="btn btn-info mt-2" (click)="changePostState()">Change State</button>
                             </form>
-                          </div>
-                          
-
-
-                        <!-- Display Price if the type is sale -->
-                        <div *ngIf="post.type === 'Sale'" class="border-product mt-3">
-                            <h5 class="product-title">Price</h5>
-                            <p>{{ post.price | currency:'JOD':'symbol':'1.2-2' }}</p>
                         </div>
+                        
                     </div>
                 </div>
             </div>

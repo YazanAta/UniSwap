@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/multikart/browser",
+    "public": "dist/uniswap/browser",
     "ignore": [
       "firebase.json",
       "**/.*",

@@ -26,14 +26,27 @@ export class QuickViewComponent implements OnInit, OnDestroy  {
   public modalOpen: boolean = false;
 
   ownerInfo: User;
+  currentUserId;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object,
-    private router: Router, private modalService: NgbModal, private auth: AuthService, private us: UserService, private ws: WishlistService, private toastr: CustomToastrService) { }
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private router: Router,
+    private modalService: NgbModal,
+    private authService: AuthService,
+    private us: UserService,
+    private ws: WishlistService,
+    private toastr: CustomToastrService) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+
+    const user = await this.authService.getUser();
+
+    this.currentUserId = user.uid
+    
     this.us.getUserInfoById(this.product.ownerId).subscribe((userData) => {
       this.ownerInfo = userData;
-    })
+    });
+
   }
 
   openModal() {
@@ -63,7 +76,7 @@ export class QuickViewComponent implements OnInit, OnDestroy  {
   }
 
   addToWishlist(id: string): void {
-    this.ws.addToWishlist(id)
+    this.ws.addToWishlist(id, this.currentUserId)
     .then(
       (value) => {
         this.toastr.show(value,'Wishlist',"success");

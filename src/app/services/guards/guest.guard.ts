@@ -12,7 +12,7 @@ export const guestGuard: CanActivateFn = (route, state) => {
       if(!user){
         resolve(true)
       }else{
-        authService.userAuthState$.pipe(take(1)).subscribe((data) => {
+        authService.user$.pipe(take(1)).subscribe((data) => {
           if(data.role === "admin"){
             router.navigate(['/admin'])
             resolve(false);

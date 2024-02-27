@@ -17,6 +17,13 @@ export class HeaderComponent {
   showNotification: boolean = false;
   toggleNotification() {
     this.showNotification = !this.showNotification;
+    this.showChatList = false;
+  }
+
+  showChatList: boolean = false;
+  toggleChatList() {
+    this.showNotification = false;
+    this.showChatList = !this.showChatList;
   }
 
   public stick: boolean = false;

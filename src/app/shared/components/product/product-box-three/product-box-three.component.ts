@@ -3,6 +3,9 @@ import { QuickViewComponent } from "../../modal/quick-view/quick-view.component"
 import { WishlistService } from 'src/app/services/wishlist/wishlist.service';
 import { ToastrService } from 'ngx-toastr';
 import { CustomToastrService } from 'src/app/services/toastr/custom-toastr.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { ChatService } from 'src/app/services/chat/chat.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-box-three',
@@ -15,14 +18,24 @@ export class ProductBoxThreeComponent implements OnInit {
   @Input() post: any;
   @ViewChild("quickView") QuickView: QuickViewComponent;
 
-  constructor(private wishlist: WishlistService, private toastr: CustomToastrService) { }
+  currentUserId: string
+  constructor(
+    private wishlist: WishlistService,
+    private toastr: CustomToastrService,
+    private authService: AuthService,
+    private chatService: ChatService,
+    private router: Router) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
 
     if(this.loader) {
       setTimeout(() => { this.loader = false; }, 2000); // Skeleton Loader
     }
 
+    const user = await this.authService.getUser();
+
+    this.currentUserId = user.uid;
+    
   }
 
   getTimeDifference(timestamp: { seconds: number, nanoseconds: number }): string {
@@ -48,7 +61,7 @@ export class ProductBoxThreeComponent implements OnInit {
   }
 
   addToWishlist(id: string): void {
-    this.wishlist.addToWishlist(id)
+    this.wishlist.addToWishlist(id, this.currentUserId)
     .then(
       (value) => {
         this.toastr.show(value,'Wishlist', 'success');
@@ -57,5 +70,11 @@ export class ProductBoxThreeComponent implements OnInit {
       (err) => {
         this.toastr.show(err, "Wishlist", 'error')
       })
+  }
+
+  createChat(postOwnerId: string) {
+    this.chatService.createChat(postOwnerId).then((chatId) => {
+      this.router.navigate([`/pages/chats/${chatId}`])
+    });
   }
 }

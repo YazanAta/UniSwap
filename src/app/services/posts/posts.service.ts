@@ -16,27 +16,20 @@ export class PostsService {
   constructor(
     private authService: AuthService,
     private firestore: AngularFirestore,
-    private storage: AngularFireStorage) {
-      this.authService.user$.subscribe((user => {
-        this.uid = user.uid
-      }));
-    }
-
-  private uid: string 
+    private storage: AngularFireStorage) { }
 
   
-  getUserPosts() {
+  getUserPosts(uid: string) {
       // Get the posts collection from Firestore where the ownerId field equals the current user's uid
-      return this.firestore.collection(`posts`, ref => ref.where('ownerId', '==', this.uid)).snapshotChanges();
+      return this.firestore.collection(`posts`, ref => ref.where('ownerId', '==', uid)).snapshotChanges();
   }
 
-  getAllPosts(): Promise<DocumentChangeAction<unknown>[]> {
-    console.log(this.uid)
+  getAllPosts(uid: string): Promise<DocumentChangeAction<unknown>[]> {
     return new Promise((resolve, reject) => {
 
       // Fetches all approved posts from the Firestore collection based on certain criteria.
       const subscription = this.firestore.collection('posts', (ref) =>
-        ref.where('ownerId', '!=', this.uid).where('state', '==', 'approved')
+        ref.where('ownerId', '!=', uid).where('state', '==', 'approved')
       )
       .snapshotChanges()
       .subscribe({
@@ -60,7 +53,7 @@ export class PostsService {
 
   }
 
-  addPost(post: Post, image: File): Promise<void> {
+  addPost(post: Post, image: File, uid: string): Promise<void> {
 
     // If upload image exists
     if (image !== null) {
@@ -78,14 +71,14 @@ export class PostsService {
           ...post,
           image: url,
           createdAt: new Date(),
-          ownerId: this.uid,
+          ownerId: uid,
           state: "pending"
         });
       })
       // if the post is free then increament points by 1
       .then(() => {
         if (post.type === 'free') {
-          return this.firestore.doc(`users/${this.uid}`).update({
+          return this.firestore.doc(`users/${uid}`).update({
             points: increment(1)
           });
         }
@@ -98,13 +91,13 @@ export class PostsService {
         ...post,
         image: null,
         createdAt: new Date(),
-        ownerId: this.uid,
+        ownerId: uid,
         state: "pending"
       })
       // if the post is free then increament points by 1
       .then(() => {
         if (post.type === 'free') {
-          return this.firestore.doc(`users/${this.uid}`).update({
+          return this.firestore.doc(`users/${uid}`).update({
             points: increment(1)
           });
         }
@@ -134,7 +127,7 @@ export class PostsService {
     });
   }
   
-  editPost(postId: string, updatedPost: Post, newImage: File | null): Observable<void> {
+  editPost(postId: string, updatedPost: Post, newImage: File | null, uid: string): Observable<void> {
     // Get the reference to the existing post document
     const postRef = this.firestore.doc(`posts/${postId}`);
 
@@ -144,7 +137,7 @@ export class PostsService {
         const postData = doc.data() as Post;
         
         // Check if the user owns the post
-        if (postData && postData.ownerId === this.uid) {
+        if (postData && postData.ownerId === uid) {
           if (newImage !== null) {
             // Update post with a new image
             const filePath = `posts/${new Date().getTime()}_${newImage.name}`;

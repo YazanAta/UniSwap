@@ -34,6 +34,7 @@ import { NotificationsSectionComponent } from './header/notifications-section/no
 import { EditPostModalComponent } from './components/modal/edit-post-modal/edit-post-modal.component';
 import { SuccessfulRegistrationModalComponent } from './components/modal/successful-registration-modal/successful-registration-modal.component';
 import { CollectionComponent } from './components/product/collection/collection.component';
+import { ChatListComponent } from './components/chatlist/chatlist.component';
 @NgModule({
   declarations: [
     HeaderComponent,
@@ -53,6 +54,7 @@ import { CollectionComponent } from './components/product/collection/collection.
     NotificationsSectionComponent,
     EditPostModalComponent,
     SuccessfulRegistrationModalComponent,
+    ChatListComponent
   ],
   imports: [
     CommonModule,
@@ -85,7 +87,8 @@ import { CollectionComponent } from './components/product/collection/collection.
     ProductBoxThreeComponent,
     SkeletonProductBoxComponent,
     MainLayoutComponent,
-    DashboardLayoutComponent
+    DashboardLayoutComponent,
+    ChatListComponent
   ],
   providers: [
     DatePipe

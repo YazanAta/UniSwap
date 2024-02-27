@@ -1,5 +1,6 @@
 export interface Post {
-    id?: string;
+    id?: string,
+    postId?: string;
     ownerId?: string;
     title?: string;
     description?: string;
@@ -11,4 +12,5 @@ export interface Post {
     price?: string;
     createdAt?: Date;
     state?: string;
+    
 }

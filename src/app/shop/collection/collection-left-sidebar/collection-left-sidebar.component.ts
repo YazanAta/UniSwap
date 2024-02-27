@@ -5,6 +5,7 @@ import { Post } from 'src/app/shared/interfaces/post.interface';
 import { PostsService } from 'src/app/services/posts/posts.service';
 import { CATEGORIES, Category } from 'src/app/shared/interfaces/category.interface';
 import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-collection-left-sidebar',
@@ -23,7 +24,7 @@ export class CollectionLeftSidebarComponent implements OnInit {
   public collapse2: boolean = true;
   public collapse3: boolean = true;
 
-  constructor(private route: ActivatedRoute, private postsService: PostsService) {   
+  constructor(private route: ActivatedRoute, private postsService: PostsService, private authService: AuthService) {   
 
       // Get My Query Params
       this.route.queryParams.subscribe(params => {
@@ -38,15 +39,19 @@ export class CollectionLeftSidebarComponent implements OnInit {
   }
   
 
-  ngOnInit(): void {
-    this.getAllPosts().then(() => {
-      this.filterPostsByCategory();
-    });
+  async ngOnInit() {
+
+    const user = await this.authService.getUser();
+
+    await this.getAllPosts(user.uid);
+      
+    this.filterPostsByCategory();
+  
   }
 
-  async getAllPosts() {
+  async getAllPosts(uid) {
     try {
-      const posts = await this.postsService.getAllPosts();
+      const posts = await this.postsService.getAllPosts(uid);
       this.posts = posts.map((post) => {
         return {
           id: post.payload.doc.id,

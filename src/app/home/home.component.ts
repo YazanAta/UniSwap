@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CATEGORIES, Category } from '../shared/interfaces/category.interface';
 import { AuthService } from '../services/auth/auth.service';
 import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -10,10 +11,13 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent {
 
-  isUser: boolean 
+  public isUser: boolean 
   
   //Categories
   public categories : Category[] = CATEGORIES
+
+  // for unsubscribing
+  private destroy$ = new Subject<void>();
 
   constructor(private authService: AuthService, private router: Router) { }
 
@@ -41,16 +45,23 @@ export class HomeComponent {
   }];
 
   ngOnInit(): void {
-    this.authService.userAuthState$.subscribe((data) => {
-      if(data){
+
+    this.authService.user$.pipe(takeUntil(this.destroy$))
+    .subscribe((user) => {
+      if(user){
         this.isUser = true;
       }else{
         this.isUser = false;
       }
     })
+
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
+    // Emit a value to signal the destruction of the component
+    this.destroy$.next();
+    // Complete the subject to release resources
+    this.destroy$.complete();
   }
 
   openPostsPage(category) {

@@ -40,7 +40,7 @@ enableProdMode();
 export function app() {
   const server = express();
   server.use(cors());
-  const distFolder = join(process.cwd(), 'dist/multikart/browser');
+  const distFolder = join(process.cwd(), 'dist/uniswap/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
   const LAZY_MODULE_MAP = require('./src/main.server');
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)

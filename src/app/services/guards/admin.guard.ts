@@ -12,7 +12,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
   return new Promise(resolve => {
     return authService.user$.pipe(take(1)).subscribe((user) => {
       if(user){
-        authService.userAuthState$.pipe(take(1)).subscribe((data) => {
+        authService.user$.pipe(take(1)).subscribe((data) => {
           if(data.role === "admin"){
             resolve(true);
           }else{

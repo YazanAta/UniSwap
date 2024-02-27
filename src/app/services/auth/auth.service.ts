@@ -12,33 +12,27 @@ import { CustomToastrService } from '../toastr/custom-toastr.service';
 })
 export class AuthService {
 
-  user$: Observable<firebase.User>
-  userAuthState$: Observable<any>;
-  uid: string;
-  
+  user$: Observable<User | null>
+
   constructor(
     private afAuth: AngularFireAuth,
     private router: Router,
     private toastr: CustomToastrService,
     private fs: AngularFirestore) {
-    this.user$ = afAuth.user;
-    afAuth.user.subscribe((user) => {
-      this.uid = user.uid
-    })
     //// Get auth data, then get firestore user document || null
-    this.userAuthState$ = this.afAuth.authState.pipe(
-    switchMap(user => {
-      if (user) {
-        return this.fs.doc<any>(`users/${user.uid}`).valueChanges();
-      } else {
-        return of(null);
-      }
-    })
+    this.user$ = this.afAuth.user.pipe(
+      switchMap(user => {
+        if (user) {
+          return this.fs.doc<User>(`users/${user.uid}`).valueChanges( {idField: 'uid'} );
+        } else {
+          return of(null);
+        }
+      })
     );
   }
 
-  getUser() {
-    return lastValueFrom(this.userAuthState$.pipe(first()))
+  async getUser() : Promise<firebase.User>{
+    return await lastValueFrom(this.afAuth.user.pipe(first()));
   }
 
   async register(email: string, password: string, user: User) : Promise<firebase.auth.UserCredential>{

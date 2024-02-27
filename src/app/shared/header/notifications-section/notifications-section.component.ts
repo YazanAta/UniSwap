@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Timestamp } from 'firebase/firestore';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { NotificationsService } from 'src/app/services/notifications/notifications.service';
 
 @Component({
@@ -8,10 +9,28 @@ import { NotificationsService } from 'src/app/services/notifications/notificatio
   styleUrls: ['./notifications-section.component.scss']
 })
 export class NotificationsSectionComponent implements OnInit{
-  constructor(private notificationsService: NotificationsService){}
+
   notifications: any[] = [];
-  ngOnInit(): void {
-    this.notificationsService.getUserNotifications().subscribe((notifications) => {
+
+  constructor(private notificationsService: NotificationsService, private authService: AuthService){}
+
+  
+  @Output() toggleNotificationEvent = new EventEmitter<void>();
+
+  toggleNotification() {
+    this.toggleNotificationEvent.emit();
+  }
+
+  async ngOnInit() {
+
+    const user = await this.authService.getUser();
+
+    this.getUserNotifictions(user.uid);
+
+  }
+
+  getUserNotifictions(uid: string){
+    this.notificationsService.getUserNotifications(uid).subscribe((notifications) => {
       // Convert Timestamp to JavaScript Date
       this.notifications = notifications.map(notification => {
         return {
@@ -21,13 +40,5 @@ export class NotificationsSectionComponent implements OnInit{
       });
     });
   }
-
-  @Output() toggleNotificationEvent = new EventEmitter<void>();
-
-  toggleNotification() {
-    this.toggleNotificationEvent.emit();
-  }
-
-
 
 }

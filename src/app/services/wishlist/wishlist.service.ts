@@ -15,11 +15,9 @@ export class WishlistService {
 
   constructor(private fs: AngularFirestore, private as: AuthService) {}
 
-  uid: string = this.as.uid;
-
-  getUserWishlist(): Observable<{ id: string, post: Post }[]> {
+  getUserWishlist(uid: string): Observable<{ id: string, post: Post }[]> {
     // Get post id's from wishlist collection
-    return this.fs.collection<Wishlist>('wishlists').doc(this.uid).valueChanges()
+    return this.fs.collection<Wishlist>('wishlists').doc(uid).valueChanges()
       .pipe(
         // The wishlist data is an array of post ID's
         switchMap((wishlist: Wishlist) => {
@@ -36,7 +34,7 @@ export class WishlistService {
                 // if the post is removed from posts collection => update wishlist
                 if (snapshot.type === 'removed') {
                   const updatedWishlist = wishlist.postIds.filter(id => id !== postId);
-                  const wishlistRef = this.fs.collection<Wishlist>('wishlists').doc(this.uid);
+                  const wishlistRef = this.fs.collection<Wishlist>('wishlists').doc(uid);
                   wishlistRef.set({ postIds: updatedWishlist })
                     .then(() => console.log('Post removed from wishlist because it does not exist'))
                     .catch(error => console.error('Error updating wishlist: ', error));
@@ -47,7 +45,6 @@ export class WishlistService {
                   const post = snapshot.payload.data() as Post;
                   const id = snapshot.payload.id;
                   // Emit the post with its ID if it exists
-                  console.log(post.state)
                   if (post && post.state == "approved") {
                     return of({ id, post }); 
                   }
@@ -66,11 +63,11 @@ export class WishlistService {
       );
   }
   
-  addToWishlist(postId: string): Promise<string> {
+  addToWishlist(postId: string, uid: string): Promise<string> {
 
     return new Promise<string>((resolve, reject) => {
 
-      const wishlistRef = this.fs.collection<Wishlist>('wishlists').doc(this.uid);
+      const wishlistRef = this.fs.collection<Wishlist>('wishlists').doc(uid);
 
       wishlistRef.get().subscribe((wishlistDoc) => {
         const currentWishlist = wishlistDoc.exists ? (wishlistDoc.data() as Wishlist)?.postIds || [] : [];
@@ -93,12 +90,12 @@ export class WishlistService {
     });
   }
   
-  removeFromWishlist(postId: string): Promise<string> {
+  removeFromWishlist(postId: string, uid: string): Promise<string> {
 
     return new Promise<string>((resolve, reject) => {
 
       // Get current wishlist
-      const wishlistRef = this.fs.collection<Wishlist>('wishlists').doc(this.uid);
+      const wishlistRef = this.fs.collection<Wishlist>('wishlists').doc(uid);
       wishlistRef.get().subscribe((wishlistDoc) => {
         const currentWishlist = wishlistDoc.exists ? (wishlistDoc.data() as Wishlist)?.postIds || [] : [];
 

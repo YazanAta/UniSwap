@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
   constructor(private auth: AuthService, private formBuilder: FormBuilder) { }
 
@@ -21,13 +21,8 @@ export class LoginComponent implements OnInit {
     ])],
   })
 
-  ngOnInit(): void {
-  }
-
-  login(form){
-    this.auth.login(form.value.email, form.value.password).then((result) => {
-      console.log(result)
-    })
+  async login(form){
+    await this.auth.login(form.value.email, form.value.password)
   }
 
 }

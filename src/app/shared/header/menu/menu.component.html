@@ -19,7 +19,7 @@
         </a>
       </li>
 
-      <li *ngIf="isUser && isVerified">
+      <li *ngIf="isUser">
         <!-- Sub -->
         <a href="javascript:void(0)" class="nav-link"
         (click)="toggletNavActive()">
@@ -46,14 +46,14 @@
 
       <li>
         <!-- Link -->
-        <a routerLink="/pages/profile" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link" *ngIf="isUser && isVerified">
+        <a routerLink="/pages/profile" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link" *ngIf="isUser">
           Profile
         </a>
       </li>
 
       <li>
         <!-- Link -->
-        <a routerLink="/pages/wishlist" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link" *ngIf="isUser && isVerified">
+        <a routerLink="/pages/wishlist" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link" *ngIf="isUser">
           Wishlist
         </a>
       </li>
@@ -61,14 +61,14 @@
       <li>
         <!-- Link -->
         <a routerLink="/pages/login" routerLinkActive="active" 
-        [routerLinkActiveOptions]="{exact: true}" class="nav-link" *ngIf="!(isUser && isVerified)">
+        [routerLinkActiveOptions]="{exact: true}" class="nav-link" *ngIf="!(isUser)">
           Login
         </a>
       </li>
     
       <li>
         <!-- Link -->
-        <a type="button" class="nav-link" *ngIf="isUser && isVerified" (click)="logout()">
+        <a type="button" class="nav-link" *ngIf="isUser" (click)="logout()">
         Logout
         </a>
       </li>

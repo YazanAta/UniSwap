@@ -5,6 +5,9 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Post } from 'src/app/shared/interfaces/post.interface';
 import { AdminService } from 'src/app/services/admin/admin.service';
 import { NotificationsService } from 'src/app/services/notifications/notifications.service';
+import { UserService } from 'src/app/services/user/user.service';
+import { User } from 'src/app/shared/interfaces/user.interface';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-manage-post-modal',
@@ -16,16 +19,30 @@ export class ManagePostModalComponent implements OnInit{
   public modalOpen: boolean = false;
   public closeResult: string;
   @Input() post: Post;
+  
+  postStateForm: FormGroup;
 
   @ViewChild("managePosts", { static: false }) ManagePosts: TemplateRef<any>;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object,private modalService: NgbModal, private fb: FormBuilder, private adminService: AdminService, private notification: NotificationsService){}
-  postStateForm: FormGroup;
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private modalService: NgbModal,
+    private fb: FormBuilder,
+    private adminService: AdminService,
+    private notification: NotificationsService,
+    private userService: UserService){}
+    
+    ownerData: User;
 
   ngOnInit(): void {
     this.postStateForm = this.fb.group({
       state: ['' || this.post.state, Validators.required],
       message: [''], // Added for rejection message
+    });
+
+    this.userService.getUserInfoById(this.post.ownerId).pipe(take(1))
+    .subscribe((user) => {
+      this.ownerData = user;
     });
   }
 
@@ -59,29 +76,44 @@ export class ManagePostModalComponent implements OnInit{
     const selectedState = this.postStateForm.get('state').value;
 
     if(selectedState === 'rejected'){
-      this.adminService.changePostState(this.post.id, {state: this.postStateForm.get('state').value}).then(() => {
+      this.adminService.changePostState(this.post.postId, {
+        state: this.postStateForm.get('state').value
+      }).then(() => {
         const ownerId = this.post.ownerId; 
-        const postId = this.post.id; 
         const message = formData.message;
 
-        this.notification.pushNotification(ownerId, message, "rejection").then((data) => {
-          this.modalService.dismissAll();
-        });
+        if(message == ''){
+          const defaultRejectionMessage = `Your post "${this.post.title}" Has Been Rejected`;
+          this.notification.pushNotification(ownerId, defaultRejectionMessage, "rejection").then((data) => {
+            this.modalService.dismissAll();
+          });
+        }else{
+          this.notification.pushNotification(ownerId, message, "rejection").then((data) => {
+            this.modalService.dismissAll();
+          });
+        }
 
       })
     }else if (selectedState === 'approved'){
-      this.adminService.changePostState(this.post.id, {state: this.postStateForm.get('state').value}).then(() => {
+      this.adminService.changePostState(this.post.postId,{
+        state: this.postStateForm.get('state').value
+      }).then(() => {
         const ownerId = this.post.ownerId; 
-        const postId = this.post.id; 
         const message = formData.message;
 
-        this.notification.pushNotification(ownerId, message, "approval").then((data) => {
-          this.modalService.dismissAll();
-        });
-
+        if(message == ''){
+          const defaultApprovalMessage = `Your post "${this.post.title}" Has Been Approved`;
+          this.notification.pushNotification(ownerId, defaultApprovalMessage, "approval").then((data) => {
+            this.modalService.dismissAll();
+          });
+        }else{
+          this.notification.pushNotification(ownerId, message, "approval").then((data) => {
+            this.modalService.dismissAll();
+          });
+        }
       })
     }else{
-        this.adminService.changePostState(this.post.id, {
+        this.adminService.changePostState(this.post.postId, {
           state: this.postStateForm.get('state').value
         }).then(()=> {
           this.modalService.dismissAll();

@@ -23,6 +23,7 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth'
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AuthService } from '../services/auth/auth.service';
 import { UserService } from '../services/user/user.service';
+import { ChatComponent } from './chat/chat/chat.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { UserService } from '../services/user/user.service';
     ProfileComponent,
     AboutUsComponent,
     ErrorComponent,
+    ChatComponent,
   ],
   imports: [
     CommonModule,

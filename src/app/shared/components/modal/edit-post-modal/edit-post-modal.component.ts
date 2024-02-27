@@ -5,6 +5,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CATEGORIES, Category } from 'src/app/shared/interfaces/category.interface';
 import { Post } from 'src/app/shared/interfaces/post.interface';
 import { PostsService } from 'src/app/services/posts/posts.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-edit-post-modal',
@@ -19,11 +20,16 @@ export class EditPostModalComponent {
   types = ['Sale', 'Free'];
   isSubmitting = false;
   @Input() post: Post;
+  uid: string
 
-  constructor(private fb: FormBuilder, public activeModal: NgbActiveModal, private postsService: PostsService, private firestore: AngularFirestore) { }
+  constructor(private fb: FormBuilder, public activeModal: NgbActiveModal, private postsService: PostsService, private firestore: AngularFirestore, private authService: AuthService) { }
 
-  ngOnInit(): void {
-    console.log(this.post)
+  async ngOnInit() {
+    
+    const user = await this.authService.getUser();
+
+    this.uid = user.uid
+    
     // Create the post form
     // The title, description, category, and type fields are required
     // The subcategory, sub-subcategory, and price fields are optional
@@ -116,16 +122,17 @@ export class EditPostModalComponent {
 
     if (this.selectedFile) {
       // If a new file is selected, update the post with the new image
-      this.postsService.editPost(postId, updatedPostData, this.selectedFile).subscribe(
+      this.postsService.editPost(postId, updatedPostData, this.selectedFile, this.uid).subscribe(
         onComplete,
         onComplete // Handle errors
       );
     } else {
       // If no new file is selected, update the post without changing the image
-      this.postsService.editPost(postId, updatedPostData, null).subscribe(
+      this.postsService.editPost(postId, updatedPostData, null, this.uid).subscribe(
         onComplete,
         onComplete // Handle errors
       );
     }
   }
+  
 }

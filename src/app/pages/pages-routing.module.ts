@@ -11,6 +11,7 @@ import { ErrorComponent } from './error/error.component';
 import { authGuard } from '../services/guards/auth.guard';
 import { guestGuard } from '../services/guards/guest.guard';
 import { userGuard } from '../services/guards/user.guard';
+import { ChatComponent } from './chat/chat/chat.component';
 
 const routes: Routes = [
   { 
@@ -47,6 +48,8 @@ const routes: Routes = [
     path: '404', 
     component: ErrorComponent 
   },
+  { path: 'chats/:chatId', component: ChatComponent }
+
 ];
 
 @NgModule({

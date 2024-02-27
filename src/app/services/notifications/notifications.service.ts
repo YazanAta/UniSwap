@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import { AuthService } from '../auth/auth.service';
-import { Observable, switchMap, take } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationsService {
 
-  constructor(private fs: AngularFirestore,private authService: AuthService) { }
-
-  private uid: string = this.authService.uid;
+  constructor(private fs: AngularFirestore) { }
 
   pushNotification(recieverId: string, message: string, type: string): Promise<void>{
     // Reference to firestore collection and add the message as a document
@@ -22,12 +19,12 @@ export class NotificationsService {
     }).then();
   }
 
-  getUserNotifications(): Observable<any[]> {
+  getUserNotifications(uid: string): Observable<any[]> {
     
     // Get notifications from the collection by user id, order by time
     const userNotificationsRef: AngularFirestoreCollection<any> = this.fs
     .collection('notifications')
-    .doc(this.uid)
+    .doc(uid)
     .collection('userNotifications', ref => ref.orderBy('timestamp', 'desc'));
 
     return userNotificationsRef.valueChanges();

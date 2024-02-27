@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, switchMap } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { User } from 'src/app/shared/interfaces/user.interface';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { PostsService } from 'src/app/services/posts/posts.service';
-import { UserService } from 'src/app/services/user/user.service';
 import { AddPostModalComponent } from 'src/app/shared/components/modal/add-post-modal/add-post-modal.component';
 
 @Component({
@@ -12,23 +11,40 @@ import { AddPostModalComponent } from 'src/app/shared/components/modal/add-post-
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy{
 
-  userData$ = this.authService.userAuthState$;
-  posts: any[] = []
+  // For displaying user data in the template
+  public userData$ : Observable<User | null> = this.authService.user$;
 
-  constructor(private userService: UserService, private authService: AuthService, private postsService: PostsService, private modalService: NgbModal) {}
+  // user posts
+  public posts: any[] = []
 
-  ngOnInit(): void {
-    this.getUserPosts();
+  // for unsubscribing
+  private destroy$ = new Subject<void>();
+  
+  constructor(
+    private authService: AuthService,
+    private postsService: PostsService,
+    private modalService: NgbModal) {}
+
+
+  async ngOnInit() {
+
+    // Get current userId and then and only then get his posts
+    const user = await this.authService.getUser();
+    this.getUserPosts(user.uid);
+
   }
 
-  openModal() {
+  // Open add post modal
+  public openModal() {
     this.modalService.open(AddPostModalComponent);
   }
 
-  getUserPosts() {
-    this.postsService.getUserPosts().subscribe({
+  // Get user posts method
+  public getUserPosts(uid: string) {
+    this.postsService.getUserPosts(uid).pipe(takeUntil(this.destroy$))
+    .subscribe({
       next: (data: Array<any>) => {
         this.posts = data.map((e) => {
           return {
@@ -42,6 +58,14 @@ export class ProfileComponent implements OnInit {
         // Handle the error here
       }
     });
+  }
+
+  // unsubscribing
+  ngOnDestroy() {
+    // Emit a value to signal the destruction of the component
+    this.destroy$.next();
+    // Complete the subject to release resources
+    this.destroy$.complete();
   }
 
 }

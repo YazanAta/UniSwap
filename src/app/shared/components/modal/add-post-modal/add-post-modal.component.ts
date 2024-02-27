@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CATEGORIES, Category } from 'src/app/shared/interfaces/category.interface';
 import { PostsService } from 'src/app/services/posts/posts.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-add-post-modal',
@@ -25,13 +26,20 @@ export class AddPostModalComponent implements OnInit{
   subSubCategories: Category[] = [];
   types = ['sale', 'free'];
   isSubmitting = false;
-
+  uid: string
 
   // Inject the FormBuilder, NgbActiveModal, and PostsService
-  constructor(private fb: FormBuilder, public activeModal: NgbActiveModal, private postsService: PostsService) { }
+  constructor(private fb: FormBuilder,
+    public activeModal: NgbActiveModal,
+    private postsService: PostsService,
+    private authService: AuthService) { }
 
+  async ngOnInit() {
 
-  ngOnInit(): void {
+    const user = await this.authService.getUser();
+    
+    this.uid = user.uid
+    
     // Create the post form
     // The title, description, category, and type fields are required
     // The subcategory, sub-subcategory, and price fields are optional
@@ -132,12 +140,12 @@ export class AddPostModalComponent implements OnInit{
 
     try{
       if (this.selectedFile) {
-        this.postsService.addPost(postData, this.selectedFile).then(
+        this.postsService.addPost(postData, this.selectedFile, this.uid).then(
           onComplete,
           error => onComplete // Handle errors in case the request fails
         );
       } else {
-        this.postsService.addPost(postData, null).then(
+        this.postsService.addPost(postData, null, this.uid).then(
           onComplete,
           error => onComplete // Handle errors in case the request fails
         );

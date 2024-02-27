@@ -66,18 +66,8 @@ export class AdminService {
 
   //-------------------Posts Service-----------------//
   getAllPosts(): Observable<any[]> {
-    return this.firestore
-      .collection('posts') // Assuming 'posts' is the name of your collection
-      .snapshotChanges()
-      .pipe(
-        map((actions) => {
-          return actions.map((a) => {
-            const data = a.payload.doc.data() as any;
-            const id = a.payload.doc.id;
-            return { id, ...data };
-          });
-        })
-      );
+    return this.firestore.collection('posts') // Assuming 'posts' is the name of your collection
+    .valueChanges({idField: 'postId'})
   }
 
   changePostState(id: string, data: Post){

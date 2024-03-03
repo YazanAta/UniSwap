@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
+import { Post } from 'src/app/shared/interfaces/post.interface';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationsService {
@@ -11,12 +12,16 @@ export class NotificationsService {
     // Reference to firestore collection and add the message as a document
     const notificationsRef = this.fs.collection('notifications').doc(recieverId).collection('userNotifications');
     
+    // Additional data to include in the notification
+    const notificationData: any = {
+      message: message,
+      timestamp: new Date(),
+      type: type,
+    };
+
+    
     // Return a Promise that resolves when the notification is successfully added
-    return notificationsRef.add({
-        message: message,
-        timestamp: new Date(),
-        type: type, // Include a type to distinguish different types of notifications
-    }).then();
+    return notificationsRef.add(notificationData).then();
   }
 
   getUserNotifications(uid: string): Observable<any[]> {

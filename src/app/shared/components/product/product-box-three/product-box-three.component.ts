@@ -6,6 +6,7 @@ import { CustomToastrService } from 'src/app/services/toastr/custom-toastr.servi
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { ChatService } from 'src/app/services/chat/chat.service';
 import { Router } from '@angular/router';
+import { Post } from 'src/app/shared/interfaces/post.interface';
 
 @Component({
   selector: 'app-product-box-three',
@@ -72,9 +73,14 @@ export class ProductBoxThreeComponent implements OnInit {
       })
   }
 
-  createChat(postOwnerId: string) {
-    this.chatService.createChat(postOwnerId).then((chatId) => {
-      this.router.navigate([`/pages/chats/${chatId}`])
-    });
+  // in component
+  async createChat(post: Post) {
+    const chatId = await this.chatService.createChat(post.ownerId, post.title);
+
+    if (chatId == null) {
+      this.toastr.show("Chat Already Exists", "Chat", 'info');
+    } else {
+      this.router.navigate([`/pages/chats/${chatId}`]);
+    }
   }
 }

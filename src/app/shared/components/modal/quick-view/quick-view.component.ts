@@ -11,6 +11,7 @@ import { NotificationsService } from 'src/app/services/notifications/notificatio
 import { CustomToastrService } from 'src/app/services/toastr/custom-toastr.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { take } from 'rxjs';
+import { ChatService } from 'src/app/services/chat/chat.service';
 
 @Component({
   selector: 'app-quick-view',
@@ -35,7 +36,9 @@ export class QuickViewComponent implements OnInit, OnDestroy  {
     private authService: AuthService,
     private us: UserService,
     private ws: WishlistService,
-    private toastr: CustomToastrService) { }
+    private toastr: CustomToastrService,
+    private chatService: ChatService
+    ) { }
 
   async ngOnInit() {
 
@@ -93,4 +96,13 @@ export class QuickViewComponent implements OnInit, OnDestroy  {
     }
   }
 
+  createChat(post: Post) {
+    this.chatService.createChat(post.ownerId, post.title).then((chatId) => {
+      if(chatId == null){
+        this.toastr.show("Chat Already Exists", "Chat", 'info')
+      }else{
+        this.router.navigate([`/pages/chats/${chatId}`])
+      }
+    });
+  }
 }

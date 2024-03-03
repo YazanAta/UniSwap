@@ -71,13 +71,15 @@ export class ManagePostModalComponent implements OnInit{
     }
   }
 
-  changePostState() {
+  updatePostState() {
     const formData = this.postStateForm.value;
     const selectedState = this.postStateForm.get('state').value;
 
     if(selectedState === 'rejected'){
-      this.adminService.changePostState(this.post.postId, {
-        state: this.postStateForm.get('state').value
+      this.adminService.updatePostState(this.post.id, {
+        state: this.postStateForm.get('state').value,
+        type: this.post.type,
+        ownerId: this.post.ownerId
       }).then(() => {
         const ownerId = this.post.ownerId; 
         const message = formData.message;
@@ -95,8 +97,10 @@ export class ManagePostModalComponent implements OnInit{
 
       })
     }else if (selectedState === 'approved'){
-      this.adminService.changePostState(this.post.postId,{
-        state: this.postStateForm.get('state').value
+      this.adminService.updatePostState(this.post.id,{
+        state: this.postStateForm.get('state').value,
+        type: this.post.type,
+        ownerId: this.post.ownerId
       }).then(() => {
         const ownerId = this.post.ownerId; 
         const message = formData.message;
@@ -113,7 +117,7 @@ export class ManagePostModalComponent implements OnInit{
         }
       })
     }else{
-        this.adminService.changePostState(this.post.postId, {
+        this.adminService.updatePostState(this.post.id, {
           state: this.postStateForm.get('state').value
         }).then(()=> {
           this.modalService.dismissAll();

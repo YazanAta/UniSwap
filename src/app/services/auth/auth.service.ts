@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, first, from, of, switchMap, lastValueFrom} from 'rxjs';
+import { Observable, first, from, of, switchMap, lastValueFrom, catchError} from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat/app';
 import { Router } from '@angular/router';
@@ -12,107 +12,128 @@ import { CustomToastrService } from '../toastr/custom-toastr.service';
 })
 export class AuthService {
 
-  user$: Observable<User | null>
+  // Observable representing the user authentication state
+  user$: Observable<User | null>;
 
   constructor(
     private afAuth: AngularFireAuth,
     private router: Router,
     private toastr: CustomToastrService,
-    private fs: AngularFirestore) {
-    //// Get auth data, then get firestore user document || null
+    private fs: AngularFirestore
+  ) {
+    // Set up the user observable based on authentication state
     this.user$ = this.afAuth.user.pipe(
       switchMap(user => {
         if (user) {
-          return this.fs.doc<User>(`users/${user.uid}`).valueChanges( {idField: 'uid'} );
+          // If authenticated, fetch user details from Firestore
+          return this.fs.doc<User>(`users/${user.uid}`).valueChanges({ idField: 'uid' });
         } else {
+          // If not authenticated, emit null
           return of(null);
         }
+      }),
+      catchError(error => {
+        // Handle errors in the observable
+        console.error('Error in user$ observable:', error);
+        return of(null);
       })
     );
   }
 
-  async getUser() : Promise<firebase.User>{
+
+  // Get the current user asynchronously
+  async getUser(): Promise<firebase.User> {
     return await lastValueFrom(this.afAuth.user.pipe(first()));
   }
 
-  async register(email: string, password: string, user: User) : Promise<firebase.auth.UserCredential>{
+  // Register a new user with email, password, and additional information
+  async register(email: string, password: string, user: User): Promise<firebase.auth.UserCredential> {
     try {
+      // Firebase Authentication
+      const result = await this.registerUserWithEmailAndPassword(email, password);
+      
+      // Firestore: Add user information
+      await this.addUserInformation(result.user.uid, user);
+      
+      // Send Verification Email
+      await this.sendVerificationEmail(result.user);
 
-      // Firebase Authentication 
-      const result = await this.afAuth.createUserWithEmailAndPassword(email, password);
-
-      // Firestore add user information
-      const userRef: AngularFirestoreDocument<any> = this.fs.doc(`users/${result.user.uid}`);
-      const data: User ={
-        firstName : user.firstName,
-        lastName  : user.lastName,
-        email     : user.email,
-        gender    : user.gender,
-        role      : "user",
-        points    : 0
-      }
-      await userRef.set(data, { merge: true });
-
-      //Send Verification Email
-      await result.user.sendEmailVerification();
-
+      // Return the authentication result
       return result;
-
     } catch (error) {
+      // Propagate the error to the calling code
       throw error;
     }
   }
 
-  async login(email: string, password: string): Promise<string | void> {
-    try {
+  // Private helper function to register user with email and password
+  private async registerUserWithEmailAndPassword(email: string, password: string): Promise<firebase.auth.UserCredential> {
+    return await this.afAuth.createUserWithEmailAndPassword(email, password);
+  }
 
-      // Firebase Authentication 
+  // Private helper function to add user information to Firestore
+  private async addUserInformation(uid: string, user: User): Promise<void> {
+    const userRef: AngularFirestoreDocument<any> = this.fs.doc(`users/${uid}`);
+    const data: User = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      gender: user.gender,
+      role: "user",
+      points: 0
+    };
+    await userRef.set(data, { merge: true });
+  }
+
+  // Private helper function to send a verification email
+  private async sendVerificationEmail(user: firebase.User): Promise<void> {
+    await user.sendEmailVerification();
+  }
+
+  // Log in the user with email and password
+  async login(email: string, password: string): Promise<void> {
+    try {
+      // Firebase Authentication
       const userCredential = await this.afAuth.signInWithEmailAndPassword(email, password);
       
-      // Get User Credential
+      // Process user credential
       if (userCredential.user) {
-
         const uid = userCredential.user.uid;
-  
-        // Get user role from firestore
-        const userData = await this.fs.doc(`users/${uid}`).get().toPromise();
-        const userRole = userData.get('role'); 
-  
-        // If Email is verified
+        
+        // Get user role from Firestore
+        const userData = await lastValueFrom(this.fs.doc(`users/${uid}`).get());
+        const userRole = userData.get('role');
+        
+        // Check if the email is verified
         if (userCredential.user.emailVerified) {
-
-          // If role is user -> Navigate to home
+          // If the role is 'user', navigate to home; if 'admin', navigate to admin
           if (userRole === 'user') {
             this.router.navigate(['']);
-          }
-        
-          // If role is admin -> Navigate to admin
-          else if (userRole === 'admin') {
+          } else if (userRole === 'admin') {
             this.router.navigate(['/admin']);
-          } 
-          // Other roles if needed
-          else {
+          } else {
+            // Handle other roles if needed
             this.toastr.show("Invalid user role", "Error", "error");
           }
-        } 
-        // If Email isn't verified
-        else {
-          // Don't log them in
+        } else {
+          // If email isn't verified, display a message and log the user out
           this.toastr.show("User is not verified, not logging in.", "Info", "error");
-          this.logout();
+          await this.logout();
         }
       }
     } catch (error) {
+      // Display an error message for invalid email or password
       this.toastr.show("Email or Password are not correct. Please try again.", "Info", "error");
     }
   }
-  
-  logout(): Promise<void>{
-    return this.afAuth.signOut()
+
+  // Log out the user
+  async logout(): Promise<void> {
+    await this.afAuth.signOut();
   }
 
-  recoverPassword(email: string): Observable<void>{
-    return from(this.afAuth.sendPasswordResetEmail(email));
+  // Send a password recovery email
+  async recoverPassword(email: string): Promise<void> {
+    await this.afAuth.sendPasswordResetEmail(email);
   }
-
 }

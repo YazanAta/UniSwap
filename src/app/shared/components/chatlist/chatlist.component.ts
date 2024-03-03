@@ -1,9 +1,9 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Observable, from, map, of, switchMap } from 'rxjs';
+import { Observable, from, map, of, switchMap, take } from 'rxjs';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { ChatService } from 'src/app/services/chat/chat.service';
 import { UserService } from 'src/app/services/user/user.service';
-import { Chat } from 'src/app/shared/interfaces/chat.interface';
+import { Chat, Message } from 'src/app/shared/interfaces/chat.interface';
 
 @Component({
   selector: 'app-chatlist',
@@ -13,6 +13,7 @@ import { Chat } from 'src/app/shared/interfaces/chat.interface';
 export class ChatListComponent implements OnInit {
   chats: Chat[] = [];
   recipientUsernames: { [chatId: string]: Observable<string> } = {};
+  lastMessages = {}; // Variable to store the last message
 
   constructor(
     private chatService: ChatService,
@@ -28,6 +29,7 @@ export class ChatListComponent implements OnInit {
     ).subscribe(chats => {
       this.chats = chats;
       this.updateRecipientUsernames();
+      this.updateLastMessageFromChat();
     });
   }
 
@@ -49,9 +51,24 @@ export class ChatListComponent implements OnInit {
     }
   }
 
+  private updateLastMessageFromChat(): void{
+    this.chats.forEach(chat => {
+      this.getLastMessageFromChat(chat.id).subscribe((message) => {
+        this.lastMessages[chat.id] = message;
+      })
+    });
+  }
+
+  getLastMessageFromChat(chatId: string): Observable<Message | null> {
+    return this.chatService.getLastMessage(chatId); // You already have this method
+  }
+  
+
   @Output() toggleChatListEvent = new EventEmitter<void>();
 
   toggleChatList() {
     this.toggleChatListEvent.emit();
   }
+
+  
 }

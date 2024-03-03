@@ -35,6 +35,8 @@ import { EditPostModalComponent } from './components/modal/edit-post-modal/edit-
 import { SuccessfulRegistrationModalComponent } from './components/modal/successful-registration-modal/successful-registration-modal.component';
 import { CollectionComponent } from './components/product/collection/collection.component';
 import { ChatListComponent } from './components/chatlist/chatlist.component';
+import { SwappedOverlayComponent } from './components/swapped-overlay/swapped-overlay.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [
     HeaderComponent,
@@ -54,7 +56,8 @@ import { ChatListComponent } from './components/chatlist/chatlist.component';
     NotificationsSectionComponent,
     EditPostModalComponent,
     SuccessfulRegistrationModalComponent,
-    ChatListComponent
+    ChatListComponent,
+    SwappedOverlayComponent
   ],
   imports: [
     CommonModule,
@@ -88,7 +91,8 @@ import { ChatListComponent } from './components/chatlist/chatlist.component';
     SkeletonProductBoxComponent,
     MainLayoutComponent,
     DashboardLayoutComponent,
-    ChatListComponent
+    ChatListComponent,
+    SwappedOverlayComponent
   ],
   providers: [
     DatePipe

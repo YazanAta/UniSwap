@@ -13,8 +13,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   styleUrls: ['./collection-left-sidebar.component.scss']
 })
 export class CollectionLeftSidebarComponent implements OnInit {
-  
-  public mobileSidebar: boolean = false;
+
   public loader: boolean = true;
 
   public posts: Post[] = []
@@ -24,8 +23,10 @@ export class CollectionLeftSidebarComponent implements OnInit {
   public collapse2: boolean = true;
   public collapse3: boolean = true;
 
-  constructor(private route: ActivatedRoute, private postsService: PostsService, private authService: AuthService) {   
-
+  constructor(
+    private route: ActivatedRoute,
+    private postsService: PostsService,
+    private authService: AuthService) {
       // Get My Query Params
       this.route.queryParams.subscribe(params => {
         if(this.selectedCategory == null){
@@ -38,6 +39,12 @@ export class CollectionLeftSidebarComponent implements OnInit {
 
   }
   
+  // Mobile sidebar
+  public mobileSidebar: boolean = false;
+  toggleMobileSidebar() {
+    this.mobileSidebar = !this.mobileSidebar;
+  }
+
 
   async ngOnInit() {
 
@@ -49,19 +56,17 @@ export class CollectionLeftSidebarComponent implements OnInit {
   
   }
 
-  async getAllPosts(uid) {
+  async getAllPosts(uid: string) {
     try {
+
       const posts = await this.postsService.getAllPosts(uid);
-      this.posts = posts.map((post) => {
-        return {
-          id: post.payload.doc.id,
-          ...post.payload.doc.data() as Post,
-        };
-      });
+
+      this.posts = posts;
   
       if (this.filteredPosts.length == 0) {
         this.filteredPosts = this.posts;
       }
+      
     } catch (error) {
       console.error(error);
     }
@@ -75,8 +80,7 @@ export class CollectionLeftSidebarComponent implements OnInit {
   selectedSubCategory = null;
   selectedSubSubCategory = null;
 
-  // Those Two Functions For Selecting Category Stuff 
-  // Those For Loading Of Sub Categories
+  // Those Functions For Selecting Category Stuff 
   selectCategory(category) {
     if (this.selectedSubCategory != null || this.selectedSubSubCategory != null) {
       this.selectedSubCategory = null;
@@ -99,6 +103,7 @@ export class CollectionLeftSidebarComponent implements OnInit {
     this.filterPostsByCategory();
   }
 
+  // filter by category
   filterPostsByCategory() {
     if (this.selectedCategory && this.selectedSubCategory == null && this.selectedSubSubCategory == null) {
       this.filteredPosts = this.posts.filter(post => post.category == this.selectedCategory.name);
@@ -111,11 +116,6 @@ export class CollectionLeftSidebarComponent implements OnInit {
       //console.log(this.selectedCategory?.name, this.selectedSubCategory?.name, this.selectedSubSubCategory?.name);
     }
     //console.log(this.selectedCategory);
-  }
-
-  // Mobile sidebar
-  toggleMobileSidebar() {
-    this.mobileSidebar = !this.mobileSidebar;
   }
 
 }

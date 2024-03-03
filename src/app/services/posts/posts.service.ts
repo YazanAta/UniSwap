@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/compat/firestore';
-import { switchMap, from, Observable, of} from 'rxjs';
+import { switchMap, from, Observable, of, take} from 'rxjs';
 import { Post } from 'src/app/shared/interfaces/post.interface';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { increment } from "firebase/firestore";
@@ -14,100 +14,76 @@ import { lastValueFrom } from 'rxjs';
 export class PostsService {
 
   constructor(
-    private authService: AuthService,
     private firestore: AngularFirestore,
     private storage: AngularFireStorage) { }
 
-  
+  // Get the posts collection from Firestore where the ownerId field equals the current user's uid
   getUserPosts(uid: string) {
-      // Get the posts collection from Firestore where the ownerId field equals the current user's uid
-      return this.firestore.collection(`posts`, ref => ref.where('ownerId', '==', uid)).snapshotChanges();
+      return this.firestore.collection(`posts`, ref => ref.where('ownerId', '==', uid)).valueChanges( {idField: 'id'} );
   }
 
-  getAllPosts(uid: string): Promise<DocumentChangeAction<unknown>[]> {
+  getAllPosts(uid: string): Promise<Post[]> {
     return new Promise((resolve, reject) => {
 
       // Fetches all approved posts from the Firestore collection based on certain criteria.
-      const subscription = this.firestore.collection('posts', (ref) =>
+      this.firestore.collection('posts', (ref) =>
         ref.where('ownerId', '!=', uid).where('state', '==', 'approved')
       )
-      .snapshotChanges()
+      .valueChanges({idField: 'id'})
+      .pipe(take(1))
       .subscribe({
         // Callback for handling successful emissions (next)
-        next: (posts) => {
+        next: (posts: Post[]) => {
           resolve(posts);
         },
         // Callback for handling errors (error)
         error: (error) => {
           reject(error);
-        },
-        // Callback for handling completion (complete)
-        complete: () => {
-          if (subscription) {
-            subscription.unsubscribe();
-          }
         }
+
       });
 
     });
 
   }
-
-  addPost(post: Post, image: File, uid: string): Promise<void> {
-
-    // If upload image exists
-    if (image !== null) {
-
-      // storage reference
-      const filePath = `posts/${new Date().getTime()}_${image.name}`;
-      const fileRef = this.storage.ref(filePath);
-      // upload image to the reference and save the url
-      return fileRef.put(image).then(() => {
-        return lastValueFrom(fileRef.getDownloadURL());
-      })
-      // when upload image to storage get url and add post to firestore
-      .then(url => {
-        return this.firestore.collection(`posts`).add({
+  
+  async addPost(post: Post, image: File, uid: string): Promise<void> {
+    try {
+      // If upload image exists
+      if (image !== null) {
+        // storage reference
+        const filePath = `posts/${new Date().getTime()}_${image.name}`;
+        const fileRef = this.storage.ref(filePath);
+  
+        // upload image to the reference and save the url
+        await fileRef.put(image);
+        const url = await lastValueFrom(fileRef.getDownloadURL());
+  
+        // add post to firestore
+        await this.firestore.collection(`posts`).add({
           ...post,
           image: url,
           createdAt: new Date(),
           ownerId: uid,
           state: "pending"
         });
-      })
-      // if the post is free then increament points by 1
-      .then(() => {
-        if (post.type === 'free') {
-          return this.firestore.doc(`users/${uid}`).update({
-            points: increment(1)
-          });
-        }
-      });
-    } 
-    // Handle the case where image is null
-    else {
-      // add post to firestore
-      return this.firestore.collection(`posts`).add({
-        ...post,
-        image: null,
-        createdAt: new Date(),
-        ownerId: uid,
-        state: "pending"
-      })
-      // if the post is free then increament points by 1
-      .then(() => {
-        if (post.type === 'free') {
-          return this.firestore.doc(`users/${uid}`).update({
-            points: increment(1)
-          });
-        }
-      });
-
-    } // end if
-
+      } else {
+        // add post to firestore without image
+        await this.firestore.collection(`posts`).add({
+          ...post,
+          image: null,
+          createdAt: new Date(),
+          ownerId: uid,
+          state: "pending"
+        });
+      }
+    } catch (error) {
+      // Handle any errors here
+      console.error("Error adding post:", error);
+      throw error; // Re-throw the error to propagate it to the caller
+    }
   }
   
- 
 
   // Not Completed
   deletePost(post: Post) {
@@ -182,6 +158,12 @@ export class PostsService {
     );
 
     
+  }
+
+  changeState(id, newState: string){
+    return this.firestore.doc(`posts/${id}`).update({
+      state: newState
+    })
   }
 
 }

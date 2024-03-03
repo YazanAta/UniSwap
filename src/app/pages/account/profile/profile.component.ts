@@ -45,13 +45,8 @@ export class ProfileComponent implements OnInit, OnDestroy{
   public getUserPosts(uid: string) {
     this.postsService.getUserPosts(uid).pipe(takeUntil(this.destroy$))
     .subscribe({
-      next: (data: Array<any>) => {
-        this.posts = data.map((e) => {
-          return {
-            id: e.payload.doc.id,
-            ...e.payload.doc.data()
-          }
-        });
+      next: (posts: Array<any>) => {
+        this.posts = posts
       },
       error: (err) => {
         console.error(err);

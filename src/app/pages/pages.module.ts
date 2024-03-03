@@ -25,6 +25,11 @@ import { AuthService } from '../services/auth/auth.service';
 import { UserService } from '../services/user/user.service';
 import { ChatComponent } from './chat/chat/chat.component';
 
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { SwapListComponent } from './chat/swap-list/swap-list.component';
+import { RequestsSectionComponent } from './account/profile/requests-section/requests-section.component';
+
+
 @NgModule({
   declarations: [
     WishlistComponent,
@@ -35,6 +40,8 @@ import { ChatComponent } from './chat/chat/chat.component';
     AboutUsComponent,
     ErrorComponent,
     ChatComponent,
+    SwapListComponent,
+    RequestsSectionComponent,
   ],
   imports: [
     CommonModule,
@@ -44,7 +51,8 @@ import { ChatComponent } from './chat/chat/chat.component';
     PagesRoutingModule,
     ReactiveFormsModule,
     AngularFireAuthModule,
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    PickerComponent
   ],
   providers: [
     AuthService,

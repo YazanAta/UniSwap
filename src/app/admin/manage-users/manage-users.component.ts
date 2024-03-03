@@ -18,12 +18,8 @@ export class ManageUsersComponent implements OnInit{
 
   getAllUsers(){
     this.adminService.getUsersByRole("user").subscribe((users) => {
-      console.log(users)
       this.usersList = users
     })
   }
 
-  disableAccount(uid: string){
-    this.adminService.disableAccount(uid)
-  }
 }

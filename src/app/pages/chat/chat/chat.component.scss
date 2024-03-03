@@ -1,0 +1,13 @@
+/* Custom scrollbar styling */
+.list-group.chat-messages::-webkit-scrollbar {
+    width: 12px; /* width of the vertical scrollbar */
+  }
+  
+  .list-group.chat-messages::-webkit-scrollbar-thumb {
+    background-color: #3B71CA; /* color of the scrollbar thumb */
+    border-radius: 10px; /* rounded corners of the thumb */
+  }
+  
+  .list-group.chat-messages::-webkit-scrollbar-track {
+    background-color: #f8f9fa; /* color of the scrollbar track */
+  }

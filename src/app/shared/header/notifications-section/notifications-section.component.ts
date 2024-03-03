@@ -12,8 +12,10 @@ export class NotificationsSectionComponent implements OnInit{
 
   notifications: any[] = [];
 
-  constructor(private notificationsService: NotificationsService, private authService: AuthService){}
-
+  constructor(
+    private notificationsService: NotificationsService,
+    private authService: AuthService,
+  ){}
   
   @Output() toggleNotificationEvent = new EventEmitter<void>();
 
@@ -24,10 +26,12 @@ export class NotificationsSectionComponent implements OnInit{
   async ngOnInit() {
 
     const user = await this.authService.getUser();
+    
 
     this.getUserNotifictions(user.uid);
 
   }
+
 
   getUserNotifictions(uid: string){
     this.notificationsService.getUserNotifications(uid).subscribe((notifications) => {

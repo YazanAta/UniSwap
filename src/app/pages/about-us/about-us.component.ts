@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TeamSlider, TestimonialSlider } from '../../shared/data/slider';
+import { TestimonialSlider } from '../../shared/data/slider';
 
 @Component({
   selector: 'app-about-us',
@@ -13,7 +13,7 @@ export class AboutUsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public TeamSliderConfig: any = TeamSlider;
+  public TeamSliderConfig: any = "TeamSlider";
   public TestimonialSliderConfig: any = TestimonialSlider;
 
   // Testimonial Carousel

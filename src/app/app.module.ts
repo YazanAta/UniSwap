@@ -10,7 +10,6 @@ import { SharedModule } from './shared/shared.module';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { ShopComponent } from './shop/shop.component';
 import { PagesComponent } from './pages/pages.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
@@ -19,7 +18,6 @@ import { environment } from 'src/environments/environment';
 @NgModule({
   declarations: [
     AppComponent,
-    ShopComponent,
     PagesComponent,
   ],
   imports: [

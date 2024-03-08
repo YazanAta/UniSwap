@@ -38,7 +38,7 @@
 
                             <!-- SubCategory Filter Start -->
                             <div class="collection-collapse-block border-0" [class.open]="collapse2">
-                                <h3 class="collapse-block-title" (click)="collapse2 = !collapse2">Sub Categories</h3>
+                                <h3 class="collapse-block-title" (click)="collapse2 = !collapse2">{{selectedCategory.name}}</h3>
                                 <div class="collection-collapse-block-content">
                                     <div class="collection-brand-filter">
                                         <ul class="category-list">
@@ -55,7 +55,7 @@
 
                             <!-- SubCategory2 Filter Start -->
                             <div class="collection-collapse-block border-0" [class.open]="collapse3" *ngIf="selectedSubCategory?.subCategory">
-                                <h3 class="collapse-block-title" (click)="collapse3 = !collapse3">Sub Category 2</h3>
+                                <h3 class="collapse-block-title" (click)="collapse3 = !collapse3">{{ selectedSubCategory.name  }}</h3>
                                 <div class="collection-collapse-block-content">
                                     <div class="collection-brand-filter">
                                         <ul class="category-list">
@@ -82,9 +82,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="top-banner-wrapper">
-                                    <a [routerLink]="['/shop/collection/left/sidebar']">
-                                        <img src="assets/images/posts-banner.jpeg" class="img-fluid " alt="">
-                                    </a>
+                                    <img src="assets/images/posts-banner.jpeg" class="img-fluid " alt="">
                                     <div class="top-banner-content small-section">
                                         <h4>Posts</h4>
                                         <h5>Welcome to our Posts page!

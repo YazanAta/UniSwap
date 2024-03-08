@@ -1,14 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ShopComponent } from './shop/shop.component';
 import { PagesComponent } from './pages/pages.component';
 import { AdminComponent } from './admin/admin.component';
 import { MainLayoutComponent } from './shared/layouts/main-layout/main-layout.component';
 import { DashboardLayoutComponent } from './shared/layouts/dashboard-layout/dashboard-layout.component';
 import { adminGuard } from './services/guards/admin.guard';
-import { authGuard } from './services/guards/auth.guard';
-import { userGuard } from './services/guards/user.guard';
 import { guestGuard } from './services/guards/guest.guard';
 import { ErrorComponent } from './pages/error/error.component';
 
@@ -21,12 +18,6 @@ const routes: Routes = [
         path: '',
         loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
         canActivate: [guestGuard]
-      },
-      {
-        path: 'shop',
-        component: ShopComponent,
-        canActivate: [userGuard],
-        loadChildren: () => import('./shop/shop.module').then(m => m.ShopModule)
       },
       { 
         path: 'pages',

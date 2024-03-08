@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Timestamp } from 'firebase/firestore';
-import { Observable, from, map, of, switchMap, take } from 'rxjs';
+import { Observable, from, of, switchMap } from 'rxjs';
+
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { ChatService } from 'src/app/services/chat/chat.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -16,94 +17,96 @@ import { SwapListComponent } from '../swap-list/swap-list.component';
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit {
-
   chatId: string;
   chat: Chat | null = null;
   messages: Message[] = [];
-  toggled
-
-  newMessage: string = '';
-
   otherParticipant: User;
   currentUserId: string;
+  isLoading: boolean = true;
+  newMessage: string = '';
+
+  @ViewChild('chatMessages') private chatMessages: ElementRef;
 
   constructor(
     private route: ActivatedRoute,
     private chatService: ChatService,
-    private us: UserService,
+    private userService: UserService,
     private authService: AuthService,
-    private modalService: NgbModal) { }
-  
-    
-  ngOnInit() {
+    private modalService: NgbModal,
+  ) {}
 
+  ngOnInit(): void {
+    this.initializeChat();
+  }
+
+  private initializeChat(): void {
     this.route.paramMap.pipe(
       switchMap(params => {
         const chatId = params.get('chatId');
-        if (chatId) {
-          return from(this.authService.getUser()).pipe(
-            switchMap(user => this.processChatData(chatId, user))
-          );
-        } else {
-          return of(null); // Handle the case where there's no chatId in the URL
-        }
+        if (!chatId) return of(null);
+        return from(this.authService.getUser()).pipe(
+          switchMap(user => this.processChatData(chatId, user))
+        );
       })
-    ).subscribe(
-      messages => {
-        this.messages = messages.map(message => {
-          return {
-            ...message,
-            timestamp: (message.timestamp as Timestamp).toDate()
-          }
-        })
-      },
-      error => console.error('Error:', error)
-    );
+    ).subscribe({
+      next: messages => this.processMessages(messages),
+      error: error => console.error('Error:', error)
+    });
   }
 
-
-  private processChatData(chatId: string, user: any): Observable<any> {
+  private processChatData(chatId: string, user: User): Observable<Message[]> {
     this.currentUserId = user.uid;
     this.chatId = chatId;
-  
-    return this.chatService.getChat(this.chatId, user.uid).pipe(
-      switchMap(chat => {
-        this.chat = chat;
-        if (this.chat) {
-          return this.getRecipientUsername(chat).pipe(
-            switchMap(user => {
-              this.otherParticipant = user;
-              return this.chatService.getMessages(this.chatId);
-            })
-          );
-        } else {
-          return of([]);  // Returning an empty observable if there is no chat
-        }
+    return this.chatService.getChat(chatId, user.uid).pipe(
+      switchMap(chat => this.chatAndMessages(chat))
+    );
+  }
+
+  private chatAndMessages(chat: Chat | null): Observable<Message[]> {
+    this.chat = chat;
+    if (!this.chat) return of([]);
+    return this.getRecipientUserInfo(this.chat).pipe(
+      switchMap(user => {
+        this.otherParticipant = user;
+        return this.chatService.getMessages(this.chatId);
       })
     );
   }
-  
-  getRecipientUsername(chat: Chat): Observable<User> {
+
+  private processMessages(messages: Message[] | null): void {
+    if (!messages) return;
+    this.isLoading = false;
+    this.messages = messages.map(message => ({
+      ...message,
+      timestamp: (message.timestamp as Timestamp).toDate()
+    }));
+  }
+
+  ngAfterViewChecked(): void {
+    this.scrollToBottom();
+  }
+
+  private scrollToBottom(): void {
+    try {
+      this.chatMessages.nativeElement.scrollTop = this.chatMessages.nativeElement.scrollHeight;
+    } catch(err) {}
+  }
+
+  private getRecipientUserInfo(chat: Chat): Observable<User> {
     const recipientId = chat.participants.find(id => id !== this.currentUserId);
-  
-    return this.us.getUserInfoById(recipientId).pipe(take(1));
+    if (!recipientId) throw new Error("Recipient ID not found");
+    return this.userService.getUserInfoById(recipientId);
   }
 
-  sendMessage() {
-    if (!this.newMessage || !this.chat) {
-      return;
-    }
-    
-    this.chatService.sendMessage(this.chatId, this.newMessage);
-    this.newMessage = ''; // Clear the message input after sending
+  async sendMessage(): Promise<void> {
+    if (!this.newMessage.trim() || !this.chatId) return;
+    await this.chatService.sendMessage(this.chatId, this.newMessage.trim());
+    this.newMessage = '';    
   }
 
-  // Open add post modal
-  public openModal(otherParticipant: User, uid: string) {
+  public openSwapListModal(): void {
     const modalRef = this.modalService.open(SwapListComponent);
-    modalRef.componentInstance.otherParticipant = otherParticipant;
-    modalRef.componentInstance.uid = uid;
-
+    modalRef.componentInstance.otherParticipant = this.otherParticipant;
+    modalRef.componentInstance.uid = this.currentUserId;
   }
-
 }

@@ -14,6 +14,9 @@ export class ChatListComponent implements OnInit {
   chats: Chat[] = [];
   recipientUsernames: { [chatId: string]: Observable<string> } = {};
   lastMessages = {}; // Variable to store the last message
+  uid: string;
+  isLoading: boolean = true; // Indicates if the notifications are being loaded
+
 
   constructor(
     private chatService: ChatService,
@@ -22,8 +25,10 @@ export class ChatListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.isLoading = true;
     from(this.authService.getUser()).pipe(
       switchMap(user => {
+        this.uid = user.uid
         return this.chatService.getChats(user.uid);
       })
     ).subscribe(chats => {
@@ -44,7 +49,7 @@ export class ChatListComponent implements OnInit {
     if(!chat){
       return of(null)
     }else{
-      const recipientId = chat.participants.find(id => id !== this.chatService.user.uid);
+      const recipientId = chat.participants.find(id => id !== this.uid);
       return this.userService.getUserInfoById(recipientId).pipe(
         map(user => user?.firstName || 'Unknown') // Use optional chaining to handle null case
       );
@@ -57,6 +62,7 @@ export class ChatListComponent implements OnInit {
         this.lastMessages[chat.id] = message;
       })
     });
+    this.isLoading = false;
   }
 
   getLastMessageFromChat(chatId: string): Observable<Message | null> {

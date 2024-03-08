@@ -2,107 +2,118 @@ import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, Input, PLATFORM_I
 import { isPlatformBrowser } from '@angular/common';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
+
 import { Post } from 'src/app/shared/interfaces/post.interface';
-import { UserService } from 'src/app/services/user/user.service';
 import { User } from 'src/app/shared/interfaces/user.interface';
-import { WishlistService } from 'src/app/services/wishlist/wishlist.service';
-import { ToastrService } from 'ngx-toastr';
-import { NotificationsService } from 'src/app/services/notifications/notifications.service';
-import { CustomToastrService } from 'src/app/services/toastr/custom-toastr.service';
+
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { take } from 'rxjs';
+import { UserService } from 'src/app/services/user/user.service';
+import { WishlistService } from 'src/app/services/wishlist/wishlist.service';
 import { ChatService } from 'src/app/services/chat/chat.service';
+import { CustomToastrService } from 'src/app/services/toastr/custom-toastr.service';
+import { lastValueFrom, take } from 'rxjs';
 
 @Component({
   selector: 'app-quick-view',
   templateUrl: './quick-view.component.html',
   styleUrls: ['./quick-view.component.scss']
 })
-export class QuickViewComponent implements OnInit, OnDestroy  {
-
-  @Input() product: Post;
-  @ViewChild("quickView", { static: false }) QuickView: TemplateRef<any>;
+export class QuickViewComponent implements OnInit, OnDestroy {
+  @Input() post: Post;
+  @ViewChild('quickView', { static: false }) quickViewTemplateRef: TemplateRef<any>;
 
   public closeResult: string;
-  public modalOpen: boolean = false;
+  public modalOpen = false;
 
   ownerInfo: User;
-  currentUserId;
+  uid: string;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private router: Router,
     private modalService: NgbModal,
     private authService: AuthService,
-    private us: UserService,
-    private ws: WishlistService,
-    private toastr: CustomToastrService,
+    private userService: UserService,
+    private wishlistService: WishlistService,
+    private toastrService: CustomToastrService,
     private chatService: ChatService
-    ) { }
+  ) {}
 
-  async ngOnInit() {
-
-    const user = await this.authService.getUser();
-
-    this.currentUserId = user.uid
-    
-    this.us.getUserInfoById(this.product.ownerId).subscribe((userData) => {
-      this.ownerInfo = userData;
-    });
-
-  }
-
-  openModal() {
-    this.modalOpen = true;
-    if (isPlatformBrowser(this.platformId)) { // For SSR 
-      this.modalService.open(this.QuickView, { 
-        size: 'lg',
-        ariaLabelledBy: 'modal-basic-title',
-        centered: true,
-        windowClass: 'Quickview' 
-      }).result.then((result) => {
-        `Result ${result}`
-      }, (reason) => {
-        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      });
+  async ngOnInit(): Promise<void> {
+    try {
+      const user = await this.authService.getUser();
+      this.uid = user.uid;
+      await this.loadOwnerInfo();
+    } catch (error) {
+      console.error('Error fetching user info', error);
     }
   }
 
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return `with: ${reason}`;
-    }
-  }
-
-  addToWishlist(id: string): void {
-    this.ws.addToWishlist(id, this.currentUserId)
-    .then(
-      (value) => {
-        this.toastr.show(value,'Wishlist',"success");
-      })
-    .catch(
-      (err) => {
-        this.toastr.show(err,'Wishlist',"error");
-      })
-  }
-
-  ngOnDestroy() {
-    if(this.modalOpen){
+  ngOnDestroy(): void {
+    if (this.modalOpen) {
       this.modalService.dismissAll();
     }
   }
 
-  createChat(post: Post) {
-    this.chatService.createChat(post.ownerId, post.title).then((chatId) => {
-      if(chatId == null){
-        this.toastr.show("Chat Already Exists", "Chat", 'info')
-      }else{
-        this.router.navigate([`/pages/chats/${chatId}`])
-      }
-    });
+  openModal(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.modalService.open(this.quickViewTemplateRef, { 
+        size: 'lg', 
+        ariaLabelledBy: 'modal-basic-title', 
+        centered: true, 
+        windowClass: 'quickview' 
+      }).result.then(
+        result => this.handleModalClose(result),
+        reason => this.handleModalDismiss(reason)
+      );
+      this.modalOpen = true;
+    }
+  }
+
+  async addToWishlist(id: string): Promise<void> {
+    try {
+      await this.wishlistService.addToWishlist(id, this.uid);
+      this.toastrService.show('Product added to wishlist', 'Wishlist', 'success');
+    } catch (error) {
+      this.toastrService.show(error, 'Wishlist', 'error');
+    }
+  }
+
+  async createChat(post: Post): Promise<void> {
+    try {
+      const chatId = await this.chatService.createChat(post.ownerId, post.title);
+      this.navigateToChat(chatId);
+    } catch (error) {
+      this.toastrService.show('Unable to create chat', 'Chat', 'error');
+      console.error('Error creating chat', error);
+    }
+  }
+
+  private async loadOwnerInfo(): Promise<void> {
+    try {
+      this.ownerInfo = await lastValueFrom(this.userService.getUserInfoById(this.post.ownerId).pipe(take(1)));
+    } catch (error) {
+      console.error('Error loading owner info', error);
+    }
+  }
+
+  private handleModalClose(result: any): void {
+    this.closeResult = `Closed with: ${result}`;
+  }
+
+  private handleModalDismiss(reason: any): void {
+    const reasons = {
+      [ModalDismissReasons.ESC]: 'by pressing ESC',
+      [ModalDismissReasons.BACKDROP_CLICK]: 'by clicking on a backdrop'
+    };
+    this.closeResult = `Dismissed ${reasons[reason] || `with: ${reason}`}`;
+  }
+
+  private navigateToChat(chatId: string | null): void {
+    if (chatId) {
+      this.router.navigate([`/pages/chats/${chatId}`]);
+    } else {
+      this.toastrService.show('Chat already exists', 'Chat', 'info');
+    }
   }
 }

@@ -1,35 +1,39 @@
-<div class="box" *ngIf="!loader">
-    <div class="img-wrapper">
+<div *ngIf="!loader; else loading">
+    <div class="box">
+      <div class="img-wrapper">
         <div class="front">
-            <a>
-                <img  [defaultImage]="'/assets/logo.png'" [lazyLoad]="post.image"  class="img-fluid" >
-            </a>
+          <a (click)="quickView.openModal()">
+            <img [src]="post.image || '/assets/logo.png'" class="img-fluid">
+          </a>
         </div>
         <div class="cart-box">
-            <a href="javascript:void(0)" title="Add to Wishlist" (click)="addToWishlist(post.id)">
-                <i class="ti-heart" aria-hidden="true"></i>
-            </a>
-            <a href="javascript:void(0)" class="mobile-quick-view" (click)="QuickView.openModal()" title="Quick View">
-                <i class="ti-search" aria-hidden="true"></i>
-            </a>
-            <a href="javascript:void(0)" title="Start Chat" (click)="createChat(post)">
-                <i class="ti-comment-alt" aria-hidden="true"></i>
-            </a>
+          <a (click)="addToWishlist(post.id)" title="Add to Wishlist">
+            <i class="ti-heart" aria-hidden="true"></i>
+          </a>
+          <a (click)="quickView.openModal()" class="mobile-quick-view" title="Quick View">
+            <i class="ti-search" aria-hidden="true"></i>
+          </a>
+          <a (click)="createChat(post)" title="Start Chat">
+            <i class="ti-comment-alt" aria-hidden="true"></i>
+          </a>
         </div>
-    </div>
-    <div class="product-detail">
-        <div>
-            
+      </div>
+      <div class="product-detail">
+        <div class="d-flex flex-column justify-content-between h-100">
+          <div>
             <h5 class="product-title">{{ post?.title | titlecase }}</h5>
-            
-
-            <h6 *ngIf="post.type == 'Free'">Price: Free</h6>
-            <h6 *ngIf="post.type == 'Sale'">Price: {{post.price}} JD</h6>
-            
-            <small>Posted: {{getTimeDifference(post?.createdAt)}} Ago</small>
+            <h6 class="text-muted">Category: {{post.category}}</h6>
+            <h6 class="text-muted" *ngIf="post.type === 'free'; else salePrice">Price: Free</h6>
+            <ng-template #salePrice class="text-muted"><h6>Price: {{post?.price}} JD</h6></ng-template>
+          </div>
+          <div>
+            <small class="text-muted">Posted: {{getTimeDifference(post?.createdAt)}} Ago</small>
+          </div>
         </div>
+      </div>
     </div>
 </div>
-<app-quick-view #quickView [product]="post"></app-quick-view>
-<app-skeleton-product-box *ngIf="loader"></app-skeleton-product-box>
-
+<ng-template #loading>
+    <app-skeleton-product-box></app-skeleton-product-box>
+</ng-template>
+<app-quick-view #quickView [post]="post"></app-quick-view>

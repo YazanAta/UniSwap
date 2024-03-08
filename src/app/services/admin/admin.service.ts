@@ -10,7 +10,6 @@ import { UserService } from '../user/user.service';
   providedIn: 'root'
 })
 export class AdminService {
-
   
   constructor(
     private firestore: AngularFirestore,

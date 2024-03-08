@@ -12,6 +12,7 @@ import { authGuard } from '../services/guards/auth.guard';
 import { guestGuard } from '../services/guards/guest.guard';
 import { userGuard } from '../services/guards/user.guard';
 import { ChatComponent } from './chat/chat/chat.component';
+import { PostsComponent } from './posts/posts.component';
 
 const routes: Routes = [
   { 
@@ -48,7 +49,12 @@ const routes: Routes = [
     path: '404', 
     component: ErrorComponent 
   },
-  { path: 'chats/:chatId', component: ChatComponent }
+  { path: 'chats/:chatId', component: ChatComponent },
+  {
+    path: 'posts',
+    component: PostsComponent,
+    canActivate: [userGuard]
+  }
 
 ];
 

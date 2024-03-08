@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from '../auth/auth.service';
-import { AngularFirestore, DocumentChangeAction } from '@angular/fire/compat/firestore';
-import { switchMap, from, Observable, of, take} from 'rxjs';
-import { Post } from 'src/app/shared/interfaces/post.interface';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { switchMap, from, Observable, take} from 'rxjs';
+import { Post, PostState } from 'src/app/shared/interfaces/post.interface';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { increment } from "firebase/firestore";
 import { lastValueFrom } from 'rxjs';
 
 
@@ -15,68 +13,43 @@ export class PostsService {
 
   constructor(
     private firestore: AngularFirestore,
-    private storage: AngularFireStorage) { }
+    private storage: AngularFireStorage
+  ) {}
 
-  // Get the posts collection from Firestore where the ownerId field equals the current user's uid
-  getUserPosts(uid: string) {
-      return this.firestore.collection(`posts`, ref => ref.where('ownerId', '==', uid)).valueChanges( {idField: 'id'} );
+  // Get posts where ownerId matches the current user's uid
+  getUserPosts(uid: string): Observable<Post[]> {
+    return this.firestore
+      .collection(`posts`, ref => ref.where('ownerId', '==', uid))
+      .valueChanges({idField: 'id'});
   }
 
+  // Get all approved posts, excluding the current user's posts
   getAllPosts(uid: string): Promise<Post[]> {
-    return new Promise((resolve, reject) => {
-
-      // Fetches all approved posts from the Firestore collection based on certain criteria.
-      this.firestore.collection('posts', (ref) =>
-        ref.where('ownerId', '!=', uid).where('state', '==', 'approved')
-      )
+    return lastValueFrom(this.firestore.collection('posts', (ref) =>
+      ref.where('ownerId', '!=', uid).where('state', '==', 'approved')
+    )
       .valueChanges({idField: 'id'})
-      .pipe(take(1))
-      .subscribe({
-        // Callback for handling successful emissions (next)
-        next: (posts: Post[]) => {
-          resolve(posts);
-        },
-        // Callback for handling errors (error)
-        error: (error) => {
-          reject(error);
-        }
+      .pipe(take(1)))
+  }
 
+  // Add a new post with or without an image
+  async addPost(post: Post, image: File | null, uid: string): Promise<void> {
+    try {
+      const filePath = image ? `posts/${new Date().getTime()}_${image.name}` : null;
+
+      if (filePath) {
+        const fileRef = this.storage.ref(filePath);
+        await fileRef.put(image);
+        post.image = await lastValueFrom(fileRef.getDownloadURL());
+      }
+
+      await this.firestore.collection(`posts`).add({
+        ...post,
+        createdAt: new Date(),
+        ownerId: uid,
+        state: "pending"
       });
 
-    });
-
-  }
-  
-  async addPost(post: Post, image: File, uid: string): Promise<void> {
-    try {
-      // If upload image exists
-      if (image !== null) {
-        // storage reference
-        const filePath = `posts/${new Date().getTime()}_${image.name}`;
-        const fileRef = this.storage.ref(filePath);
-  
-        // upload image to the reference and save the url
-        await fileRef.put(image);
-        const url = await lastValueFrom(fileRef.getDownloadURL());
-  
-        // add post to firestore
-        await this.firestore.collection(`posts`).add({
-          ...post,
-          image: url,
-          createdAt: new Date(),
-          ownerId: uid,
-          state: "pending"
-        });
-      } else {
-        // add post to firestore without image
-        await this.firestore.collection(`posts`).add({
-          ...post,
-          image: null,
-          createdAt: new Date(),
-          ownerId: uid,
-          state: "pending"
-        });
-      }
     } catch (error) {
       // Handle any errors here
       console.error("Error adding post:", error);
@@ -85,22 +58,22 @@ export class PostsService {
   }
   
 
-  // Not Completed
-  deletePost(post: Post) {
-    //if(post.state === "approved" || post.state === "rejected")
-    // Get the post data including the image URL
-    const postRef = this.firestore.doc(`posts/${post.id}`);
-    return postRef.get().toPromise().then((doc) => {
-      const postData = doc.data() as { image?: string };
-      // Delete the post document from Firestore
-      return postRef.delete().then(() => {
-        // If the post had an image, delete it from Firebase Storage
-        if (postData && postData.image) {
-          const storageRef = this.storage.refFromURL(postData.image);
-          return storageRef.delete();
-        }
-      });
-    });
+  // Delete a post and its associated image
+  deletePost(post: Post): any {
+//    const postRef = this.firestore.doc(`posts/${post.id}`);
+//
+//    return lastValueFrom(postRef.get()).then((doc) => {
+//      const postData = doc.data() as { image?: string };
+//      
+//      // Delete the post document from Firestore
+//      return postRef.delete().then(() => {
+//        // If the post had an image, delete it from Firebase Storage
+//        if (postData && postData.image) {
+//          const storageRef = this.storage.refFromURL(postData.image);
+//          return storageRef.delete();
+//        }
+//      });
+//    });
   }
   
   editPost(postId: string, updatedPost: Post, newImage: File | null, uid: string): Observable<void> {
@@ -133,7 +106,7 @@ export class PostsService {
                 return postRef.update({
                   image: url,
                   ...updatedPost,
-                  cratedAt: new Date(),
+                  createdAt: new Date(),
                   state: "pending"
                 }).then(() => {
                   // Additional logic if needed
@@ -160,8 +133,9 @@ export class PostsService {
     
   }
 
-  changeState(id, newState: string){
-    return this.firestore.doc(`posts/${id}`).update({
+  // Change the state of a post (e.g., from 'pending' to 'approved' or 'rejected')
+  async updateState(postId: string, newState: PostState): Promise<void>{
+    await this.firestore.doc(`posts/${postId}`).update({
       state: newState
     })
   }

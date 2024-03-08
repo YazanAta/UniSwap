@@ -1,77 +1,82 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+
 import { Post } from 'src/app/shared/interfaces/post.interface';
-import { PostsService } from 'src/app/services/posts/posts.service';
-import { CustomToastrService } from 'src/app/services/toastr/custom-toastr.service';
-import { WishlistService } from 'src/app/services/wishlist/wishlist.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { WishlistService } from 'src/app/services/wishlist/wishlist.service';
+import { CustomToastrService } from 'src/app/services/toastr/custom-toastr.service';
+import { ChatService } from 'src/app/services/chat/chat.service';
+import { QuickViewComponent } from 'src/app/shared/components/modal/quick-view/quick-view.component';
 
 @Component({
   selector: 'app-wishlist',
   templateUrl: './wishlist.component.html',
   styleUrls: ['./wishlist.component.scss']
 })
-export class WishlistComponent implements OnInit, OnDestroy{
-
-  constructor(
-    private ws: WishlistService,
-    private toastr: CustomToastrService,
-    private authService: AuthService) {}
-
-  // user wishlist
+export class WishlistComponent implements OnInit, OnDestroy {
   wishlist: Post[] = [];
-  
   uid: string;
+  isLoading = true; // Track loading state
 
-  // for unsubscribing
+  @ViewChild('quickView') quickView: QuickViewComponent;
   private destroy$ = new Subject<void>();
 
-  async ngOnInit() {
+  constructor(
+    private wishlistService: WishlistService,
+    private toastrService: CustomToastrService,
+    private authService: AuthService,
+    private chatService: ChatService,
+    private router: Router
+  ) {}
 
-    const user = await this.authService.getUser();
-    
-    this.uid = user.uid;
-    
-    this.getUserWishlist(user.uid);
-  
+  async ngOnInit(): Promise<void> {
+    try {
+      const user = await this.authService.getUser();
+      this.uid = user.uid;
+      this.getUserWishlist(this.uid);
+    } catch (error) {
+      this.toastrService.show("Error fetching user data", "Error", "error");
+    }
   }
 
-  getUserWishlist(uid: string){
-    this.ws.getUserWishlist(uid).pipe(
+  private getUserWishlist(uid: string): void {
+    this.wishlistService.getUserWishlist(uid).pipe(
       takeUntil(this.destroy$)
-    )
-    .subscribe((postsWithIds) => {
-      // Clear the existing wishlist array
-      this.wishlist = [];
-
-      // Add the new wishlist items
-      postsWithIds.forEach(item => {
-        this.wishlist.push({ 
-          id: item.id, 
-          ...item.post });
-      });
-
-    })
-    
+    ).subscribe({
+      next: (posts) => {
+        this.wishlist = posts;
+        this.isLoading = false; // Update loading state
+      },
+      error: (error) => this.toastrService.show("Error fetching wishlist", "Error", "error")
+    });
   }
 
-  removeFromWishlist(id: string): void {
-    this.ws.removeFromWishlist(id, this.uid)
-    .then(
-      (value) => {
-        this.toastr.show(value,'Wishlist', "success");
-      })
-    .catch(
-      (err) => {
-        this.toastr.show(err, "Wishlist", "error")
-      })
+  async removeFromWishlist(id: string): Promise<void> {
+    try {
+      await this.wishlistService.removeFromWishlist(id, this.uid);
+      this.toastrService.show("Item removed from wishlist", "Wishlist", "success");
+    } catch (err) {
+      this.toastrService.show(err, "Wishlist", "error");
+    }
+  }
+  
+  async createChat(post: Post): Promise<void> {
+    try {
+      const chatId = await this.chatService.createChat(post.ownerId, post.title);
+      chatId ? this.navigateToChat(chatId) : this.toastrService.show("Chat Already Exists", "Chat", 'info');
+    } catch (error) {
+      this.toastrService.show("Failed to create chat", "Chat", 'error');
+    }
   }
 
-  ngOnDestroy() {
-    // Emit a value to signal the destruction of the component
+  private navigateToChat(chatId: string): void {
+    this.router.navigate([`/pages/chats/${chatId}`]);
+  }
+
+  ngOnDestroy(): void {
     this.destroy$.next();
-    // Complete the subject to release resources
     this.destroy$.complete();
   }
-
 }

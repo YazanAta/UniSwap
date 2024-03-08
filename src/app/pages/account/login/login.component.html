@@ -1,33 +1,39 @@
 <app-breadcrumb [title]="'Login'" [breadcrumb]="'Login'"></app-breadcrumb>
-<!-- section start -->
+
 <section class="login-page pb-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6">
-                <h3>Login</h3>
-                <div class="theme-card">
-                    <form class="theme-form" [formGroup]="loginForm" (ngSubmit)="login(loginForm)">
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="text" class="form-control" id="email" placeholder="Email" formControlName="email">
-                        </div>
-                        <div class="form-group">
-                            <label for="review">Password</label>
-                            <input type="password" class="form-control" id="review" placeholder="Enter your password" formControlName="password">
-                        </div>
-                        <button class="btn btn-solid" type="submit">Login</button>
-                    </form>
-                </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6">
+        <h3>Login</h3>
+        <div class="theme-card">
+          <form class="theme-form" [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="text" class="form-control" id="email" placeholder="Email" formControlName="email">
             </div>
-            <div class="col-lg-6 right-login">
-                <h3>New Customer</h3>
-                <div class="theme-card authentication-right">
-                    <h6 class="title-font">Create A Account</h6>
-                    <p>Sign up for a free account at our store. Registration is quick and easy. It allows you to be able to order from our shop. To start shopping click register.</p>
-                    <button class="btn btn-solid" routerLink="../register">Create an Account</button>
-                </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" id="password" placeholder="Enter your password"
+                     formControlName="password">
             </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <button class="btn btn-solid" type="submit">Login</button>
+              <div class="text-primary">
+                <a routerLink="../forget/password">Forget Password?</a>
+              </div>
+            </div>
+          </form>
         </div>
+      </div>
+      <div class="col-lg-6 right-login">
+        <h3>New To UniSwap</h3>
+        <div class="theme-card authentication-right">
+          <h6 class="title-font">Create An Account</h6>
+          <p>Sign up for a free account at our store. Registration is quick and easy. It allows you to be able to order
+            from our shop. To start shopping click register.</p>
+          <button class="btn btn-solid" routerLink="../register">Create an Account</button>
+        </div>
+      </div>
     </div>
+  </div>
 </section>
-<!--Section ends-->

@@ -1,40 +1,44 @@
-<header class="sticky" [ngClass]="class" [class.fixed]="stick && sticky">
-    <div class="container">
+<header>
+  <div class="container">
       <div class="row">
-        <div class="col-sm-12">
-          <div class="main-menu">
-            <div class="brand-logo p-0">
-                <a routerLink="" id="headerlogo">
-                  <img [src]="themeLogo" class="img-fluid" alt="logo">
-                </a>
-            </div>
-            <div class="menu-right pull-right">
-              <div>
-                <app-menu></app-menu>
+          <div class="col-sm-12">
+              <div class="main-menu">
+                  <!-- Brand Logo -->
+                  <div class="brand-logo p-0">
+                      <a routerLink="" id="headerlogo">
+                          <img [src]="themeLogo" class="img-fluid" alt="logo">
+                      </a>
+                  </div>
+                  <!-- Menu Right -->
+                  <div class="menu-right pull-right">
+                      <!-- App Menu -->
+                      <div>
+                          <app-menu></app-menu>
+                      </div>
+
+                      <!-- Top Right Section -->
+                      <div class="top-right">
+                          <!-- Notifications -->
+                          <ng-container *ngIf="isUser">
+                            <div>
+                              <button class="btn btn-link" (click)="toggleList('notification')" *ngIf="!showNotification && !showChatList">
+                                  <i class="fa fa-bell"></i>
+                              </button>
+                              <app-notifications-section *ngIf="showNotification" (toggleNotificationEvent)="toggleList('notification')"></app-notifications-section>
+                            </div>
+
+                            <!-- Chat -->
+                            <div>
+                              <button class="btn btn-link" (click)="toggleList('chat')" *ngIf="!showChatList && !showNotification">
+                                  <i class="fa fa-comment"></i>
+                              </button>
+                              <app-chatlist *ngIf="showChatList" (toggleChatListEvent)="toggleList('chat')"></app-chatlist>
+                            </div>
+                          </ng-container>
+                      </div>
+                  </div>
               </div>
-              <!-- Top Right Section -->
-              <div class="top-right d-flex justify-content-between align-items-center">
-
-                <div class="inner-top-right p-0" *ngIf="isUser">
-                  <button class="btn btn-link" (click)="toggleNotification()" *ngIf="!showNotification && !showChatList">
-                    <i class="fa fa-bell" style="font-size: 20px;"></i>
-                  </button>
-                  <app-notifications-section *ngIf="showNotification" (toggleNotificationEvent)="toggleNotification()"></app-notifications-section>
-                </div>
-                <div class="inner-top-right p-0" *ngIf="isUser">
-                  <button class="btn btn-link" (click)="toggleChatList()" *ngIf="!showChatList && !showNotification">
-                    <i class="fa fa-comment" style="font-size: 20px;"></i>
-                  </button>
-                  <app-chatlist *ngIf="showChatList" (toggleChatListEvent)="toggleChatList()"></app-chatlist>
-                </div>
-
-              </div>
-              
-
-            </div>
           </div>
-        </div>
       </div>
-    </div>
+  </div>
 </header>
-  

@@ -18,4 +18,5 @@ export class DeleteModalComponent {
   confirmDelete() {
     this.activeModal.close('Delete');
   }
+  
 }

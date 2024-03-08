@@ -16,7 +16,6 @@ import { FooterComponent } from './footer/footer.component';
 import { MenuComponent } from './header/menu/menu.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 import { ProductBoxThreeComponent } from './components/product/product-box-three/product-box-three.component';
-import { ProductBoxOneComponent } from './components/product/product-box-one/product-box-one.component';
 
 // Modals Components
 import { QuickViewComponent } from './components/modal/quick-view/quick-view.component';
@@ -35,7 +34,6 @@ import { EditPostModalComponent } from './components/modal/edit-post-modal/edit-
 import { SuccessfulRegistrationModalComponent } from './components/modal/successful-registration-modal/successful-registration-modal.component';
 import { CollectionComponent } from './components/product/collection/collection.component';
 import { ChatListComponent } from './components/chatlist/chatlist.component';
-import { SwappedOverlayComponent } from './components/swapped-overlay/swapped-overlay.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [
@@ -47,7 +45,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     TapToTopComponent,
     FooterComponent,
 
-    ProductBoxOneComponent,
     CollectionComponent,
     SkeletonProductBoxComponent,
     MainLayoutComponent,
@@ -56,8 +53,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NotificationsSectionComponent,
     EditPostModalComponent,
     SuccessfulRegistrationModalComponent,
-    ChatListComponent,
-    SwappedOverlayComponent
+    ChatListComponent
   ],
   imports: [
     CommonModule,
@@ -86,13 +82,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CollectionComponent,
     QuickViewComponent,
     TapToTopComponent,
-    ProductBoxOneComponent,
     ProductBoxThreeComponent,
     SkeletonProductBoxComponent,
     MainLayoutComponent,
     DashboardLayoutComponent,
-    ChatListComponent,
-    SwappedOverlayComponent
+    ChatListComponent
   ],
   providers: [
     DatePipe

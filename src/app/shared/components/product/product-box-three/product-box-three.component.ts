@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { QuickViewComponent } from "../../modal/quick-view/quick-view.component";
 import { WishlistService } from 'src/app/services/wishlist/wishlist.service';
-import { ToastrService } from 'ngx-toastr';
 import { CustomToastrService } from 'src/app/services/toastr/custom-toastr.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { ChatService } from 'src/app/services/chat/chat.service';
@@ -14,73 +13,88 @@ import { Post } from 'src/app/shared/interfaces/post.interface';
   styleUrls: ['./product-box-three.component.scss']
 })
 export class ProductBoxThreeComponent implements OnInit {
+  @Input() loader: boolean;
+  @Input() post: Post;
+  @ViewChild("quickView") quickView: QuickViewComponent;
 
-  @Input() loader: boolean = false;
-  @Input() post: any;
-  @ViewChild("quickView") QuickView: QuickViewComponent;
+  private uid: string; // Stores the user ID after fetching from AuthService
 
-  currentUserId: string
   constructor(
-    private wishlist: WishlistService,
-    private toastr: CustomToastrService,
+    private wishlistService: WishlistService,
+    private toastrService: CustomToastrService,
     private authService: AuthService,
     private chatService: ChatService,
-    private router: Router) { }
+    private router: Router
+  ) {}
 
-  async ngOnInit() {
-
-    if(this.loader) {
-      setTimeout(() => { this.loader = false; }, 2000); // Skeleton Loader
-    }
-
-    const user = await this.authService.getUser();
-
-    this.currentUserId = user.uid;
-    
+  ngOnInit(): void {
+    // Component initialization and user data fetching
+    this.initializeComponent();
   }
 
+  private async initializeComponent(): Promise<void> {
+    // Displays loader if necessary and fetches user data
+    this.showLoader();
+    const user = await this.authService.getUser();
+    this.uid = user.uid;
+  }
+
+  private showLoader(): void {
+    // Sets a timeout to simulate a loading process for the component
+    if (this.loader) {
+      setTimeout(() => { this.loader = false; }, 2000);
+    }
+  }
+
+  // Calculates and returns the time difference between the current time and the post's timestamp
   getTimeDifference(timestamp: { seconds: number, nanoseconds: number }): string {
     const currentDate = new Date();
     const postDate = new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
+    return this.calculateTimeDifference(currentDate, postDate);
+  }
 
+  private calculateTimeDifference(currentDate: Date, postDate: Date): string {
+    // Helper method to calculate the detailed time difference
     const timeDifference = currentDate.getTime() - postDate.getTime();
+    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
-    const seconds = Math.floor(timeDifference / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
+    if (days > 0) return `${days} d`;
+    if (hours > 0) return `${hours} hrs`;
+    if (minutes > 0) return `${minutes} min`;
+    return `${seconds} s`;
+  }
 
-    if (days > 0) {
-      return `${days} d`;
-    } else if (hours > 0) {
-      return `${hours} hrs`;
-    } else if (minutes > 0) {
-      return `${minutes} min`;
-    } else {
-      return `${seconds} s`;
+  // Adds the current post to the user's wishlist
+  async addToWishlist(id: string): Promise<void> {
+    try {
+      // Wait for the wishlist service to add the item, then show success message
+      const value = await this.wishlistService.addToWishlist(id, this.uid);
+      this.toastrService.show(value, 'Wishlist', 'success');
+    } catch (err) {
+      // In case of an error, show the error message
+      this.toastrService.show(err, "Wishlist", 'error');
     }
   }
 
-  addToWishlist(id: string): void {
-    this.wishlist.addToWishlist(id, this.currentUserId)
-    .then(
-      (value) => {
-        this.toastr.show(value,'Wishlist', 'success');
-      })
-    .catch(
-      (err) => {
-        this.toastr.show(err, "Wishlist", 'error')
-      })
+  // Initiates a chat with the post owner
+  async createChat(post: Post): Promise<void> {
+    try {
+      const chatId = await this.chatService.createChat(post.ownerId, post.title);
+      if (!chatId) {
+        this.toastrService.show("Chat Already Exists", "Chat", 'info');
+        return;
+      }
+      this.navigateToChat(chatId);
+    } catch (error) {
+      this.toastrService.show("Failed to create chat", "Chat", 'error');
+    }
   }
 
-  // in component
-  async createChat(post: Post) {
-    const chatId = await this.chatService.createChat(post.ownerId, post.title);
-
-    if (chatId == null) {
-      this.toastr.show("Chat Already Exists", "Chat", 'info');
-    } else {
-      this.router.navigate([`/pages/chats/${chatId}`]);
-    }
+  // Navigates to the chat page using the router
+  private navigateToChat(chatId: string): void {
+    this.router.navigate([`/pages/chats/${chatId}`]);
   }
 }

@@ -22,47 +22,6 @@
 </section>
 <!-- service section end -->
 
-<!-- About section start -->
-<section>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 offset-lg-2">
-                <div class="title3">
-                    <h4>about us</h4>
-                    <h2 class="title-inner3">welcome to uniswap</h2>
-                    <div class="line"></div>
-                </div>
-                <div class="about-text">
-                    <p>
-                      Welcome to our innovative platform dedicated to enhancing the student experience! We understand the financial and environmental challenges students face when acquiring and disposing of university supplies. Our mission is to foster a sense of community by providing a user-friendly web-based platform that facilitates the exchange and donation of academic essentials among students. By reusing tools that might be unnecessary for some but crucial for others, we aim to promote savings, cooperation, and interaction within the university community. Join us in creating a sustainable and collaborative environment where students can easily connect, share, and contribute to each other's academic journeys. Together, let's build a community that not only thrives academically but also cares for the responsible use of resources.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- About banner start-->
-<section class="p-t-0 section-b-space">
-  <div class="container">
-    <div class="row partition2">
-      <div class="col-md-6" *ngFor="let collection of collections">
-        <div class="collection-banner text-center" [ngClass]="collection.class">
-          <img [src]="collection.image" class="img-fluid opacity-75" alt="collection-banner">
-          <div class="contain-banner">
-            <div>
-              <h4>{{collection.save}}</h4>
-              <h2>{{collection.title}}</h2>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- About banner End -->
-<!-- About section end -->
-
 
 <!-- Categories section start -->
 
@@ -103,3 +62,44 @@
   </div>
 </section>
 <!--Categories Section End-->
+
+<!-- About section start -->
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <div class="title3">
+                    <h4>about us</h4>
+                    <h2 class="title-inner3">welcome to uniswap</h2>
+                    <div class="line"></div>
+                </div>
+                <div class="about-text">
+                    <p>
+                      Welcome to our innovative platform dedicated to enhancing the student experience! We understand the financial and environmental challenges students face when acquiring and disposing of university supplies. Our mission is to foster a sense of community by providing a user-friendly web-based platform that facilitates the exchange and donation of academic essentials among students. By reusing tools that might be unnecessary for some but crucial for others, we aim to promote savings, cooperation, and interaction within the university community. Join us in creating a sustainable and collaborative environment where students can easily connect, share, and contribute to each other's academic journeys. Together, let's build a community that not only thrives academically but also cares for the responsible use of resources.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About banner start-->
+<section class="p-t-0 section-b-space">
+  <div class="container">
+    <div class="row partition2">
+      <div class="col-md-6" *ngFor="let collection of collections">
+        <div class="collection-banner text-center" [ngClass]="collection.class">
+          <img [src]="collection.image" class="img-fluid opacity-75" alt="collection-banner">
+          <div class="contain-banner">
+            <div>
+              <h4>{{collection.save}}</h4>
+              <h2>{{collection.title}}</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- About banner End -->
+<!-- About section end -->

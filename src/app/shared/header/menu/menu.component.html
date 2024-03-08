@@ -4,75 +4,45 @@
       <i class="fa fa-bars sidebar-bar"></i>
     </div>
     <ul class="nav-menu" [class.opennav]="menuToggle">
-
       <li class="back-btn">
         <div class="mobile-back text-end" (click)="mainMenuToggleFunction()">
           <span>Back</span>
           <i class="fa fa-angle-right ps-2" aria-hidden="true"></i>
         </div>
       </li>
-
       <li>
-        <!-- Link -->
-        <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link" >
-          Home
-        </a>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Home</a>
       </li>
-
-      <li *ngIf="isUser">
-        <!-- Sub -->
-        <a href="javascript:void(0)" class="nav-link"
-        (click)="toggletNavActive()">
-        Categories
-        <span class="sub-arrow"></span>
-        </a>
-        <!-- 2nd Level Menu -->
-        <ul class="nav-submenu" [class.opensubmenu]="active" *ngIf="active">
-          <li *ngFor="let category of categories">
-            <!-- Link -->
-            <a routerLink="shop/collection/left/sidebar" [queryParams]="{category: category.name}" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-              {{category.name}}
-            </a>
-          </li>
-        </ul>
-      </li>
-
       <li>
-        <!-- Link -->
-        <a routerLink="/pages/aboutus" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link" >
-          About
-        </a>
+        <a routerLink="/pages/aboutus" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">About</a>
       </li>
-
-      <li>
-        <!-- Link -->
-        <a routerLink="/pages/profile" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link" *ngIf="isUser">
-          Profile
-        </a>
+      <ng-container *ngIf="isUser">
+        <li>
+          <a href="javascript:void(0)" class="nav-link" (click)="toggleNavActive()">
+            Categories
+            <span class="sub-arrow"></span>
+          </a>
+          <ul class="nav-submenu" [class.opensubmenu]="active" *ngIf="active">
+            <li *ngFor="let category of categories">
+              <a routerLink="/pages/posts" [queryParams]="{category: category.name}" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                {{category.name}}
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a routerLink="/pages/profile" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Profile</a>
+        </li>
+        <li>
+          <a routerLink="/pages/wishlist" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Wishlist</a>
+        </li>
+        <li>
+          <a type="button" class="nav-link" (click)="logout()">Logout</a>
+        </li>
+      </ng-container>
+      <li *ngIf="!isUser">
+        <a routerLink="/pages/login" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Login</a>
       </li>
-
-      <li>
-        <!-- Link -->
-        <a routerLink="/pages/wishlist" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link" *ngIf="isUser">
-          Wishlist
-        </a>
-      </li>
-
-      <li>
-        <!-- Link -->
-        <a routerLink="/pages/login" routerLinkActive="active" 
-        [routerLinkActiveOptions]="{exact: true}" class="nav-link" *ngIf="!(isUser)">
-          Login
-        </a>
-      </li>
-    
-      <li>
-        <!-- Link -->
-        <a type="button" class="nav-link" *ngIf="isUser" (click)="logout()">
-        Logout
-        </a>
-      </li>
-
     </ul>
   </div>
 </div>

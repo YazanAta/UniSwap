@@ -1,6 +1,4 @@
-import { Component, Input, HostListener, ViewChild } from '@angular/core';
-import { NotificationsModalComponent } from '../components/modal/notifications-modal/notifications-modal.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
@@ -9,30 +7,14 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  
-  @Input() class: string;
-  @Input() themeLogo: string = 'assets/logo.png'; // Default Logo
-  @Input() sticky: boolean = false; // Default false
 
-  showNotification: boolean = false;
-  toggleNotification() {
-    this.showNotification = !this.showNotification;
-    this.showChatList = false;
-  }
-
-  showChatList: boolean = false;
-  toggleChatList() {
-    this.showNotification = false;
-    this.showChatList = !this.showChatList;
-  }
-
-  public stick: boolean = false;
   isUser: Boolean = false;
+  themeLogo: string = 'assets/logo.png'; // Default Logo
 
-  constructor(private auth: AuthService) { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.auth.user$.subscribe((user) => {
+    this.authService.user$?.subscribe((user) => {
       if(user){
         this.isUser = true
       }else{
@@ -40,19 +22,12 @@ export class HeaderComponent {
       }
     })
   }
-
-  // @HostListener Decorator
-  @HostListener("window:scroll", [])
-  onWindowScroll() {
-    let number = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-  	if (number >= 150 && window.innerWidth > 400) { 
-  	  this.stick = true;
-  	} else {
-  	  this.stick = false;
-  	}
+    
+  showNotification: boolean = false;
+  showChatList: boolean = false;
+  toggleList(list: 'notification' | 'chat' = 'notification') {
+    this.showNotification = list === 'notification' ? !this.showNotification : false;
+    this.showChatList = list === 'chat' ? !this.showChatList : false;
   }
-
-
   
-
 }

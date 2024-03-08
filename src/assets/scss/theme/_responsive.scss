@@ -3512,29 +3512,6 @@ background-color: $black;*/
             }
         }
     }
-    .wishlist-section {
-        .cart-table {
-            thead {
-                th {
-                    &:nth-last-child(-n+3) {
-                        display: none;
-                    }
-                }
-            }
-        }
-        tbody {
-            tr {
-                td {
-                    &:nth-last-child(-n+3) {
-                        display: none;
-                    }
-                    .mobile-cart-content {
-                        display: flex;
-                    }
-                }
-            }
-        }
-    }
     .blog-page {
         .order-sec {
             order: -1;

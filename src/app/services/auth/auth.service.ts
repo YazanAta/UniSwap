@@ -26,7 +26,7 @@ export class AuthService {
       switchMap(user => {
         if (user) {
           // If authenticated, fetch user details from Firestore
-          return this.fs.doc<User>(`users/${user.uid}`).valueChanges({ idField: 'uid' });
+          return this.fs.doc<User>(`users/${user.uid}`).valueChanges({ idField: 'id' });
         } else {
           // If not authenticated, emit null
           return of(null);

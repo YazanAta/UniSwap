@@ -4,3 +4,26 @@
     top: 10px;
     right: 10px;
 }
+
+/* ScrollBar */
+::-webkit-scrollbar {
+    width: 10px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Color of the scrollbar track */
+}
+  
+::-webkit-scrollbar-thumb {
+    background: #0174BE; /* Color of the scrollbar thumb */
+    border-radius: 5px; /* Rounded corners of the scrollbar thumb */
+}
+  
+::-webkit-scrollbar-thumb:hover {
+    background: #015c8a; /* Color of the scrollbar thumb on hover */
+}
+  
+::-webkit-scrollbar-thumb:active {
+    background: #013d5e; /* Color of the scrollbar thumb when active */
+}
+  

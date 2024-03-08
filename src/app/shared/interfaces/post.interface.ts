@@ -1,18 +1,22 @@
 export interface Post {
+
     id?: string,
-    postId?: string,
-    ownerId?: string,
     title?: string,
     description?: string,
     category?: string,
     subCategory?: string,
     subSubCategory?: string,
-    image?: string,
     type?: string,
     price?: string,
+    image?: string | null,
     createdAt?: Date,
-    state?: string,
+
+    ownerId?: string,
+
+    state?: PostState,
     swappedTo?: string,
+
     requestId?: string
-    
 }
+
+export type PostState = 'pending' | 'approved' | 'rejected' | 'waiting' | 'swapped' | 'deleted';

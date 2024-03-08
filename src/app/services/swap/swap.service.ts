@@ -4,7 +4,7 @@ import { Post } from 'src/app/shared/interfaces/post.interface';
 import { NotificationsService } from '../notifications/notifications.service';
 import { PostsService } from '../posts/posts.service';
 import { UserService } from '../user/user.service';
-import { lastValueFrom, take } from 'rxjs';
+import { Observable, lastValueFrom, take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,27 +15,29 @@ export class SwapService {
     private firestore: AngularFirestore,
     private notification: NotificationsService,
     private postsService: PostsService,
-    private usersService: UserService
+    private userService: UserService
   ) { }
 
-
-  getSwapList(uid: string) {
+  // Get the list of approved posts for a user
+  getSwapList(uid: string): Observable<Post[]> {
       return this.firestore.collection(`posts`, ref => ref
       .where('ownerId', '==', uid)
       .where('state', '==', "approved"))
       .valueChanges( {idField: 'id'} );
   }
 
-  getRequests(uid){
+  // Get the swap requests for a user
+  getRequests(uid: string): Observable<Post[]>{
     return this.firestore.collection(`users/${uid}/requests`).valueChanges( {idField: 'requestId'} )
   }
 
 
-  async swapRequest(otherParticipantId, username, post: Post){
+  // Initiate a swap request
+  async swapRequest(otherParticipantId: string, username: string, post: Post): Promise<void>{
 
-    // Check if the user has enough points to initiate the swap
+    // Check if the user has enough points to initiate the swap for a free post
     if(post.type == 'free'){
-      const user = await lastValueFrom(this.usersService.getUserInfoById(otherParticipantId).pipe(take(1)));
+      const user = await lastValueFrom(this.userService.getUserInfoById(otherParticipantId).pipe(take(1)));
       if (!user || user.points <= 0) {
         // Handle the case where the user doesn't have enough points
         console.error('User does not have enough points to initiate the swap.');
@@ -44,10 +46,10 @@ export class SwapService {
     }
 
 
-    // Change Post State To Waiting ..
-    await this.postsService.changeState(post.id, "waiting");
+    // Change Post State To Waiting
+    await this.postsService.updateState(post.id, "waiting");
 
-    // Add post data to requests collection with the requessted from name to display on the 
+    // Add post data to requests collection with the requested from name to display on the UI
     await this.firestore.collection(`users/${otherParticipantId}/requests`).add({
       ...post,
       requestFrom: username
@@ -58,15 +60,15 @@ export class SwapService {
   
   }
 
-  async acceptSwap(post: Post, uid: string){
+  // Accept a swap request
+  async acceptSwap(post: Post, uid: string) : Promise<void>{
     
     // Change Post State To "Swapped"
-    await this.postsService.changeState(post.id, "swapped");
+    await this.postsService.updateState(post.id, "swapped");
 
     // If type of post is free -> decreament point by 1
     if(post.type == 'free'){
-
-      await this.usersService.decrementPoints(uid)
+      await this.userService.decrementPoints(uid)
     }
 
     // Add "SwappedTo" field to the post
@@ -74,20 +76,21 @@ export class SwapService {
       swappedTo: uid
     }, {merge: true});
 
-    // delete request
+    // Delete request
     await this.firestore.doc(`users/${uid}/requests/${post.requestId}`).delete();
 
     // Push Notification To Other User
-    return this.notification.pushNotification(post.ownerId, `Congratulations, ${post.title} successfully swapped`, "swap");
+    await this.notification.pushNotification(post.ownerId, `Congratulations, ${post.title} successfully swapped`, "swap");
 
   }
 
-  async rejectSwap(post: Post, uid){
+  // Reject a swap request
+  async rejectSwap(post: Post, uid: string){
 
     // Change Post State To "approved"
-    await this.postsService.changeState(post.id, "approved");
+    await this.postsService.updateState(post.id, "approved");
 
-    // delete request
+    // Delete request
     await this.firestore.doc(`users/${uid}/requests/${post.requestId}`).delete();
 
     // Push Notification To Other User

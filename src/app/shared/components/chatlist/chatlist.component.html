@@ -1,16 +1,16 @@
 <div class="container mt-4">
 
-  <div class="card-header d-flex justify-content-between m-3 bg-light rounded-top border-light">
-    <h5 class="text-primary m-0">Chat List</h5>
+  <div class="card-header d-flex justify-content-between m-3">
+    <h5 class="text-dark m-0">Chat List</h5>
     <button class="btn btn-link py-0 px-2" (click)="toggleChatList()">
       <i class="fa fa-times text-primary"></i>
     </button>
   </div>
 
-  <ul class="list-group list-group-flush p-0 overflow-auto" *ngIf="chats.length > 0; else noChats">
+  <ul class="list-group list-group-flush p-0 overflow-auto" *ngIf="!isLoading && chats?.length > 0">
     <li *ngFor="let chat of chats" class="list-group-item d-flex justify-content-between align-items-center border-bottom shadow-sm rounded-0">
-      <div class="d-flex align-items-center gap-2">
-        <i class="fa fa-comment text-primary"></i>
+      <div class="d-flex align-items-center gap-2 p-2">
+        <i class="fa fa-comment text-primary m-2"></i>
         
         <div class="flex-grow-1">
           <a routerLink="/pages/chats/{{ chat.id }}" class="text-decoration-none text-dark fw-bold">
@@ -24,7 +24,14 @@
     </li>
   </ul>
 
-  <ng-template #noChats class="mt-3 text-center">
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="p-3">
+    <div class="custom-loader">
+      <ngx-skeleton-loader count="3" [theme]="{ 'border-radius': '4px', height: '50px' }"></ngx-skeleton-loader>
+    </div>
+  </div>
+
+  <ng-template *ngIf="!isLoading && chats?.length == 0" class="mt-3 text-center">
     <div class="alert alert-info alert-dismissible d-flex justify-content-center bg-light border">
       <p class="mb-0 text-muted">
         <i class="fa fa-info-circle me-2"></i> No messages yet.

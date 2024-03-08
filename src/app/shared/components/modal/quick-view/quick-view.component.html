@@ -1,38 +1,40 @@
-<ng-template class="theme-modal" #quickView let-modal>
+<ng-template #quickView let-modal class="theme-modal">
     <div class="modal-content quick-view-modal">
-        <div class="modal-body">
-            <button type="button" class="close float-end border-0" (click)="modal.dismiss('Cross click')">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <div class="row">
-                <div class="col-lg-6  col-xs-12">
-                    <div class="quick-view-img">
-                        <img [src]="product.image" class="img-fluid">
-                    </div>
-                </div>
-                <div class="col-lg-6 rtl-text">
-                    <div class="product-right">
-                        <h2>{{ product.title | titlecase }}</h2>
-                        <h3>{{ product?.type}}</h3>
-                        <div class="border-product">
-                            {{product?.category}}
-                        </div>
-                        <div class="border-product">
-                            <h6 class="product-title">Item Description</h6>
-                            <p>{{ product.description.substring(0, 200)+'...' }}</p>
-                        </div>
-                        <div class="border-product">
-                            <h5>
-                                Owner Name: {{ownerInfo.firstName + " " + ownerInfo.lastName}}
-                            </h5>
-                        </div>
-                        <div class="border-product d-flex justify-content-between">
-                            <button class="btn btn-primary" (click)="createChat(product)">Start Chat</button>
-                            <button class="btn btn-warning" (click)="addToWishlist(product.id)">Add To Wishlist</button>
-                        </div>
-                    </div>
-                </div>
+      <div class="modal-body">
+        <!-- Simplified close button with aria label for accessibility -->
+        <button type="button" class="close float-end border-0" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          &times;
+        </button>
+        <div class="row">
+          <!-- Product Image -->
+          <div class="col-lg-6 col-xs-12">
+            <div class="quick-view-img">
+              <img [src]="post.image || '/assets/logo.png'" alt="{{post.title}}" class="img-fluid">
             </div>
+          </div>
+          <!-- Product Details -->
+          <div class="col-lg-6 rtl-text">
+            <div class="product-right">
+              <h2>{{ post.title | titlecase }}</h2>
+              <p class="text-muted" *ngIf="post.type === 'free'; else salePrice">{{ post.type | titlecase }}</p>
+              <ng-template #salePrice><p class="text-muted">Price: {{post.price}} JD</p></ng-template>
+              <div class="border-product text-muted">
+                {{ post.category }}
+              </div>
+              <div class="border-product">
+                <p>{{ post.description }}</p>
+              </div>
+              <div *ngIf="ownerInfo" class="border-product">
+                <p class="text-muted">Owner: {{ ownerInfo.firstName }} {{ ownerInfo.lastName }}</p>
+              </div>
+              <div class="border-product d-flex gap-2 mt-3">
+                <button class="btn btn-outline-primary" (click)="createChat(post)"><i class="ti-comments-smiley me-2"></i>Start Chat</button>
+                <button class="btn btn-outline-warning" (click)="addToWishlist(post.id)"><i class="ti-heart me-2"></i>Add To Wishlist</button>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
 </ng-template>
+  

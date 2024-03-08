@@ -4,81 +4,91 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <h3>create account</h3>
+                <h3>Create Account</h3>
                 <div class="theme-card">
-                    <form class="theme-form" [formGroup]="registrationForm" (ngSubmit)="register(registrationForm)">
-
+                    <form class="theme-form" [formGroup]="registrationForm" (ngSubmit)="register()">
                         <div class="row">
-
+                            <!-- First Name -->
                             <div class="col-md-6">
                                 <label for="fname">First Name</label>
                                 <input type="text" class="form-control" id="fname" placeholder="First Name" formControlName="firstName">
-                                <div class="alert alert-danger" *ngIf="registrationForm.get('firstName').errors?.['required'] && registrationForm.get('firstName').touched">
+                                <div *ngIf="registrationForm.get('firstName').touched && registrationForm.get('firstName').errors?.['required']" class="alert alert-danger">
                                     First Name is required
-                                </div>   
+                                </div>
                             </div>
-                            
+
+                            <!-- Last Name -->
                             <div class="col-md-6">
                                 <label for="lname">Last Name</label>
                                 <input type="text" class="form-control" id="lname" placeholder="Last Name" formControlName="lastName">
-                                <div class="alert alert-danger" *ngIf="registrationForm.get('lastName').errors?.['required'] && registrationForm.get('lastName').touched">
+                                <div *ngIf="registrationForm.get('lastName').touched && registrationForm.get('lastName').errors?.['required']" class="alert alert-danger">
                                     Last Name is required
-                                </div>   
-                            </div>
-
-                        </div>
-
-                        <div class="row">
-
-                            <div class="col-md-6">
-                                <label for="email">email</label>
-                                <input type="text" class="form-control" id="email" placeholder="Email" formControlName="email">
-                                <div class="alert alert-danger" *ngIf="registrationForm.get('email').errors?.['required'] && registrationForm.get('email').touched">
-                                    Email is Required
-                                </div>  
-                                <div class="alert alert-danger" *ngIf="registrationForm.get('email').errors?.['email'] && registrationForm.get('email').touched">
-                                    Enter a valid JU email address 
-                                </div>   
-                                <div class="alert alert-danger" *ngIf="registrationForm.get('email').errors?.['invalidDomain'] && registrationForm.get('email').touched">
-                                    Email must be a JU email, ends with (&#64;.edu.jo)
-                                </div>   
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="gender">Gender</label>
-                                <div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input p-2" type="radio" name="gender" id="inlineRadio1" value="male" formControlName="gender">
-                                        <label class="form-check-label" for="inlineRadio1">Male</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input p-2" type="radio" name="gender" id="inlineRadio2" value="female" formControlName="gender">
-                                        <label class="form-check-label" for="inlineRadio2">Female</label>
-                                    </div>
-                                </div>             
-                            </div>
-                        </div>
-
-                        <div class="row">                            
-                            <div class="col-md-6">
-                                <label for="password">Password</label>
-                                <input type="password" class="form-control" id="password" placeholder="Enter your password" formControlName="password">
-                                <div class="alert alert-danger" *ngIf="registrationForm.get('password').errors?.['required'] && registrationForm.get('password').touched">
-                                    Password is required
-                                  </div>  
-                                  <div class="alert alert-danger" *ngIf="registrationForm.get('password').errors?.['minLength'] && registrationForm.get('password').touched">
-                                    Password must gave minimum length of 8 
-                                </div>                                   
-                            </div>
-                            <div class="col-md-6">
-                                <label for="pconfirm">Confirm Password</label>
-                                <input type="password" class="form-control" id="pconfirm" placeholder="Confirm Password" formControlName="confirmPassword">
-                                <div class="alert alert-danger" *ngIf="registrationForm.get('confirmPassword').hasError('passwordMismatch')">
-                                    Password Don't Match
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-solid" [disabled]="registrationForm.invalid">create Account</button>
+
+                        <div class="row">
+                            <!-- Email -->
+                            <div class="col-md-6">
+                                <label for="email">Email</label>
+                                <input type="text" class="form-control" id="email" placeholder="Email" formControlName="email">
+                                <div *ngIf="registrationForm.get('email').touched">
+                                    <div *ngIf="registrationForm.get('email').errors?.['required']" class="alert alert-danger">
+                                        Email is Required
+                                    </div>
+                                    <div *ngIf="registrationForm.get('email').errors?.['email']" class="alert alert-danger">
+                                        Enter a valid email address
+                                    </div>
+                                    <div *ngIf="registrationForm.get('email').errors?.['invalidDomain']" class="alert alert-danger">
+                                        Email must be a JU email, ends with @.edu.jo
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
+                                <label for="gender m-0">Gender</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input p-2 mx-1 my-0" type="radio" id="inlineRadio1" value="male" formControlName="gender">
+                                        <label class="form-check-label m-0" for="inlineRadio1">Male</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input p-2 mx-1 my-0" type="radio" id="inlineRadio2" value="female" formControlName="gender">
+                                        <label class="form-check-label m-0" for="inlineRadio2">Female</label>
+                                    </div>
+                                </div>
+                                <div *ngIf="registrationForm.get('gender').touched && registrationForm.get('gender').errors?.['required']" class="alert alert-danger">
+                                    Gender is required
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Password -->
+                            <div class="col-md-6">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" id="password" placeholder="Enter your password" formControlName="password">
+                                <div *ngIf="registrationForm.get('password').touched">
+                                    <div *ngIf="registrationForm.get('password').errors?.['required']" class="alert alert-danger">
+                                        Password is required
+                                    </div>
+                                    <div *ngIf="registrationForm.get('password').errors?.['minLength']" class="alert alert-danger">
+                                        Password must have a minimum length of 8 characters
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Confirm Password -->
+                            <div class="col-md-6">
+                                <label for="pconfirm">Confirm Password</label>
+                                <input type="password" class="form-control" id="pconfirm" placeholder="Confirm Password" formControlName="confirmPassword">
+                                <div *ngIf="registrationForm.errors?.['passwordMismatch'] && registrationForm.get('confirmPassword').touched" class="alert alert-danger">
+                                    Passwords don't match
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-solid" [disabled]="registrationForm.invalid">Create Account</button>
                     </form>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-import { Component, Injector } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -14,71 +14,45 @@ import { SuccessfulRegistrationModalComponent } from 'src/app/shared/components/
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
+  
+  registrationForm: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
     private customValidations: CustomValidationsService,
-    private auth: AuthService, private router: Router,
-    private injector: Injector,
-    private toastr: CustomToastrService) { }
+    private authService: AuthService,
+    private router: Router,
+    private toastr: CustomToastrService,
+    private modalService: NgbModal
+  ) { 
+    this.initForm();
+  }
 
-  // Form Builder
-  registrationForm = this.formBuilder.group({ 
+  private initForm(): void {
+    this.registrationForm = this.formBuilder.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email, this.customValidations.validateEmailDomain]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', Validators.required],
+      gender: ['', Validators.required]
+    }, { validators: this.customValidations.passwordMatchValidator("password", "confirmPassword") });
+  }
 
-    firstName : ['', Validators.required],
+  async register(): Promise<void> {
+    if (this.registrationForm.invalid) return;
 
-    lastName : ['', Validators.required],
-
-    email : ['', Validators.compose([
-      Validators.required,
-      Validators.email,
-      this.customValidations.validateEmailDomain
-    ])],
-
-    password : ['', Validators.compose([
-      Validators.required,
-      Validators.minLength(8)
-    ])],
-
-    confirmPassword : ['', Validators.compose([
-      Validators.required,
-      Validators.minLength(8)
-    ])],
-
-    gender : ['', Validators.required]
-
-  },
-  {
-    validators: this.customValidations.passwordMatchValidator("password", "confirmPassword")
-  });
-
-  // Register method
-  async register(form: FormGroup) {
-
-    const data: User = form.value;
+    const data: User = this.registrationForm.value;
 
     try {
-
-      // Regestration proccess & Sending email verification
-      const result = await this.auth.register(data.email, data.password, data);
-
-      // Opening Modal For Successful Registration And Routing For Login
-      let modalService = this.injector.get(NgbModal);
-      modalService.open(SuccessfulRegistrationModalComponent);
+      await this.authService.register(data.email, data.password, data);
+      this.modalService.open(SuccessfulRegistrationModalComponent);
       this.router.navigate(['/pages/login']);
-
-      // Log the user out after sending the verification email
-      this.auth.logout();
-
+      this.authService.logout();
     } catch (error) {
-      if (error.code === 'auth/email-already-in-use') {
-        // Handle the case where the email is already in use By displaying a toastr
-        this.toastr.show('The email address is already in use by another account.', 'Failed', 'error');
-      } else {
-        // Handle other errors By displaying a toastr
-        this.toastr.show(error.message, 'Failed', 'error');
-      }
+      const errorMessage = error.code === 'auth/email-already-in-use' ? 
+        'The email address is already in use by another account.' : error.message;
+      this.toastr.show(errorMessage, 'Failed', 'error');
     }
   }
-  
 }

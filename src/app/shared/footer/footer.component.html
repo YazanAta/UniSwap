@@ -1,5 +1,5 @@
 <!--footer section -->
-<footer [class]="class">
+<footer>
 	<section class="section-b-space light-layout">
 		<div class="container">
 			<div class="row footer-theme partition-f">
@@ -21,9 +21,14 @@
                         </div>
                         <div class="footer-contant">
                             <ul>
-                                <li><a href="javascript:void(0)">Text Books</a></li>
-                                <li><a href="javascript:void(0)">Uniforms</a></li>
-                                <li><a href="javascript:void(0)">Tools</a></li>
+                                <li *ngFor="let category of categories">
+									<a routerLink="/pages/posts" 
+										[queryParams]="{category: category.name}"
+										routerLinkActive="active"
+										[routerLinkActiveOptions]="{exact: true}">
+										{{category.name}}
+									</a>
+								</li>
                             </ul>
                         </div>
 					</div>
@@ -35,7 +40,7 @@
                         </div>
                         <div class="footer-contant">
                             <ul>
-                                <li><a href="javascript:void(0)">About</a></li>
+                                <li><a routerLink="/pages/aboutus">About</a></li>
                             </ul>
                         </div>
 					</div>

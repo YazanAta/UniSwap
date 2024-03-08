@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { CATEGORIES, Category } from '../interfaces/category.interface';
 
 @Component({
   selector: 'app-footer',
@@ -7,11 +8,9 @@ import { Component, Input } from '@angular/core';
 })
 export class FooterComponent {
 
-  @Input() class: string = 'footer-light' // Default class 
   @Input() themeLogo: string = 'assets/logo.png' // Default Logo
-  @Input() newsletter: boolean = false; // Default True
 
-  public today: number = Date.now();
+  public categories: Category[] = CATEGORIES;
 
   constructor() { }
 

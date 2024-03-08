@@ -28,6 +28,7 @@ import { ChatComponent } from './chat/chat/chat.component';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { SwapListComponent } from './chat/swap-list/swap-list.component';
 import { RequestsSectionComponent } from './account/profile/requests-section/requests-section.component';
+import { PostsComponent } from './posts/posts.component';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { RequestsSectionComponent } from './account/profile/requests-section/req
     ChatComponent,
     SwapListComponent,
     RequestsSectionComponent,
+    PostsComponent
   ],
   imports: [
     CommonModule,

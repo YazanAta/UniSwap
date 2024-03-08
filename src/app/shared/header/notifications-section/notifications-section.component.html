@@ -1,34 +1,42 @@
 <div class="container p-0">
-  <div *ngIf="notifications.length > 0; else noNotifications" class="card">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="m-0"><i class="fa fa-bell"></i> Notifications</h3>
-      <button class="btn btn-link" (click)="toggleNotification()">
-        <i class="fa fa-times"></i>
-      </button>
-    </div>
-    <div class="card-body">
-      <div *ngFor="let notification of notifications" class="mb-2">
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="mx-3">
-            <i class="fa fa-bullhorn text-primary mx-2"></i>
-            <span class="truncate" [innerHTML]="notification.message"></span>
-          </div>
-          <div class="text-muted">
-            {{ notification.timestamp | date: 'medium' }}
-          </div>
-        </div>      
-      </div>
+  <!-- Notification header -->
+  <div class="alert alert-light border rounded-3 d-flex justify-content-between align-items-center m-auto shadow-sm" role="alert">
+    <h4 class="m-0  text-secondary"><i class="ti-bell text-primary"></i> Notifications</h4>
+    <!-- Button to close notifications -->
+    <button class="btn-close" (click)="toggleNotification()" aria-label="Close notifications"></button>
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="p-3">
+    <div class="custom-loader">
+      <ngx-skeleton-loader count="5" [theme]="{ 'border-radius': '4px', height: '50px' }"></ngx-skeleton-loader>
     </div>
   </div>
 
-  <ng-template #noNotifications class="mt-3">
-    <div class="alert alert-info m-0 d-flex justify-content-between">
+  <!-- Notification list -->
+  <div *ngIf="!isLoading && notifications?.length > 0" class="notification-list p-2">
+    <!-- Loop through notifications -->
+    <div *ngFor="let notification of notifications" class="notification-item d-flex justify-content-between align-items-center p-2 mb-1 bg-white rounded shadow-sm">
+      <!-- Notification content -->
+      <div class="notification-content d-flex align-items-center">
+        <i class="ti-announcement text-primary mr-2"></i>
+        <span class="notification-message">{{notification?.message}}</span> <!-- Ensure `notification.message` is sanitized -->
+      </div>
+      <!-- Notification timestamp -->
+      <div class="text-muted small">
+        {{ notification.timestamp | date: 'medium' }}
+      </div>
+    </div>      
+  </div>
+
+  <!-- No notifications message -->
+  <ng-template *ngIf="!isLoading && notifications?.length === 0">
+    <div class="alert alert-info mt-3 d-flex justify-content-between align-items-center p-2 rounded" role="alert">
       <p class="mb-0">
         <i class="fa fa-info-circle"></i> No notifications available.
       </p>
-      <button class="btn btn-link" (click)="toggleNotification()">
-        <i class="fa fa-times"></i>
-      </button>
+      <!-- Button to close notification alert -->
+      <button class="btn-close" (click)="toggleNotification()" aria-label="Close notification alert"></button>
     </div>
   </ng-template>
 </div>

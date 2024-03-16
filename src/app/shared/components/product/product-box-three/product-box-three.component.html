@@ -21,10 +21,10 @@
       <div class="product-detail">
         <div class="d-flex flex-column justify-content-between h-100">
           <div>
-            <h5 class="product-title">{{ post?.title | titlecase }}</h5>
+            <h6 class="product-title">{{ post?.title | titlecase }}</h6>
             <h6 class="text-muted">Category: {{post.category}}</h6>
             <h6 class="text-muted" *ngIf="post.type === 'free'; else salePrice">Price: Free</h6>
-            <ng-template #salePrice class="text-muted"><h6>Price: {{post?.price}} JD</h6></ng-template>
+            <ng-template #salePrice><h6 class="text-muted">Price: {{post?.price}} JD</h6></ng-template>
           </div>
           <div>
             <small class="text-muted">Posted: {{getTimeDifference(post?.createdAt)}} Ago</small>

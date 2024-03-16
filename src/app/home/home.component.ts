@@ -66,7 +66,7 @@ export class HomeComponent {
 
   openPostsPage(category) {
     this.router.navigate(
-      ['/shop/collection/left/sidebar'],
+      ['/pages/posts'],
       { queryParams: { category: category.linkParam } }
     );
   }

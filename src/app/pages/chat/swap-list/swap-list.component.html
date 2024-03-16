@@ -15,7 +15,7 @@
         <td class="align-middle">{{ post.title }}</td>
         <td class="align-middle">{{ post.type }}</td>
         <td class="align-middle">{{ post.price | currency }}</td>
-        <td class="align-middle"><button class="btn btn-primary" (click)="swapRequest(otherParticipant.uid, uid, post)">Swap me</button></td>
+        <td class="align-middle"><button class="btn btn-primary btn-sm" (click)="swapRequest(otherParticipant.uid, post)">Swap me</button></td>
       </tr>
       <span class="text-muted" *ngIf="!posts?.length">No Posts To Swap</span>
     </tbody>

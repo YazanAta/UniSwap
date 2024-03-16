@@ -53,15 +53,14 @@ export class PostsComponent {
 
   // Component initialization
   async ngOnInit() {
-    const user = await this.authService.getUser(); // Retrieve the current user
-    await this.getAllPosts(user.uid); // Fetch all posts for the user
+    await this.getAllPosts(); // Fetch all posts for the user
     this.filterPostsByCategory(); // Apply initial category filter to posts
   }
 
   // Retrieves all posts for a given user
-  async getAllPosts(uid: string) {
+  async getAllPosts() {
     try {
-      const posts = await this.postsService.getAllPosts(uid);
+      const posts = await this.postsService.getAllPosts();
       this.posts = posts;
   
       // Default to showing all posts if no category filter is applied
@@ -99,7 +98,7 @@ export class PostsComponent {
   }
 
   // Filters posts based on selected category and sub-categories
-  filterPostsByCategory() {
+  private filterPostsByCategory() {
     this.filteredPosts = this.posts.filter(post => {
       let matchesCategory = this.selectedCategory ? post.category === this.selectedCategory.name : true;
       let matchesSubCategory = this.selectedSubCategory ? post.subCategory === this.selectedSubCategory.name : true;
@@ -108,4 +107,10 @@ export class PostsComponent {
       return matchesCategory && matchesSubCategory && matchesSubSubCategory;
     });
   }
+
+  private filterMyPosts(uid){
+
+  }
+
+
 }

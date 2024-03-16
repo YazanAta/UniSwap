@@ -26,16 +26,17 @@ export class ChatListComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
-    from(this.authService.getUser()).pipe(
-      switchMap(user => {
-        this.uid = user.uid
-        return this.chatService.getChats(user.uid);
-      })
-    ).subscribe(chats => {
+    this.getChats()
+  }
+
+  private async getChats(){
+    const user = await this.authService.getUser();
+    this.uid = user.uid;
+    this.chatService.getChats(user.uid).subscribe((chats) => {
       this.chats = chats;
       this.updateRecipientUsernames();
       this.updateLastMessageFromChat();
-    });
+    })
   }
 
   private updateRecipientUsernames(): void {

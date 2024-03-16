@@ -37,14 +37,12 @@
           </div>
 
           <div class="col-sm-4 border-padding" *ngFor="let category of categories">
-              <div class="category-banner" (click)="openPostsPage(category)">
+              <div class="category-banner" (click)="openPostsPage(category)" style="cursor: pointer;">
                   <div>
-                      <img [src]="category.image" class="img-fluid" alt="">
+                    <img [src]="category.image" class="img-fluid" alt="">
                   </div>
                   <div class="category-box">
-                      <a [routerLink]="['/shop/collection/left/sidebar']" [queryParams]="{ category: category.linkParam}">
-                          <h2>{{category.name}}</h2>
-                      </a>
+                    <h2>{{category.name}}</h2>
                   </div>
               </div>
           </div>

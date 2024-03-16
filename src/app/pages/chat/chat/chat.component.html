@@ -30,7 +30,7 @@
 
         <div class="card-body">
           <ul class="list-group chat-messages overflow-auto" style="height: 200px;" #chatMessages>
-            <li *ngFor="let message of messages" class="list-group-item d-flex justify-content-between">
+            <li *ngFor="let message of messages; let i = index" class="list-group-item d-flex justify-content-between" [ngClass]="{'bg-light': i % 2 === 0, 'bg-secondary': i % 2 !== 0}">
               <span class="text-break">
                 <span *ngIf="message.sender !== currentUserId">{{ otherParticipant.firstName }} {{ otherParticipant.lastName }}:</span>
                 <span *ngIf="message.sender === currentUserId">You:</span>

@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { take } from 'rxjs';
-import { PostsService } from 'src/app/services/posts/posts.service';
+import { lastValueFrom } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { SwapService } from 'src/app/services/swap/swap.service';
+import { CustomToastrService } from 'src/app/services/toastr/custom-toastr.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { Post } from 'src/app/shared/interfaces/post.interface';
 import { User } from 'src/app/shared/interfaces/user.interface';
@@ -12,71 +13,50 @@ import { User } from 'src/app/shared/interfaces/user.interface';
   templateUrl: './swap-list.component.html',
   styleUrls: ['./swap-list.component.scss']
 })
-export class SwapListComponent implements OnInit{
-  constructor(
-    public activeModal: NgbActiveModal,
-    private postsService: PostsService,
-    private swapService: SwapService,
-    private userService: UserService
-  ){}
-
+export class SwapListComponent implements OnInit {
   @Input() otherParticipant: User;
   @Input() uid: string;
 
-  public posts: Post[];
+  public posts: Post[] = [];
+  public isSwapping = false;
 
+  constructor(
+    public activeModal: NgbActiveModal,
+    private swapService: SwapService,
+    private userService: UserService,
+    private toastrService: CustomToastrService
+  ) {}
 
   ngOnInit(): void {
-    this.getUserPosts(this.uid)
+    this.getUserPosts();
   }
 
-  // Get user posts method
-  public getUserPosts(uid: string) {
-    this.swapService.getSwapList(uid).pipe(take(1))
-    .subscribe({
-      next: (posts: Array<any>) => {
-        this.posts = posts
-      },
-      error: (err) => {
-        console.error(err);
-        // Handle the error here
-      }
-    });
+  private getUserPosts(): void {
+    this.swapService.getSwapList(this.uid)
+      .pipe(take(1))
+      .subscribe({
+        next: (posts: Post[]) => this.posts = posts,
+        error: (err) => console.error(err) // Optionally, handle the error in a more user-friendly way
+      });
   }
 
+  async swapRequest(otherParticipantId: string, post: Post): Promise<void> {
+    if (this.isSwapping) return;
 
-  isSwapping: Boolean = false
-  async swapRequest(otherParticipantId, uid, post){
-    if(this.isSwapping){
-      return
+    this.isSwapping = true;
+    try {
+      const user = await lastValueFrom(this.userService.getUserInfoById(this.uid).pipe(take(1)));
+      await this.swapService.swapRequest(otherParticipantId, user.firstName, post);
+      this.toastrService.show("Success","Swapping Request sent","success");
+    } catch (err) {
+      this.toastrService.show(err,"Swapping Faild","error")
+    } finally {
+      this.closeModal();
+      this.isSwapping = false;
     }
-    this.isSwapping = true
-    const user = await this.userService.getUserInfoById(uid).pipe(take(1)).toPromise();
-    this.swapService.swapRequest(otherParticipantId, user.firstName, post).then(() => {
-      console.log("Sent To ", otherParticipantId);
-      this.isSwapping = false
-    })
   }
 
-
-
-
-
-
-
-
-
-
-
-
-  isSubmitting: boolean = false
-
-  closeModal(){
-    const onComplete = () => {
-      this.isSubmitting = false;
-      this.activeModal.close();
-    };
+  closeModal(): void {
     this.activeModal.close();
   }
-
 }

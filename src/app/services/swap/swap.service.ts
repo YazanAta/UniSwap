@@ -40,8 +40,7 @@ export class SwapService {
       const user = await lastValueFrom(this.userService.getUserInfoById(otherParticipantId).pipe(take(1)));
       if (!user || user.points <= 0) {
         // Handle the case where the user doesn't have enough points
-        console.error('User does not have enough points to initiate the swap.');
-        return;
+        throw('User does not have enough points to initiate the swap.');
       }
     }
 

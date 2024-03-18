@@ -528,19 +528,7 @@ del {
                     }
                 }
             }
-            .main-nav-center {
-                .sm {
-                    >li {
-                        >a {
-                            padding-top: 16px;
-                            padding-bottom: 16px;
-                        }
-                        .lable-nav {
-                            top: 1px;
-                        }
-                    }
-                }
-            }
+            
         }
     }
 }
@@ -1187,17 +1175,7 @@ header {
             }
         }
     }
-    .layout3-menu {
-        .main-menu {
-            .menu-left {
-                .navbar {
-                    i {
-                        font-size: 22px;
-                    }
-                }
-            }
-        }
-    }
+   
     &.top-header-dark2 {
         background-color: $grey-dark;
         .header-contact {
@@ -9562,16 +9540,7 @@ body.rtl {
             .left-sidebar_center {
                 padding: 40px 30px 40px 0;
             }
-            .pixelstrap {
-                li {
-                    a {
-                        .sub-arrow {
-                            left: 7px;
-                            transform: rotate(180deg);
-                        }
-                    }
-                }
-            }
+         
         }
         .top-header {
             padding-left: 0;
@@ -10559,12 +10528,7 @@ body.rtl {
             }
         }
     }
-    .main-nav-center {
-        .toggle-nav {
-            left: 175px;
-            right: 0;
-        }
-    }
+   
     .testimonial {
         .testimonial-slider {
             .slick-track {
@@ -12698,31 +12662,7 @@ footer {
         nav {
             background-color: $white;
         }
-        .pixelstrap {
-            >li {
-                >a {
-                    padding: 10px 0 20px 0;
-                    &:hover,
-                    &:focus {
-                        padding: 10px 0 20px 0;
-                        background-color: $white;
-                    }
-                }
-                .lable-nav {
-                    top: -12px;
-                    background-color: $white-dark;
-                    &:before {
-                        border-top: 5px solid $color-red;
-                    }
-                    &.grey-lable {
-                        background-color: #4d6171;
-                        &:before {
-                            border-top: 5px solid #4d6171;
-                        }
-                    }
-                }
-            }
-        }
+      
         .left-sidebar_search {
             width: 100%;
             background-color: $white;
@@ -13428,14 +13368,7 @@ footer {
             }
         }
     }
-    .pixelstrap {
-        li {
-            .lable-nav {
-                background: var(--theme-deafult);
-                background-image: linear-gradient(to right, var(--theme-gradient1), var(--theme-gradient2));
-            }
-        }
-    }
+  
 }
 
 .service_slide {

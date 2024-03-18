@@ -251,21 +251,7 @@
 }
 
 @media(max-width: 1430px) and (min-width: 1200px) {
-    .layout3-menu {
-        max-width: 100%;
-        .main-menu {
-            .menu-left {
-                .navbar {
-                    padding: 40px 10px 40px 0;
-                }
-            }
-        }
-        .pixelstrap {
-            >a {
-                padding-right: 38px;
-            }
-        }
-    }
+   
     .portfolio-section {
         &.metro-section {
             .product-box {
@@ -287,18 +273,7 @@
             }
         }
     }
-    // rtl section //
-    .rtl {
-        .layout3-menu {
-            .main-menu {
-                .menu-left {
-                    .navbar {
-                        padding: 40px 0 40px 35px;
-                    }
-                }
-            }
-        }
-    }
+   
 }
 
 @media(max-width: 1367px) {
@@ -613,10 +588,7 @@
                 }
             }
         }
-        .toggle-nav {
-            padding-top: 20px;
-            padding-bottom: 20px;
-        }
+       
         .main-navbar {
             .nav-menu {
                 >li {
@@ -631,28 +603,8 @@
     }
     header {
         &.header-tools {
-            .toggle-nav {
-                padding-top: 25px;
-                padding-bottom: 25px;
-            }
-            .pixelstrap {
-                >li {
-                    >a {
-                        padding: 10px 15px;
-                        &:hover,
-                        &:active,
-                        &:focus,
-                        &.highlighted {
-                            padding: 10px 15px;
-                        }
-                    }
-                }
-                li {
-                    .lable-nav {
-                        top: 5px;
-                    }
-                }
-            }
+           
+        
             .main-navbar {
                 .nav-menu {
                     >li {
@@ -1401,11 +1353,7 @@
                 border-color: $dark-border;
                 color: $white-3;
             }
-            &.pixelstrap {
-                ul {
-                    background-color: $dark-body;
-                }
-            }
+         
         }
         .tab-product {
             .nav-material {
@@ -1415,13 +1363,7 @@
             }
         }
         header {
-            &.left-header {
-                .pixelstrap {
-                    ul {
-                        background-color: $dark-top;
-                    }
-                }
-            }
+          
             &.header-gym {
                 .main-navbar {
                     .nav-menu {
@@ -1488,11 +1430,7 @@
 }
 
 @media(max-width: 991px) {
-    .main-nav-center {
-        .toggle-nav {
-            top: -92px;
-        }
-    }
+   
     .service_slide {
         .service-home {
             position: relative;
@@ -2977,16 +2915,7 @@ background-color: $black;*/
             }
         }
     }
-    .layout3-menu {
-        max-width: 100%;
-        .main-menu {
-            .brand-logo {
-                img {
-                    height: 25px;
-                }
-            }
-        }
-    }
+    
     section,
     .section-t-space {
         padding-top: 40px;
@@ -3990,11 +3919,7 @@ background-color: $black;*/
     }
     // rtl section //
     .rtl {
-        .main-nav-center {
-            .toggle-nav {
-                left: 75px;
-            }
-        }
+      
         .tab-left {
             .theme-tab {
                 .tab-content-cls {
@@ -4200,15 +4125,7 @@ background-color: $black;*/
             }
         }
     }
-    .layout3-menu {
-        .main-menu {
-            height: 75px;
-        }
-        .brand-logo {
-            padding-top: 25px !important;
-            padding-bottom: 25px !important;
-        }
-    }
+   
     .tab-left {
         .theme-tab {
             .left-side {
@@ -4380,37 +4297,7 @@ background-color: $black;*/
         padding-top: 100px;
         padding-bottom: 100px;
     }
-    .layout3-menu {
-        .main-menu {
-            .menu-left {
-                width: calc(100vw - 32px);
-                .main-menu-right {
-                    .toggle-nav {
-                        right: 15px;
-                        .sidebar-name {
-                            display: none;
-                        }
-                    }
-                }
-            }
-            >div {
-                &:nth-child(2) {
-                    position: absolute;
-                    left: 0;
-                    right: 50%;
-                    transform: none;
-                    top: 0;
-                }
-                &:nth-child(3) {
-                    height: 0;
-                }
-            }
-        }
-        .brand-logo {
-            left: 0;
-            transform: none;
-        }
-    }
+   
     .layout2-logo {
         padding-right: 0;
     }
@@ -5256,11 +5143,7 @@ background-color: $black;*/
                 }
             }
         }
-        .main-nav-center {
-            .toggle-nav {
-                left: 15px;
-            }
-        }
+       
         .breadcrumb-section {
             .page-title {
                 h2 {
@@ -5350,27 +5233,7 @@ background-color: $black;*/
                 }
             }
         }
-        .layout3-menu {
-            .main-menu {
-                >div {
-                    &:nth-child(2) {
-                        left: unset;
-                        right: 0;
-                    }
-                }
-                .menu-left {
-                    .main-menu-right {
-                        .toggle-nav {
-                            right: unset;
-                            left: 15px;
-                        }
-                    }
-                }
-            }
-            .brand-logo {
-                transform: translateX(-15%);
-            }
-        }
+       
         .top-header {
             .header-dropdown {
                 li {

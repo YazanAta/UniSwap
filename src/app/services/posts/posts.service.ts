@@ -24,9 +24,9 @@ export class PostsService {
   }
 
   // Get all approved posts, excluding the current user's posts
-  getAllPosts(): Promise<Post[]> {
+  getAllPosts(uid: string): Promise<Post[]> {
     return lastValueFrom(this.firestore.collection('posts', (ref) =>
-      ref.where('state', '==', 'approved')
+      ref.where('ownerId', '!=', uid).where('state', '==', 'approved')
     )
       .valueChanges({idField: 'id'})
       .pipe(take(1)))

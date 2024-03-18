@@ -65,12 +65,13 @@ export class ChatService {
   }
 
   // Get all chats for the current user
-  getChats(uid: string): Observable<Chat[]> {    
+  getChats(uid: string): Promise<Chat[]> {    
     // Using AngularFire to get real-time updates on the 'chatsCollection'
-    return this.firestore.collection<Chat>('chats').valueChanges().pipe(
-        // Filtering the chats based on whether the user is a participant
-        map(chats => chats.filter(chat => chat.participants.includes(uid)))
-    );
+    return lastValueFrom(this.firestore.collection<Chat>('chats').valueChanges().pipe(
+      map(chats => chats.filter(chat => chat.participants.includes(uid))),
+      // Take 1 emission and convert to a Promise
+      take(1)
+    ));
   }
 
   // Get details of a specific chat
@@ -90,13 +91,11 @@ export class ChatService {
   private async doesChatExist(uid: string, recipientId: string): Promise<boolean> {
     try {
       const chats = await this.getChats(uid);
-      this.getChats(uid).pipe(take(1)).subscribe((chats) => {
-        if (chats) {
-          return chats.some(chat => chat.participants.includes(recipientId));
-        } else {
-          return false;
-        }
-      })
+      if (chats) {
+        return chats.some(chat => chat.participants.includes(recipientId));
+      } else {
+        return false;
+      }
     } catch (error) {
       console.error('Error checking if chat exists:', error);
       return false;

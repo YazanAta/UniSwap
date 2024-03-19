@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Observable, from, map, of, switchMap, take } from 'rxjs';
+import { Observable, from, lastValueFrom, map, of, switchMap, take } from 'rxjs';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { ChatService } from 'src/app/services/chat/chat.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -32,7 +32,7 @@ export class ChatListComponent implements OnInit {
   private async getChats(){
     const user = await this.authService.getUser();
     this.uid = user.uid;
-    const chats = await this.chatService.getChats(user.uid)
+    const chats =  await lastValueFrom(this.chatService.getChats(user.uid).pipe(take(1)))
     this.chats = chats;
     this.updateRecipientUsernames();
     this.updateLastMessageFromChat(); 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AngularFirestore, CollectionReference, QueryFn } from '@angular/fire/compat/firestore';
 import { Observable, lastValueFrom } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { catchError, map, take } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { Chat, Message } from 'src/app/shared/interfaces/chat.interface';
 
@@ -65,13 +65,41 @@ export class ChatService {
   }
 
   // Get all chats for the current user
-  getChats(uid: string): Promise<Chat[]> {    
-    // Using AngularFire to get real-time updates on the 'chatsCollection'
-    return lastValueFrom(this.firestore.collection<Chat>('chats').valueChanges().pipe(
-      map(chats => chats.filter(chat => chat.participants.includes(uid))),
-      // Take 1 emission and convert to a Promise
-      take(1)
-    ));
+  getChats(uid: string): Observable<Chat[]> {
+    const queryFn: QueryFn = (ref: CollectionReference) =>
+      ref.where('participants', 'array-contains', uid);
+
+    return this.firestore.collection<Chat>('chats', queryFn).valueChanges()
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching chats:', error);
+          throw error; // Rethrow or handle as needed
+        })
+      );
+  }
+
+  // Check if a chat already exists between two users
+  private async doesChatExist(uid: string, recipientId: string): Promise<boolean> {
+    try {
+      const queryFn: QueryFn = (ref: CollectionReference) =>
+        ref.where('participants', 'array-contains', uid);
+
+      const chats = await lastValueFrom(
+        this.firestore.collection<Chat>('chats', queryFn).valueChanges().pipe(take(1))
+      );
+
+      if (chats) {
+        for (const chat of chats) {
+          if (chat.participants.includes(recipientId)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    } catch (error) {
+      console.error('Error checking if chat exists:', error);
+      return false;
+    }
   }
 
   // Get details of a specific chat
@@ -86,22 +114,7 @@ export class ChatService {
       })
     );
   }
-
-  // Check if a chat already exists between two users
-  private async doesChatExist(uid: string, recipientId: string): Promise<boolean> {
-    try {
-      const chats = await this.getChats(uid);
-      if (chats) {
-        return chats.some(chat => chat.participants.includes(recipientId));
-      } else {
-        return false;
-      }
-    } catch (error) {
-      console.error('Error checking if chat exists:', error);
-      return false;
-    }
-  }
-
+  
   // Send a message to a chat
   async sendMessage(chatId: string, message: string): Promise<void> {
     // Get the current user

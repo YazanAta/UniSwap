@@ -61,4 +61,8 @@ export class MenuComponent implements OnInit, OnDestroy{
     }
   }
 
+  scrollToAboutSection() {
+    this.router.navigate(['/'], { fragment: 'about' });
+  }
+  
 }

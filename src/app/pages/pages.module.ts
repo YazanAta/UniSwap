@@ -13,7 +13,6 @@ import { LoginComponent } from './account/login/login.component';
 import { RegisterComponent } from './account/register/register.component';
 import { ForgetPasswordComponent } from './account/forget-password/forget-password.component';
 import { ProfileComponent } from './account/profile/profile.component';
-import { AboutUsComponent } from './about-us/about-us.component';
 import { ErrorComponent } from './error/error.component';
 // Portfolio Components
 import { ReactiveFormsModule } from '@angular/forms';
@@ -38,7 +37,6 @@ import { PostsComponent } from './posts/posts.component';
     RegisterComponent,
     ForgetPasswordComponent,
     ProfileComponent,
-    AboutUsComponent,
     ErrorComponent,
     ChatComponent,
     SwapListComponent,

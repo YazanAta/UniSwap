@@ -6,7 +6,6 @@ import { LoginComponent } from './account/login/login.component';
 import { RegisterComponent } from './account/register/register.component';
 import { ForgetPasswordComponent } from './account/forget-password/forget-password.component';
 import { ProfileComponent } from './account/profile/profile.component';
-import { AboutUsComponent } from './about-us/about-us.component';
 import { ErrorComponent } from './error/error.component';
 import { authGuard } from '../services/guards/auth.guard';
 import { guestGuard } from '../services/guards/guest.guard';
@@ -39,11 +38,6 @@ const routes: Routes = [
     path: 'profile', 
     component: ProfileComponent,
     canActivate: [userGuard] 
-  },
-  { 
-    path: 'aboutus', 
-    component: AboutUsComponent,
-    canActivate: [guestGuard]
   },
   { 
     path: '404', 

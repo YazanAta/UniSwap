@@ -14,7 +14,7 @@
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Home</a>
       </li>
       <li>
-        <a routerLink="/pages/aboutus" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">About</a>
+        <a routerLink="" (click)="scrollToAboutSection()" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">About</a>
       </li>
       <ng-container *ngIf="isUser">
         <li>

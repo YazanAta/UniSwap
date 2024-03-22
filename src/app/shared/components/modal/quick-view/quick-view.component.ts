@@ -81,8 +81,7 @@ export class QuickViewComponent implements OnInit, OnDestroy {
 
   async createChat(post: Post): Promise<void> {
     try {
-      const chatId = await this.chatService.createChat(post.ownerId, post.title);
-      this.navigateToChat(chatId);
+      await this.chatService.createChat(post.ownerId, post.title);
     } catch (error) {
       this.toastrService.show('Unable to create chat', 'Chat', 'error');
       console.error('Error creating chat', error);
@@ -107,13 +106,5 @@ export class QuickViewComponent implements OnInit, OnDestroy {
       [ModalDismissReasons.BACKDROP_CLICK]: 'by clicking on a backdrop'
     };
     this.closeResult = `Dismissed ${reasons[reason] || `with: ${reason}`}`;
-  }
-
-  private navigateToChat(chatId: string | null): void {
-    if (chatId) {
-      this.router.navigate([`/pages/chats/${chatId}`]);
-    } else {
-      this.toastrService.show('Chat already exists', 'Chat', 'info');
-    }
   }
 }

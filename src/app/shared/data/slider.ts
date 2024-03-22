@@ -22,19 +22,3 @@ export let HomeSlider: any = {
         }
     },
 };
-
-
-// Testimonial Slider
-export let TestimonialSlider: any = {
-    loop: true,
-    dots: false,
-    navSpeed: 300,
-    responsive: {
-        991: {
-            items: 2
-        },
-        0: {
-            items: 1
-        }
-    }
-}

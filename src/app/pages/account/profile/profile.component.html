@@ -1,41 +1,43 @@
 <app-breadcrumb [title]="'Profile'" [breadcrumb]="'Profile'"></app-breadcrumb>
 <section>
     <div class="container">
-        <!-- personal deatail section start -->
+        <!-- personal detail section start -->
         <div class="row">
             <div class="col-sm-12">
-                <h3>PERSONAL DETAIL</h3>
-                <div class="theme-form">
-                    <div class="row">
-                        <!-- Skeleton Loader for First Name and Last Name -->
-                        <ng-container *ngIf="(userData$ | async) as userData; else loading">
-                            <div class="col-md-6">
-                                <div class="fw-bold">First Name</div>
-                                <div class="border p-3 my-1">{{ userData.firstName | titlecase }}</div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="fw-bold">Last Name</div>
-                                <div class="border p-3 my-1">{{ userData.lastName | titlecase }}</div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="fw-bold">Email</div>
-                                <div class="border p-3 my-1">{{ userData.email }}</div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="fw-bold">Gender</div>
-                                <div class="border p-3 my-1">{{ userData.gender | titlecase }}</div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="fw-bold">Points</div>
-                                <div class="border p-3 my-1">{{ userData.points }}</div>
-                            </div>
-                        </ng-container>
+                <h3 class="mb-4">Personal Details</h3>
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="row">
+                            <ng-container *ngIf="(userData$ | async) as userData; else loading">
+                                <div class="col-md-6 mb-3">
+                                    <div class="fw-bold">First Name</div>
+                                    <div>{{ userData.firstName | titlecase }}</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="fw-bold">Last Name</div>
+                                    <div>{{ userData.lastName | titlecase }}</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="fw-bold">Email</div>
+                                    <div>{{ userData.email }}</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="fw-bold">Gender</div>
+                                    <div>{{ userData.gender | titlecase }}</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="fw-bold">Points</div>
+                                    <div>{{ userData.points }}</div>
+                                </div>
+                            </ng-container>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- personal deatail section end -->
+        <!-- personal detail section end -->
 
+        
         <!-- product section start -->
         <section class="section-b-space">
             <div class="container">
@@ -60,41 +62,35 @@
 
         <!-- Requests section start -->
         <section class="section-b-space">
-            <div class="container">
-                <div class="product-related">
-                    <h2>Requests</h2>
-                </div>
-                <app-requests-section></app-requests-section>
+            <div class="product-related">
+                <h2 class="mb-3">Requests</h2>
             </div>
+            <app-requests-section></app-requests-section>
         </section>
         <!-- Requests section end -->
-        
     </div>
 </section>
-<!-- Section ends -->
-
 
 <ng-template #loading>
     <div class="container">
         <div class="row">
-            <!-- Customized Skeleton Loader for each field -->
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
                 <div class="fw-bold">First Name</div>
                 <ngx-skeleton-loader count="1" appearance="line" class="p-3 my-1"></ngx-skeleton-loader>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
                 <div class="fw-bold">Last Name</div>
                 <ngx-skeleton-loader count="1" appearance="line" class="p-3 my-1"></ngx-skeleton-loader>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
                 <div class="fw-bold">Email</div>
                 <ngx-skeleton-loader count="1" appearance="line" class="p-3 my-1"></ngx-skeleton-loader>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
                 <div class="fw-bold">Gender</div>
                 <ngx-skeleton-loader count="1" appearance="line" class="p-3 my-1"></ngx-skeleton-loader>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
                 <div class="fw-bold">Points</div>
                 <ngx-skeleton-loader count="1" appearance="line" class="p-3 my-1"></ngx-skeleton-loader>
             </div>

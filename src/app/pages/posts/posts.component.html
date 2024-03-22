@@ -20,7 +20,7 @@
                                 <div class="collection-collapse-block-content">
                                     <div class="collection-brand-filter">
                                         <ul class="category-list">
-                                            <li *ngFor="let category of categories">
+                                            <li *ngFor="let category of categories" [ngClass]="{'selected-category': selectedCategory?.name === category.name}">
                                                 <a (click)="selectCategory(category)">
                                                     {{ category.name }}
                                                 </a>
@@ -42,7 +42,8 @@
                                 <div class="collection-collapse-block-content">
                                     <div class="collection-brand-filter">
                                         <ul class="category-list">
-                                            <li *ngFor="let subcategory of selectedCategory.subCategory" >
+                                            <li *ngFor="let subcategory of selectedCategory.subCategory" 
+                                            [ngClass]="{'selected-subcategory': selectedSubCategory?.name === subcategory.name}">
                                                 <a (click)="selectSubCategory(subcategory)">
                                                     {{ subcategory.name }}
                                                 </a>
@@ -59,7 +60,8 @@
                                 <div class="collection-collapse-block-content">
                                     <div class="collection-brand-filter">
                                         <ul class="category-list">
-                                            <li *ngFor="let subSubcategory of selectedSubCategory.subCategory">
+                                            <li *ngFor="let subSubcategory of selectedSubCategory.subCategory"
+                                            [ngClass]="{'selected-subcategory': selectedSubSubCategory?.name === subSubcategory.name}">
                                                 <a (click)="selectSubSubCategory(subSubcategory)">
                                                     {{ subSubcategory.name }}
                                                 </a>
@@ -68,10 +70,26 @@
                                     </div>
                                 </div>
                             </div> 
-                            <!-- SubCategory2 Filter Start -->
+                            <!-- SubCategory2 Filter End -->
 
                         </div>
                         <!-- silde-bar colleps block end here -->
+
+                            
+                        <div class="collection-filter-block my-4 py-2">
+                            <h3 class="mb-3">Pricing</h3>
+                            <ul class="list-group">
+                                <li class="list-group-item" *ngFor="let type of ['all', 'free', 'paid']">
+                                    <div type="button" class="p-0 text-decoration-none"
+                                            (click)="selectType(type)"
+                                            [ngClass]="{'selected-type': selectedType === type}">
+                                        {{ type | titlecase }}
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Type Filter End -->
 
                     </div>
                     
@@ -104,7 +122,7 @@
                                 </div>
                                 <!---->
                                 <div class="collection-product-wrapper" id="products">
-                                    <div class="product-wrapper-grid" [ngClass]="'grid-view'">
+                                    <div class="product-wrapper-grid">
                                         <div class="row">
                                             <div class="col-grid-box" [ngClass]="'col-xl-3 col-md-6'" *ngFor="let post of filteredPosts">
                                                 <div class="product-box">
@@ -115,7 +133,7 @@
                                                 <img src="assets/images/empty-search.jpg" class="img-fluid mb-4">
                                                 <h3>Sorry! Couldn't find any post you were looking For!!! </h3>
                                                 <p>Please check if you have misspelt something or try searching with other words.</p>
-                                                <a [routerLink]="['/pages/posts']" class="btn btn-solid">continue shopping</a>
+                                                <a href="/pages/posts" class="btn btn-solid">continue shopping</a>
                                             </div>
                                         </div>
                                     </div>
@@ -127,5 +145,8 @@
             </div>
         </div>
     </div>
+    <div class="add-post-btn" data-bs-toggle="tooltip" data-bs-placement="left" title="Add new post" (click)="openModal()">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+    </div>    
 </section>
 <!-- section End -->

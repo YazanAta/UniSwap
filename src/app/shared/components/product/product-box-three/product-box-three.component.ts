@@ -82,19 +82,9 @@ export class ProductBoxThreeComponent implements OnInit {
   // Initiates a chat with the post owner
   async createChat(post: Post): Promise<void> {
     try {
-      const chatId = await this.chatService.createChat(post.ownerId, post.title);
-      if (!chatId) {
-        this.toastrService.show("Chat Already Exists", "Chat", 'info');
-        return;
-      }
-      this.navigateToChat(chatId);
+      await this.chatService.createChat(post.ownerId, post.title);
     } catch (error) {
       this.toastrService.show("Failed to create chat", "Chat", 'error');
     }
-  }
-
-  // Navigates to the chat page using the router
-  private navigateToChat(chatId: string): void {
-    this.router.navigate([`/pages/chats/${chatId}`]);
   }
 }

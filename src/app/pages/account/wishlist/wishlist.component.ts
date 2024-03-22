@@ -64,15 +64,10 @@ export class WishlistComponent implements OnInit, OnDestroy {
   
   async createChat(post: Post): Promise<void> {
     try {
-      const chatId = await this.chatService.createChat(post.ownerId, post.title);
-      chatId ? this.navigateToChat(chatId) : this.toastrService.show("Chat Already Exists", "Chat", 'info');
+      await this.chatService.createChat(post.ownerId, post.title);
     } catch (error) {
       this.toastrService.show("Failed to create chat", "Chat", 'error');
     }
-  }
-
-  private navigateToChat(chatId: string): void {
-    this.router.navigate([`/pages/chats/${chatId}`]);
   }
 
   ngOnDestroy(): void {

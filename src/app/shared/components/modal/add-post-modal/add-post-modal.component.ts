@@ -6,6 +6,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CATEGORIES, Category } from 'src/app/shared/interfaces/category.interface';
 import { PostsService } from 'src/app/services/posts/posts.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { CustomToastrService } from 'src/app/services/toastr/custom-toastr.service';
 
 @Component({
   selector: 'app-add-post-modal',
@@ -24,13 +25,15 @@ export class AddPostModalComponent implements OnInit {
   uid: string;
   private readonly MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
   private readonly ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
-  types = ['sale', 'free'];
+  types = ['paid', 'free'];
+  statues = ['new', 'used', ];
 
   constructor(
     private formBuilder: FormBuilder,
     public activeModal: NgbActiveModal,
     private postsService: PostsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastr: CustomToastrService
   ) {}
 
   async ngOnInit() {
@@ -46,7 +49,8 @@ export class AddPostModalComponent implements OnInit {
       category: ['', Validators.required],
       subCategory: [{ value: '', disabled: true }],
       subSubCategory: [{ value: '', disabled: true }],
-      type: ['', Validators.required],
+      pricing: ['', Validators.required],
+      status: ['', Validators.required],
       image: [null],
       price: [{ value: '', disabled: true }, Validators.required]
     });
@@ -110,7 +114,12 @@ export class AddPostModalComponent implements OnInit {
 
     this.postsService
       .addPost(this.postForm.value, this.selectedFile, this.uid)
-      .then(() => this.activeModal.close())
+      .then(() => {
+        this.toastr.show('Your post has been successfully uploaded and is currently under review by the administrator, You can review your post and it\'s current state from your profile page','Success', 'success', {
+          timeOut: 10000,
+        })
+        this.activeModal.close()
+      })
       .catch(error => console.error(error))
       .finally(() => (this.isSubmitting = false));
   }

@@ -50,6 +50,14 @@
         <option *ngFor="let type of types" [value]="type">{{ type | titlecase }}</option>
       </select>
     </div>
+
+    <!-- Statue Dropdown -->
+    <div class="form-group">
+      <label for="statue">Statue</label>
+      <select id="statue" formControlName="statue" class="form-control">
+        <option *ngFor="let statue of statues" [value]="statue">{{ statue | titlecase }}</option>
+      </select>
+    </div>
     
     <!-- Conditional Price Field -->
     <div class="form-group" *ngIf="postForm.get('type').value === 'sale'">

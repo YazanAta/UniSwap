@@ -1,5 +1,5 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Observable, from, lastValueFrom, map, of, switchMap, take } from 'rxjs';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Observable, Subscription, map, of } from 'rxjs';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { ChatService } from 'src/app/services/chat/chat.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -10,12 +10,13 @@ import { Chat, Message } from 'src/app/shared/interfaces/chat.interface';
   templateUrl: './chatlist.component.html',
   styleUrls: ['./chatlist.component.scss']
 })
-export class ChatListComponent implements OnInit {
+export class ChatListComponent implements OnInit, OnDestroy {
   chats: Chat[] = [];
   recipientUsernames: { [chatId: string]: Observable<string> } = {};
   lastMessages = {}; // Variable to store the last message
   uid: string;
   isLoading: boolean = true; // Indicates if the notifications are being loaded
+  private subscriptions = new Subscription();
 
 
   constructor(
@@ -29,14 +30,22 @@ export class ChatListComponent implements OnInit {
     this.getChats()
   }
 
-  private async getChats(){
-    const user = await this.authService.getUser();
-    this.uid = user.uid;
-    const chats =  await lastValueFrom(this.chatService.getChats(user.uid).pipe(take(1)))
-    this.chats = chats;
-    this.updateRecipientUsernames();
-    this.updateLastMessageFromChat(); 
+  private getChats(): void {
+    this.authService.getUser().then(user => {
+      this.uid = user.uid;
+      // Subscribe to chat updates
+      const chatSubscription = this.chatService.getChats(user.uid)
+        .subscribe(chats => {
+          this.chats = chats;
+          this.updateRecipientUsernames();
+          this.updateLastMessageFromChat();
+          this.isLoading = false;
+        });
+
+      this.subscriptions.add(chatSubscription);
+    });
   }
+
 
   private updateRecipientUsernames(): void {
     this.recipientUsernames = {};
@@ -62,7 +71,6 @@ export class ChatListComponent implements OnInit {
         this.lastMessages[chat.id] = message;
       })
     });
-    this.isLoading = false;
   }
 
   getLastMessageFromChat(chatId: string): Observable<Message | null> {
@@ -76,5 +84,7 @@ export class ChatListComponent implements OnInit {
     this.toggleChatListEvent.emit();
   }
 
-  
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe()
+  }
 }

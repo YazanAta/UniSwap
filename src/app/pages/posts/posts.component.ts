@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { PostsService } from 'src/app/services/posts/posts.service';
+import { AddPostModalComponent } from 'src/app/shared/components/modal/add-post-modal/add-post-modal.component';
 import { CATEGORIES, Category } from 'src/app/shared/interfaces/category.interface';
 import { Post } from 'src/app/shared/interfaces/post.interface';
 
@@ -19,6 +21,8 @@ export class PostsComponent {
   public collapse1: boolean = true; // Controls collapse state of UI component 1
   public collapse2: boolean = true; // Controls collapse state of UI component 2
   public collapse3: boolean = true; // Controls collapse state of UI component 3
+  public collapseType: boolean = true; // Controls collapse state of UI component 3
+
 
   // Mobile sidebar visibility toggle
   public mobileSidebar: boolean = false;
@@ -29,10 +33,13 @@ export class PostsComponent {
   public selectedSubCategory: Category | null = null;
   public selectedSubSubCategory: Category | null = null;
 
+  public selectedType: 'all' | 'free' | 'paid' = 'all'; // NEW: Selected post type filter
+
   constructor(
     private route: ActivatedRoute,
     private postsService: PostsService,
-    private authService: AuthService) {
+    private authService: AuthService,
+    private modalService: NgbModal) {
 
     // Subscribe to route query parameters to filter posts based on category selection
     this.route.queryParams.subscribe(params => {
@@ -40,7 +47,7 @@ export class PostsComponent {
         this.selectedCategory = this.categories.find(category => category.name == params.category);
       }else{
         this.selectedCategory = this.categories.find(category => category.name == params.category);
-        this.filterPostsByCategory();
+        this.filterPosts();
       }
     });
 
@@ -55,7 +62,7 @@ export class PostsComponent {
   async ngOnInit() {
     const user = await this.authService.getUser(); // Retrieve the current user
     await this.getAllPosts(user.uid); // Fetch all posts for the user
-    this.filterPostsByCategory(); // Apply initial category filter to posts
+    this.filterPosts(); // Apply initial category filter to posts
   }
 
   // Retrieves all posts for a given user
@@ -78,18 +85,18 @@ export class PostsComponent {
   selectCategory(category: Category) {
     this.resetSelections();
     this.selectedCategory = category;
-    this.filterPostsByCategory(); // Apply filter based on new category selection
+    this.filterPosts(); // Apply filter based on new category selection
   }
 
   selectSubCategory(subCategory: Category) {
     this.selectedSubCategory = subCategory;
     this.selectedSubSubCategory = null; // Reset sub-sub-category on new sub-category selection
-    this.filterPostsByCategory(); // Re-apply filter based on new sub-category selection
+    this.filterPosts(); // Re-apply filter based on new sub-category selection
   }
   
   selectSubSubCategory(subSubCategory: Category) {
     this.selectedSubSubCategory = subSubCategory;
-    this.filterPostsByCategory(); // Re-apply filter based on new sub-sub-category selection
+    this.filterPosts(); // Re-apply filter based on new sub-sub-category selection
   }
 
   // Resets category selections
@@ -99,13 +106,25 @@ export class PostsComponent {
   }
 
   // Filters posts based on selected category and sub-categories
-  private filterPostsByCategory() {
+  private filterPosts() {
     this.filteredPosts = this.posts.filter(post => {
       let matchesCategory = this.selectedCategory ? post.category === this.selectedCategory.name : true;
       let matchesSubCategory = this.selectedSubCategory ? post.subCategory === this.selectedSubCategory.name : true;
       let matchesSubSubCategory = this.selectedSubSubCategory ? post.subSubCategory === this.selectedSubSubCategory.name : true;
-  
-      return matchesCategory && matchesSubCategory && matchesSubSubCategory;
+      let matchesType = this.selectedType === 'all' || post.type === this.selectedType; // NEW: Type filter check
+
+      return matchesCategory && matchesSubCategory && matchesSubSubCategory && matchesType;
     });
+  }
+  
+  // NEW: Method to update selected type and re-filter posts
+  selectType(type: 'all' | 'free' | 'paid') {
+    this.selectedType = type;
+    this.filterPosts();
+  }
+
+  // Open add post modal
+  public openModal() {
+    this.modalService.open(AddPostModalComponent);
   }
 }

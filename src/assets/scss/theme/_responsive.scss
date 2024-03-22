@@ -128,13 +128,6 @@
         }
     }
   
-    hr {
-        &.style1 {
-            height: 1px;
-            margin-top: 7px;
-            margin-bottom: 7px;
-        }
-    }
     .home-slider {
         &:hover {
             .owl-prev,
@@ -308,13 +301,7 @@
         }
     }
   
-    .timer {
-        span {
-            .padding-l {
-                padding-left: 0;
-            }
-        }
-    }
+  
   
     .service-block,
     .service-block1 {
@@ -507,56 +494,6 @@
     }
 
 
-    .timer {
-        span {
-            width: 60px;
-        }
-    }
- 
-    // dark //
-    .dark {
-        .sm-horizontal {
-            background-color: $dark-body;
-            border-color: $dark-border;
-            .mobile-back {
-                border-color: $dark-border;
-                color: $white-3;
-            }
-         
-        }
-        .tab-product {
-            .nav-material {
-                &.nav-tabs {
-                    background-color: $dark-body;
-                }
-            }
-        }
-        header {
-          
-            &.header-gym {
-                .main-navbar {
-                    .nav-menu {
-                        background-color: $dark-body;
-                        >li {
-                            >a {
-                                color: white;
-                            }
-                        }
-                    }
-                }
-            }
-            .main-navbar {
-                .nav-menu {
-                    border-color: rgba(white, 0.17);
-                    .back-btn {
-                        .mobile-back {
-                            border-color: rgba(white, 0.17);
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
 
 @media(max-width: 991px) and (min-width: 767px) {
@@ -1132,9 +1069,7 @@ background-color: $black;*/
         .size-text {
             text-align: left;
         }
-        .timer {
-            text-align: left;
-        }
+      
         .product-icon {
             .product-social {
                 li {
@@ -1387,8 +1322,6 @@ background-color: $black;*/
     }
    
     .darken-layout,
-  
-
     .about-cls {
         .service {
             &.border-section {
@@ -2368,46 +2301,8 @@ background-color: $black;*/
             }
         }
     }
-    .timer {
-        p {
-            font-size: 14px;
-        }
-    }
+   
   
-    // dark //
-    .dark {
-        header {
-            &.header-gym {
-                background-color: #020202;
-            }
-        }
-        .collection-product-wrapper {
-            .product-top-filter {
-                .product-filter-content {
-                    .product-page-per-view {
-                        border-color: $dark-border !important;
-                    }
-                }
-            }
-        }
-        .tools-service {
-            &.absolute-banner {
-                .absolute-bg {
-                    box-shadow: none;
-                }
-            }
-        }
-        .full-banner {
-            .banner-contain {
-                background-color: rgba(0, 0, 0, 0.2);
-            }
-        }
-        .absolute-banner {
-            .absolute-bg {
-                box-shadow: none;
-            }
-        }
-    }
 }
 
 
@@ -2811,27 +2706,8 @@ background-color: $black;*/
                 padding: 5px 8px;
             }
         }
-        &.product-form-box {
-            .timer {
-                padding-left: 29px;
-                span {
-                    width: 45px;
-                }
-            }
-        }
-        .timer {
-            padding-left: 35px;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            span {
-                width: 55px;
-                &.padding-l {
-                    padding-right: 18px;
-                }
-            }
-        }
+      
+    
         .product-icon {
             .product-social {
                 margin-top: 0;
@@ -3055,29 +2931,6 @@ background-color: $black;*/
         }
     }
    
-  
-    .product-right {
-        .timer {
-            padding-left: 25px;
-            span {
-                .padding-l {
-                    padding-left: 10px;
-                }
-            }
-        }
-    }
-   
-    .product-form-box,
-    .border-product {
-        .timer {
-            span {
-                width: 45px;
-                .padding-l {
-                    padding-right: 5px;
-                }
-            }
-        }
-    }
    
 }
 

@@ -248,7 +248,7 @@ body {
                     }
                 }
             }
-            .sidenav {
+          .sidenav {
                 nav {
                     background-color: $dark-top;
                     transition: all 0.3s ease;
@@ -343,36 +343,7 @@ body {
         background-color: $dark-top;
         transition: all 0.3s ease;
     }
-    .sidenav {
-        nav {
-            background-color: $dark-top;
-            transition: all 0.3s ease;
-            .sidebar-menu {
-                background-color: $dark-top;
-                li {
-                    a {
-                        color: $white-1;
-                    }
-                    .mega-menu {
-                        background-color: $dark-top;
-                        box-shadow: none;
-                        .link-section {
-                            ul {
-                                background-color: $dark-top;
-                            }
-                        }
-                    }
-                    ul {
-                        background-color: $dark-top;
-                    }
-                }
-            }
-        }
-        .sidebar-back {
-            color: $white-1;
-            border-color: $dark-border;
-        }
-    }
+  
     .pixelstrap {
         ul {
             background: $dark-top;

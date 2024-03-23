@@ -25,8 +25,8 @@ export class AddPostModalComponent implements OnInit {
   uid: string;
   private readonly MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
   private readonly ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
-  types = ['paid', 'free'];
-  statues = ['new', 'used', ];
+  pricings = ['paid', 'free'];
+  conditions = ['new', 'good condition', 'fair condition', 'damaged'];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -50,20 +50,20 @@ export class AddPostModalComponent implements OnInit {
       subCategory: [{ value: '', disabled: true }],
       subSubCategory: [{ value: '', disabled: true }],
       pricing: ['', Validators.required],
-      status: ['', Validators.required],
+      condition: ['', Validators.required],
       image: [null],
       price: [{ value: '', disabled: true }, Validators.required]
     });
   }
 
   private setupFormSubscriptions() {
-    this.handleTypeChanges();
+    this.handlePricingChanges();
     this.handleCategoryChanges();
     this.handleSubCategoryChanges();
   }
 
-  private handleTypeChanges() {
-    this.postForm.get('type').valueChanges.subscribe(value => this.togglePriceField(value));
+  private handlePricingChanges() {
+    this.postForm.get('pricing').valueChanges.subscribe(value => this.togglePriceField(value));
   }
 
   private handleCategoryChanges() {
@@ -75,7 +75,7 @@ export class AddPostModalComponent implements OnInit {
   }
 
   private togglePriceField(value: string) {
-    value === 'sale' ? this.postForm.get('price').enable() : this.postForm.get('price').disable();
+    value === 'paid' ? this.postForm.get('price').enable() : this.postForm.get('price').disable();
   }
 
   private updateSubCategories(value: string) {

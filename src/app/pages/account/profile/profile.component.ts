@@ -15,7 +15,7 @@ import { Post } from 'src/app/shared/interfaces/post.interface';
 })
 export class ProfileComponent implements OnInit, OnDestroy{
 
-   testData: Post[] = [
+   testData: any[] = [
     {
       "category": "Text Books",
       "subCategory": "Humanitarian Faculties",

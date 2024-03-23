@@ -78,7 +78,7 @@ export class ManagePostModalComponent implements OnInit{
     if(selectedState === 'rejected'){
       this.adminService.updatePostState(this.post.id, {
         state: this.postStateForm.get('state').value,
-        type: this.post.type,
+        pricing: this.post.pricing,
         ownerId: this.post.ownerId
       }).then(() => {
         const ownerId = this.post.ownerId; 
@@ -99,7 +99,7 @@ export class ManagePostModalComponent implements OnInit{
     }else if (selectedState === 'approved'){
       this.adminService.updatePostState(this.post.id,{
         state: this.postStateForm.get('state').value,
-        type: this.post.type,
+        pricing: this.post.pricing,
         ownerId: this.post.ownerId
       }).then(() => {
         const ownerId = this.post.ownerId; 

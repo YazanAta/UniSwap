@@ -4,7 +4,7 @@
       <tr>
         <th scope="col">Image</th>
         <th scope="col">Title</th>
-        <th scope="col">Type</th>
+        <th scope="col">Pricing</th>
         <th scope="col">Price</th>
         <th scope="col">Actions</th>
       </tr>
@@ -12,8 +12,8 @@
     <tbody>
       <tr *ngFor="let post of posts">
         <td class="align-middle"><img [src]="post.image" alt="{{ post.title }} Image" style="max-width: 50px;"></td>
-        <td class="align-middle">{{ post.title }}</td>
-        <td class="align-middle">{{ post.type }}</td>
+        <td class="align-middle">{{ post.title |titlecase }}</td>
+        <td class="align-middle">{{ post.pricing | titlecase }}</td>
         <td class="align-middle">{{ post.price | currency }}</td>
         <td class="align-middle"><button class="btn btn-primary btn-sm" (click)="swapRequest(otherParticipant.uid, post)">Swap me</button></td>
       </tr>

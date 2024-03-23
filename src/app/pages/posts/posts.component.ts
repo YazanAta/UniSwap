@@ -33,7 +33,7 @@ export class PostsComponent {
   public selectedSubCategory: Category | null = null;
   public selectedSubSubCategory: Category | null = null;
 
-  public selectedType: 'all' | 'free' | 'paid' = 'all'; // NEW: Selected post type filter
+  public selectedPricing: 'all' | 'free' | 'paid' = 'all'; // NEW: Selected post type filter
 
   constructor(
     private route: ActivatedRoute,
@@ -111,15 +111,15 @@ export class PostsComponent {
       let matchesCategory = this.selectedCategory ? post.category === this.selectedCategory.name : true;
       let matchesSubCategory = this.selectedSubCategory ? post.subCategory === this.selectedSubCategory.name : true;
       let matchesSubSubCategory = this.selectedSubSubCategory ? post.subSubCategory === this.selectedSubSubCategory.name : true;
-      let matchesType = this.selectedType === 'all' || post.type === this.selectedType; // NEW: Type filter check
+      let matchesType = this.selectedPricing === 'all' || post.pricing === this.selectedPricing; // NEW: Type filter check
 
       return matchesCategory && matchesSubCategory && matchesSubSubCategory && matchesType;
     });
   }
   
   // NEW: Method to update selected type and re-filter posts
-  selectType(type: 'all' | 'free' | 'paid') {
-    this.selectedType = type;
+  selectPricing(pricing: 'all' | 'free' | 'paid') {
+    this.selectedPricing = pricing;
     this.filterPosts();
   }
 

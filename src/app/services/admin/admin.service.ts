@@ -74,7 +74,7 @@ export class AdminService {
       });
   
       // Check for truthiness and use optional chaining
-      if (data?.type === 'free' && data?.state === 'approved') {
+      if (data?.pricing === 'free' && data?.state === 'approved') {
         // Ensure incrementPoints returns a Promise
         await this.userService.incrementPoints(data.ownerId);
       }

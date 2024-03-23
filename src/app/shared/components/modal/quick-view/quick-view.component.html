@@ -16,13 +16,16 @@
           <div class="col-lg-6 rtl-text">
             <div class="product-right">
               <h2>{{ post.title | titlecase }}</h2>
-              <p class="text-muted" *ngIf="post.type === 'free'; else salePrice">{{ post.type | titlecase }}</p>
+              <p class="text-muted" *ngIf="post.pricing === 'free'; else salePrice">{{ post.pricing | titlecase }}</p>
               <ng-template #salePrice><p class="text-muted">Price: {{post.price}} JD</p></ng-template>
               <div class="border-product text-muted">
-                {{ post.category }}
+                {{ post.category | titlecase }}
               </div>
               <div class="border-product">
                 <p>{{ post.description }}</p>
+              </div>
+              <div class="border-product">
+                <p>Condition: {{ post.condition | titlecase}}</p>
               </div>
               <div *ngIf="ownerInfo" class="border-product">
                 <p class="text-muted">Owner: {{ ownerInfo.firstName }} {{ ownerInfo.lastName }}</p>

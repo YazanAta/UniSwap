@@ -79,11 +79,11 @@
                         <div class="collection-filter-block my-4 py-2">
                             <h3 class="mb-3">Pricing</h3>
                             <ul class="list-group">
-                                <li class="list-group-item" *ngFor="let type of ['all', 'free', 'paid']">
+                                <li class="list-group-item" *ngFor="let pricing of ['all', 'free', 'paid']">
                                     <div type="button" class="p-0 text-decoration-none"
-                                            (click)="selectType(type)"
-                                            [ngClass]="{'selected-type': selectedType === type}">
-                                        {{ type | titlecase }}
+                                            (click)="selectPricing(pricing)"
+                                            [ngClass]="{'selected-type': selectPricing === pricing}">
+                                        {{ pricing | titlecase }}
                                     </div>
                                 </li>
                             </ul>

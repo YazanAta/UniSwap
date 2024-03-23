@@ -12,51 +12,6 @@
   
 
     // inner pages //
-    .collection-product-wrapper {
-        .product-top-filter {
-            .product-filter-content {
-                .search-count {
-                    width: 100%;
-                    border-left: 1px solid $round-border;
-                    border-bottom: 1px solid $round-border;
-                    text-align: center;
-                }
-                .collection-view {
-                    width: 20%;
-                    padding-right: 0 !important;
-                    border-left: 1px solid $round-border;
-                }
-                .collection-grid-view {
-                    padding: 20px !important;
-                    padding-left: 0 !important;
-                    width: 20%;
-                    border-left: 1px solid $round-border;
-                    ul {
-                        li {
-                            &:last-child {
-                                display: none;
-                            }
-                        }
-                    }
-                }
-                .product-page-filter {
-                    border-right: 1px solid $round-border;
-                    width: 30%;
-                }
-                .product-page-per-view {
-                    width: 30%;
-                }
-            }
-            .popup-filter {
-                .collection-view {
-                    width: 10%;
-                }
-                .product-page-per-view {
-                    width: 25%;
-                }
-            }
-        }
-    }
   
     .product-right {
         .product-icon {
@@ -67,48 +22,6 @@
             }
         }
     }
-
-    .dark {
-        .collection-product-wrapper {
-            .product-top-filter {
-                .product-filter-content {
-                    .collection-view {
-                        border-color: $dark-border;
-                    }
-                    .product-page-filter {
-                        border-color: $dark-border;
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-@media(max-width: 1430px) and (min-width: 1200px) {
-   
-    .portfolio-section {
-        &.metro-section {
-            .product-box {
-                .cart-wrap {
-                    a {
-                        i {
-                            padding: 5px;
-                        }
-                    }
-                    i {
-                        font-size: 14px;
-                    }
-                    button {
-                        i {
-                            padding: 5px;
-                        }
-                    }
-                }
-            }
-        }
-    }
-   
 }
 
 @media(max-width: 1367px) {
@@ -263,11 +176,8 @@
         padding-top: 60px;
     }
 
- 
     header {
         &.header-tools {
-           
-        
             .main-navbar {
                 .nav-menu {
                     >li {
@@ -288,7 +198,6 @@
     .section-b-space {
         padding-bottom: 60px;
     }
-    
     .title3 {
         h4 {
             padding-bottom: 8px;
@@ -300,17 +209,7 @@
             margin-bottom: 25px;
         }
     }
-  
-  
-  
-    .service-block,
-    .service-block1 {
-        svg {
-            width: 50px;
-            height: 50px;
-        }
-    }
-  
+
     .full-banner {
         .banner-contain {
             h2 {
@@ -363,12 +262,6 @@
             }
         }
     }
-    .background {
-        .contain-bg {
-            padding-top: 30px;
-            padding-bottom: 30px;
-        }
-    }
     .theme-card {
         .offer-slider {
             .media {
@@ -393,7 +286,6 @@
             }
         }
     }
-
 
     .home-slider {
         &.fullpage {
@@ -492,8 +384,6 @@
             font-size: 20px;
         }
     }
-
-
 }
 
 @media(max-width: 991px) and (min-width: 767px) {
@@ -522,29 +412,8 @@
     }
 }
 
-@media (min-width: 992px) {
-    .rtl {
-        .service_slide {
-            .service-home {
-                .offset-lg-2 {
-                    margin-right: 16.6666666667%;
-                    margin-left: 0;
-                }
-            }
-        }
-    }
-}
-
 @media(max-width: 991px) {
    
-    .service_slide {
-        .service-home {
-            position: relative;
-            .service-block1 {
-                padding: 0;
-            }
-        }
-    }
     .service_slide {
         .partition4 {
             >div {
@@ -1246,7 +1115,6 @@ background-color: $black;*/
             }
         }
     }
-  
     .tools-service {
         .service-block {
             +.service-block {
@@ -1262,7 +1130,6 @@ background-color: $black;*/
             line-height: 25px;
         }
     }
-  
     .portfolio-section {
         &.metro-section {
             .product-box {
@@ -1316,22 +1183,10 @@ background-color: $black;*/
     .section-b-space {
         padding-bottom: 40px;
     }
-
     .small-section {
         padding: 23px 0 20px;
     }
-   
     .darken-layout,
-    .about-cls {
-        .service {
-            &.border-section {
-                border-bottom: none;
-            }
-            &.small-section {
-                padding-bottom: 0;
-            }
-        }
-    }
   
     .service-block {
         .media {
@@ -1364,7 +1219,6 @@ background-color: $black;*/
             margin-bottom: 25px;
         }
     }
-
     .about-text {
         p {
             line-height: 25px;
@@ -1417,8 +1271,7 @@ background-color: $black;*/
             }
         }
     }
-  
-  
+
     .home-slider {
         &.fullpage {
             .slick-dots {
@@ -1485,8 +1338,7 @@ background-color: $black;*/
             }
         }
     }
-   
- 
+
     .category-border {
         div {
             .category-banner {
@@ -1499,7 +1351,6 @@ background-color: $black;*/
         }
     }
   
- 
     .product-box {
         .img-block {
             min-height: 350px;
@@ -1538,7 +1389,6 @@ background-color: $black;*/
             }
         }
     }
-   
 
     .full-banner {
         padding-top: 120px;
@@ -1613,38 +1463,6 @@ background-color: $black;*/
         }
     }
    
-    .theme-modal {
-        .modal-dialog {
-            .modal-content {
-                .modal-body {
-                    .modal-bg {
-                        .age-content {
-                            h2 {
-                                margin-bottom: 20px;
-                                padding-bottom: 20px;
-                            }
-                            h4 {
-                                margin-bottom: 20px;
-                                font-size: 15px;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        &.cart-modal {
-            .product-section {
-                display: none;
-            }
-        }
-        &.exit-modal {
-            .media {
-                .media-body {
-                    h4 {}
-                }
-            }
-        }
-    }
     .filter-main-btn {
         span {
             font-size: 16px;
@@ -1655,23 +1473,8 @@ background-color: $black;*/
         right: 20px;
     }
     // inner pages //
-  
-  
     .testimonial {
         background-color: $grey-about;
-        .testimonial-slider {
-            .media {
-                .media-body {
-                    padding: 30px 30px 30px 30px;
-                }
-            }
-        }
-    }
-    .about-page {
-        text-align: center;
-        p {
-            line-height: 1.5;
-        }
     }
     .team {
         h2 {
@@ -1769,25 +1572,10 @@ background-color: $black;*/
             }
         }
     }
-   
-    // rtl section //
-   
-    // dark //
-    .dark {
-        .collection-product-wrapper {
-            .product-pagination {
-                .theme-paggination-block {
-                    nav {
-                        border-color: $dark-border;
-                    }
-                }
-            }
-        }
-    }
+
 }
 
 @media (max-width: 577px) {
-  
    
     .service_slide {
         .home-slider {
@@ -1842,8 +1630,6 @@ background-color: $black;*/
         padding-top: 100px;
         padding-bottom: 100px;
     }
-
-
     .section-b-space {
         padding-bottom: 30px;
     }
@@ -1854,8 +1640,7 @@ background-color: $black;*/
     h2 {
         font-size: 24px;
     }
-   
-   
+
     .sticky {
         &.fixed {
             .top-header {
@@ -1863,8 +1648,7 @@ background-color: $black;*/
             }
         }
     }
-    
- 
+   
     .btn-solid {
         padding: 7px 15px;
     }
@@ -1979,7 +1763,6 @@ background-color: $black;*/
             }
         }
     }
-   
   
     .category-border {
         div {
@@ -1999,7 +1782,6 @@ background-color: $black;*/
         }
     }
    
-  
     .full-banner {
         padding-top: 50px;
         padding-bottom: 50px;
@@ -2114,10 +1896,8 @@ background-color: $black;*/
         padding: 2px;
         font-size: 19px;
     }
- 
 
     // inner pages //
- 
     .error-section {
         padding: 100px 0;
         h1 {
@@ -2233,7 +2013,6 @@ background-color: $black;*/
         }
     }
 
-  
     .wishlist-section {
         .btn-solid {
             padding: 7px 8px;
@@ -2279,9 +2058,7 @@ background-color: $black;*/
             }
         }
     }
-   
-   
-    
+
     .main-menu {
         .menu-left {
             .navbar {
@@ -2300,12 +2077,8 @@ background-color: $black;*/
                 }
             }
         }
-    }
-   
-  
+    }  
 }
-
-
 
 @media (max-width: 480px) {
     .service_slide {
@@ -2321,7 +2094,6 @@ background-color: $black;*/
             margin-bottom: 20px;
         }
     }
-
 
     .category-border {
         div {
@@ -2347,7 +2119,6 @@ background-color: $black;*/
         }
     }
    
-  
     .product-box {
         .img-block {
             min-height: 290px;
@@ -2413,7 +2184,6 @@ background-color: $black;*/
             }
         }
     }
-    
     
     .theme-modal {
         .modal-dialog {
@@ -2485,8 +2255,6 @@ background-color: $black;*/
             }
         }
     }
-    
-    
     .pwd-page {
         padding: 70px 0;
         h2 {
@@ -2515,7 +2283,6 @@ background-color: $black;*/
             }
         }
     }
-  
 }
 
 @media (max-width: 420px) {
@@ -2527,18 +2294,6 @@ background-color: $black;*/
             line-height: 22px;
         }
     }
-    .service_slide {
-        .service-home {
-            .service-block1 {
-                svg {
-                    width: 40px;
-                    height: 40px;
-                }
-            }
-        }
-    }
-   
-
     h2 {
         font-size: 22px;
     }
@@ -2582,8 +2337,7 @@ background-color: $black;*/
     .breadcrumb-section {
         padding: 15px 0;
     }
-  
-    
+
     .full-banner {
         .banner-contain {
             h2 {
@@ -2637,7 +2391,6 @@ background-color: $black;*/
         }
     }
     
-   
     .product-box {
         .img-wrapper {
             .lable-block {
@@ -2667,22 +2420,7 @@ background-color: $black;*/
             line-height: 15px;
         }
     }
-    .theme-modal {
-        .modal-dialog {
-            .modal-content {
-                .modal-body {
-                    .modal-bg {
-                        padding: 30px;
-                        .offer-content {
-                            h2 {
-                                font-size: 30px;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+
     .login-page {
         .authentication-right {
             p {
@@ -2746,8 +2484,7 @@ background-color: $black;*/
                 }
             }
         }
-    }
-   
+    } 
 }
 
 @media (max-width: 360px) {
@@ -2766,8 +2503,6 @@ background-color: $black;*/
     h2 {
         font-size: 25px;
     }
-   
-  
     .category-border {
         div {
             .category-banner {
@@ -2823,7 +2558,6 @@ background-color: $black;*/
             }
         }
     }
-    
     
     .about-page {
         p {
@@ -2888,8 +2622,6 @@ background-color: $black;*/
             padding: 18px;
         }
     }
-   
-
     .cart-section,
     .wishlist-section {
         tbody {
@@ -2930,19 +2662,14 @@ background-color: $black;*/
             }
         }
     }
-   
-   
 }
 
 @media (max-width: 320px) {
-  
-  
     .footer-theme {
         .footer-logo {
             margin-bottom: 20px;
         }
     }
-   
     .collection-banner {
         .contain-banner {
             &.banner-3 {
@@ -2962,9 +2689,3 @@ background-color: $black;*/
         }
     }
 }
-
-
-/*=====================
-Fashion-2 Demo Responsive CSS
-==========================*/
-

@@ -590,30 +590,6 @@ header {
                         }
                     }
                 }
-                .mobile-search {
-                    right: 80%;
-                    z-index: 1;
-                    i {
-                        display: inline-block;
-                        font-size: 22px;
-                        color: $header-font;
-                    }
-                    img {
-                        display: none;
-                    }
-                    .show-div {
-                        .form-group {
-                            margin-bottom: 0;
-                        }
-                        .form-inline {
-                            button {
-                                i {
-                                    font-size: 14px;
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
     }

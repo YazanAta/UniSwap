@@ -14,25 +14,27 @@
 						<p>In UniSwap, students can easily list items they no longer need and find items they require, fostering a culture of reuse and minimising costs.</p>
 					</div>
 				</div>
-				<div class="col offset-xl-1">
-					<div class="sub-title">
-						<div class="footer-title">
-                            <h4>Categories</h4>
-                        </div>
-                        <div class="footer-contant">
-                            <ul>
-                                <li *ngFor="let category of categories">
-									<a routerLink="/pages/posts" 
-										[queryParams]="{category: category.name}"
-										routerLinkActive="active"
-										[routerLinkActiveOptions]="{exact: true}">
-										{{category.name}}
-									</a>
-								</li>
-                            </ul>
-                        </div>
+				<ng-container *ngIf="isUser">
+					<div class="col offset-xl-1" >
+						<div class="sub-title">
+							<div class="footer-title">
+								<h4>Categories</h4>
+							</div>
+							<div class="footer-contant">
+								<ul>
+									<li *ngFor="let category of categories">
+										<a routerLink="/pages/posts" 
+											[queryParams]="{category: category.name}"
+											routerLinkActive="active"
+											[routerLinkActiveOptions]="{exact: true}">
+											{{category.name}}
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
 					</div>
-				</div>
+				</ng-container>
 				<div class="col">
 					<div class="sub-title">
 						<div class="footer-title">
@@ -40,7 +42,7 @@
                         </div>
                         <div class="footer-contant">
                             <ul>
-                                <li><a routerLink="/pages/aboutus">About</a></li>
+                                <li><a (click)="scrollToAboutSection()" routerLink="">About</a></li>
                             </ul>
                         </div>
 					</div>

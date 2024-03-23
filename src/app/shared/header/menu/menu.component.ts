@@ -62,7 +62,25 @@ export class MenuComponent implements OnInit, OnDestroy{
   }
 
   scrollToAboutSection() {
-    this.router.navigate(['/'], { fragment: 'about' });
+    // Check if already on home page
+    if (this.router.url === '') {
+      // Scroll to about section
+      const aboutSection = document.getElementById('about');
+      if (aboutSection) {
+        aboutSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // Navigate to home page
+      this.router.navigate(['']).then(() => {
+        // Scroll to about section after navigation
+        setTimeout(() => {
+          const aboutSection = document.getElementById('about');
+          if (aboutSection) {
+            aboutSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 500); // Adjust timing as needed
+      });
+    }
   }
   
 }

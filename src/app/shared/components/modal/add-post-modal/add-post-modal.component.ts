@@ -7,13 +7,15 @@ import { CATEGORIES, Category } from 'src/app/shared/interfaces/category.interfa
 import { PostsService } from 'src/app/services/posts/posts.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { CustomToastrService } from 'src/app/services/toastr/custom-toastr.service';
+import { CustomValidationsService } from 'src/app/services/validations/custom-validations.service';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 @Component({
   selector: 'app-add-post-modal',
   templateUrl: './add-post-modal.component.html',
   styleUrls: ['./add-post-modal.component.scss'],
   standalone: true,
-  imports: [AngularFireStorageModule, ReactiveFormsModule, CommonModule]
+  imports: [AngularFireStorageModule, ReactiveFormsModule, CommonModule, CurrencyMaskModule]
 })
 export class AddPostModalComponent implements OnInit {
   postForm: FormGroup;
@@ -25,8 +27,8 @@ export class AddPostModalComponent implements OnInit {
   uid: string;
   private readonly MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
   private readonly ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
-  types = ['paid', 'free'];
-  statues = ['new', 'used', ];
+  pricings = ['paid', 'free'];
+  conditions = ['new', 'good condition', 'fair condition', 'damaged'];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -50,20 +52,20 @@ export class AddPostModalComponent implements OnInit {
       subCategory: [{ value: '', disabled: true }],
       subSubCategory: [{ value: '', disabled: true }],
       pricing: ['', Validators.required],
-      status: ['', Validators.required],
+      condition: ['', Validators.required],
       image: [null],
-      price: [{ value: '', disabled: true }, Validators.required]
+      price: [{ value: '', disabled: true }, [Validators.required, CustomValidationsService.priceValidator(1000)]],
     });
   }
 
   private setupFormSubscriptions() {
-    this.handleTypeChanges();
+    this.handlePricingChanges();
     this.handleCategoryChanges();
     this.handleSubCategoryChanges();
   }
 
-  private handleTypeChanges() {
-    this.postForm.get('type').valueChanges.subscribe(value => this.togglePriceField(value));
+  private handlePricingChanges() {
+    this.postForm.get('pricing').valueChanges.subscribe(value => this.togglePriceField(value));
   }
 
   private handleCategoryChanges() {
@@ -75,7 +77,7 @@ export class AddPostModalComponent implements OnInit {
   }
 
   private togglePriceField(value: string) {
-    value === 'sale' ? this.postForm.get('price').enable() : this.postForm.get('price').disable();
+    value === 'paid' ? this.postForm.get('price').enable() : this.postForm.get('price').disable();
   }
 
   private updateSubCategories(value: string) {
@@ -112,6 +114,11 @@ export class AddPostModalComponent implements OnInit {
     if (this.isSubmitting || !this.postForm.valid) return;
     this.isSubmitting = true;
 
+    const formValue = this.postForm.value;
+    if (formValue.price) {
+      formValue.price = parseFloat(formValue.price.replace(/[^0-9.]/g, ''));
+    }
+    
     this.postsService
       .addPost(this.postForm.value, this.selectedFile, this.uid)
       .then(() => {

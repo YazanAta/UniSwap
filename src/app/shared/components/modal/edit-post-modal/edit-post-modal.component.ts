@@ -17,7 +17,8 @@ export class EditPostModalComponent {
   categories: Category[] = CATEGORIES;
   subCategories: Category[] = [];
   subSubCategories: Category[] = [];
-  types = ['Sale', 'Free'];
+  pricings = ['paid', 'free'];
+  conditions = ['new', 'good condition', 'fair condition', 'damaged'];
   isSubmitting = false;
   @Input() post: Post;
   uid: string
@@ -42,14 +43,15 @@ export class EditPostModalComponent {
       category: [this.post.category || '' , Validators.required],
       subCategory: [{value: this.post.subCategory || '', disabled: true }],
       subSubCategory:[{ value: this.post.subSubCategory || '', disabled: true }],
-      type: [this.post.type || '', Validators.required],
+      condition: ['', Validators.required],
+      pricing: [this.post.pricing || '', Validators.required],
       price: [{value: this.post.price || '', disabled: true}, Validators.required]
     });
     // Disable the price field if the type is Free
     // Enable the price field if the type is Sale
     // Subscribe to the type field value changes
-    this.postForm.get('type').valueChanges.subscribe(value => {
-      if (value === 'Sale') {
+    this.postForm.get('pricing').valueChanges.subscribe(value => {
+      if (value === 'paid') {
         this.postForm.get('price').enable();
       } else {
         this.postForm.get('price').disable();

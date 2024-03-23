@@ -36,7 +36,7 @@ export class SwapService {
   async swapRequest(otherParticipantId: string, username: string, post: Post): Promise<void>{
 
     // Check if the user has enough points to initiate the swap for a free post
-    if(post.type == 'free'){
+    if(post.pricing == 'free'){
       const user = await lastValueFrom(this.userService.getUserInfoById(otherParticipantId).pipe(take(1)));
       if (!user || user.points <= 0) {
         // Handle the case where the user doesn't have enough points
@@ -66,7 +66,7 @@ export class SwapService {
     await this.postsService.updateState(post.id, "swapped");
 
     // If type of post is free -> decreament point by 1
-    if(post.type == 'free'){
+    if(post.pricing == 'free'){
       await this.userService.decrementPoints(uid)
     }
 

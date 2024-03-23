@@ -36,12 +36,18 @@
         </select>
       </div>
       <div class="form-group">
-        <label for="type">Type</label>
-        <select id="type" formControlName="type" class="form-control">
-          <option *ngFor="let type of types" [value]="type">{{ type }}</option>
+        <label for="condition">Condition</label>
+        <select id="condition" formControlName="condition" class="form-control">
+          <option *ngFor="let condition of conditions" [value]="condition">{{ condition | titlecase }}</option>
         </select>
       </div>
-      <div class="form-group" *ngIf="postForm.get('type').value === 'Sale'">
+      <div class="form-group">
+        <label for="pricing">Pricing</label>
+        <select id="pricing" formControlName="pricing" class="form-control">
+          <option *ngFor="let pricing of pricings" [value]="pricing">{{ pricing }}</option>
+        </select>
+      </div>
+      <div class="form-group" *ngIf="postForm.get('pricing').value === 'paid'">
         <label for="price">Price</label>
         <input type="number" id="price" formControlName="price" placeholder="Price" class="form-control">
       </div>

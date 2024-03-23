@@ -15,149 +15,145 @@ import { Post } from 'src/app/shared/interfaces/post.interface';
 })
 export class ProfileComponent implements OnInit, OnDestroy{
 
-   testData: Post[] = [
+  start: any = new Date(2020, 0, 1);
+  end: any = new Date()
+  randomDate() {
+    var date = new Date(+this.start + Math.random() * (this.end - this.start));
+    var hour = 0 + Math.random() * (24 - 0) | 0;
+    date.setHours(hour);
+    return date;
+  }
+  items: any[] = [
     {
+      "title": "Introduction to Machine Learning",
+      "condition": "new",
+      "createdAt": "2024-03-14T10:20:39.000Z",
+      "description": "A comprehensive introduction to the concepts and algorithms of machine learning.",
+      "image": "https://picsum.photos/200/300?random=31",
+      "ownerId": "zIYoHoKCyFdR22cacnSPGfQsOlo2",
+      "pricing": "paid",
+      "price": 90,
+      "state": "approved",
       "category": "Text Books",
-      "subCategory": "Humanitarian Faculties",
-      "subSubCategory": "School Of Foreign Languages",
-      "title": "Advanced Language Patterns",
-      "description": "Exploring complex linguistic structures across languages.",
-      "type": "paid",
-      "price": "65",
-      "createdAt": new Date(),
-      "state": "approved",
-      "ownerId": "taUw2XSRd2arhb7UJTXTnYojFHN2",
-      "image": "https://picsum.photos/200/300?random=73"
+      "subCategory": "Scientific faculties",
+      "subSubCategory": "King Abdullah II School for Information Technology"
     },
     {
-      "category": "Text Books",
-      "subCategory": "Humanitarian Faculties",
-      "subSubCategory": "School Of Archaeology And Tourism",
-      "title": "Ancient Civilizations and Their Discoveries",
-      "description": "Unveiling the mysteries of ancient societies and their cultures.",
-      "type": "free",
-      "createdAt": new Date(),
+      "title": "Surgical Instruments Set",
+      "condition": "good condition",
+      "createdAt": "2024-03-17T16:05:39.000Z",
+      "description": "Complete set of surgical instruments for medical students and professionals.",
+      "image": "https://picsum.photos/200/300?random=32",
+      "ownerId": "zIYoHoKCyFdR22cacnSPGfQsOlo2",
+      "pricing": "free",
       "state": "approved",
-      "ownerId": "taUw2XSRd2arhb7UJTXTnYojFHN2",
-      "image": "https://picsum.photos/200/300?random=74"
-    },
-    {
-      "category": "Text Books",
-      "subCategory": "Scientific Faculties",
-      "subSubCategory": "School Of Agriculture",
-      "title": "Future of Sustainable Farming",
-      "description": "Innovative techniques for eco-friendly agriculture.",
-      "type": "paid",
-      "price": "75",
-      "createdAt": new Date(),
-      "state": "approved",
-      "ownerId": "taUw2XSRd2arhb7UJTXTnYojFHN2",
-      "image": "https://picsum.photos/200/300?random=75"
-    },
-    {
-      "category": "Text Books",
-      "subCategory": "Scientific Faculties",
-      "subSubCategory": "King Abdullah II School For Information Technology",
-      "title": "Emerging Technologies in IT",
-      "description": "A deep dive into blockchain, AI, and IoT.",
-      "type": "free",
-      "createdAt": new Date(),
-      "state": "approved",
-      "ownerId": "taUw2XSRd2arhb7UJTXTnYojFHN2",
-      "image": "https://picsum.photos/200/300?random=76"
-    },
-    {
-      "category": "Text Books",
-      "subCategory": "Medical Faculties",
-      "subSubCategory": "School Of Rehabilitation Sciences",
-      "title": "Innovations in Rehabilitation Therapy",
-      "description": "Cutting-edge practices for physical and occupational therapy.",
-      "type": "paid",
-      "price": "80",
-      "createdAt": new Date(),
-      "state": "approved",
-      "ownerId": "taUw2XSRd2arhb7UJTXTnYojFHN2",
-      "image": "https://picsum.photos/200/300?random=77"
-    },
-    {
-      "category": "Uniforms",
-      "subCategory": "Medical Uniforms",
-      "title": "Eco-Friendly Scrubs",
-      "description": "Sustainable and comfortable scrubs for healthcare workers.",
-      "type": "free",
-      "createdAt": new Date(),
-      "state": "approved",
-      "ownerId": "taUw2XSRd2arhb7UJTXTnYojFHN2",
-      "image": "https://picsum.photos/200/300?random=78"
-    },
-    {
-      "category": "Uniforms",
-      "subCategory": "Art Uniforms",
-      "title": "Designer Art Aprons",
-      "description": "Stylish aprons for the modern artist.",
-      "type": "paid",
-      "price": "45",
-      "createdAt": new Date(),
-      "state": "approved",
-      "ownerId": "taUw2XSRd2arhb7UJTXTnYojFHN2",
-      "image": "https://picsum.photos/200/300?random=79"
-    },
-    {
-      "category": "Uniforms",
-      "subCategory": "Science Uniforms",
-      "title": "High-Tech Lab Wear",
-      "description": "Lab coats and gear equipped with the latest technology.",
-      "type": "free",
-      "createdAt": new Date(),
-      "state": "approved",
-      "ownerId": "taUw2XSRd2arhb7UJTXTnYojFHN2",
-      "image": "https://picsum.photos/200/300?random=80"
-    },
-    {
       "category": "Tools",
-      "subCategory": "Medical Tools",
-      "title": "Emergency Medical Kit",
-      "description": "Comprehensive first aid supplies for urgent healthcare needs.",
-      "type": "paid",
-      "price": "90",
-      "createdAt": new Date(),
-      "state": "approved",
-      "ownerId": "taUw2XSRd2arhb7UJTXTnYojFHN2",
-      "image": "https://picsum.photos/200/300?random=81"
+      "subCategory": "Medical Tools"
     },
     {
-      "category": "Tools",
-      "subCategory": "Engineering Tools",
-      "title": "Digital Engineering Gadgets",
-      "description": "Precision tools for the digital era engineer.",
-      "type": "free",
-      "createdAt": new Date(),
+      "title": "Statistical Analysis with R",
+      "condition": "new",
+      "createdAt": "2024-03-19T12:40:39.000Z",
+      "description": "Understanding data analysis and statistical computing using R.",
+      "image": "https://picsum.photos/200/300?random=33",
+      "ownerId": "zIYoHoKCyFdR22cacnSPGfQsOlo2",
+      "pricing": "paid",
+      "price": 50,
       "state": "approved",
-      "ownerId": "taUw2XSRd2arhb7UJTXTnYojFHN2",
-      "image": "https://picsum.photos/200/300?random=82"
+      "category": "Text Books",
+      "subCategory": "Scientific faculties",
+      "subSubCategory": "School of Science"
     },
     {
-      "category": "Tools",
-      "subCategory": "Science Tools",
-      "title": "Advanced Chemistry Kit",
-      "description": "Everything needed for high-level chemistry experiments.",
-      "type": "paid",
-      "price": "100",
-      "createdAt": new Date(),
+      "title": "Watercolor Painting Set",
+      "condition": "fair condition",
+      "createdAt": "2024-03-22T09:15:39.000Z",
+      "description": "High-quality watercolor paints, brushes, and paper for artists of all levels.",
+      "image": "https://picsum.photos/200/300?random=34",
+      "ownerId": "zIYoHoKCyFdR22cacnSPGfQsOlo2",
+      "pricing": "free",
       "state": "approved",
-      "ownerId": "taUw2XSRd2arhb7UJTXTnYojFHN2",
-      "image": "https://picsum.photos/200/300?random=83"
+      "category": "Tools",
+      "subCategory": "Art Tools"
     },
     {
-      "category": "Tools",
-      "subCategory": "Art Tools",
-      "title": "Sculpture Tools for Professionals",
-      "description": "High-quality tools for sculptors and model makers.",
-      "type": "free",
-      "createdAt": new Date(),
+      "title": "Theories of Personality",
+      "condition": "new",
+      "createdAt": "2024-03-18T13:50:39.000Z",
+      "description": "A deep dive into the major theories of personality in psychology.",
+      "image": "https://picsum.photos/200/300?random=35",
+      "ownerId": "zIYoHoKCyFdR22cacnSPGfQsOlo2",
+      "pricing": "paid",
+      "price": 65,
       "state": "approved",
-      "ownerId": "taUw2XSRd2arhb7UJTXTnYojFHN2",
-      "image": "https://picsum.photos/200/300?random=84"
+      "category": "Text Books",
+      "subCategory": "Humanitarian faculties",
+      "subSubCategory": "School of Educational Sciences"
+    },
+    {
+      "title": "Electric Circuit Analysis Kit",
+      "condition": "good condition",
+      "createdAt": "2024-03-21T11:35:39.000Z",
+      "description": "Kit contains all essential tools for electric circuit analysis.",
+      "image": "https://picsum.photos/200/300?random=36",
+      "ownerId": "zIYoHoKCyFdR22cacnSPGfQsOlo2",
+      "pricing": "free",
+      "state": "approved",
+      "category": "Tools",
+      "subCategory": "Electronic Tools"
+    },
+    {
+      "title": "Contemporary Marketing Strategies",
+      "condition": "new",
+      "createdAt": "2024-03-20T08:20:39.000Z",
+      "description": "Exploring modern marketing strategies and digital marketing trends.",
+      "image": "https://picsum.photos/200/300?random=37",
+      "ownerId": "zIYoHoKCyFdR22cacnSPGfQsOlo2",
+      "pricing": "paid",
+      "price": 75,
+      "state": "approved",
+      "category": "Text Books",
+      "subCategory": "Humanitarian faculties",
+      "subSubCategory": "School of Business"
+    },
+    {
+      "title": "Basic Carpentry Tools Set",
+      "condition": "new",
+      "createdAt": "2024-03-23T19:45:39.000Z",
+      "description": "Essential carpentry tools for beginners and professionals.",
+      "image": "https://picsum.photos/200/300?random=38",
+      "ownerId": "zIYoHoKCyFdR22cacnSPGfQsOlo2",
+      "pricing": "free",
+      "state": "approved",
+      "category": "Tools",
+      "subCategory": "Engineering Tools"
+    },
+    {
+      "title": "Advanced Biochemistry",
+      "condition": "new",
+      "createdAt": "2024-03-15T06:55:39.000Z",
+      "description": "Covering advanced topics in biochemistry for in-depth study.",
+      "image": "https://picsum.photos/200/300?random=39",
+      "ownerId": "zIYoHoKCyFdR22cacnSPGfQsOlo2",
+      "pricing": "paid",
+      "price": 85,
+      "state": "approved",
+      "category": "Text Books",
+      "subCategory": "Medical faculties",
+      "subSubCategory": "School of Pharmacy"
+    },
+    {
+      "title": "World History Overview",
+      "condition": "good condition",
+      "createdAt": "2024-03-16T12:10:39.000Z",
+      "description": "A comprehensive overview of world history from ancient times to the present.",
+      "image": "https://picsum.photos/200/300?random=40",
+      "ownerId": "zIYoHoKCyFdR22cacnSPGfQsOlo2",
+      "pricing": "free",
+      "state": "approved",
+      "category": "Text Books",
+      "subCategory": "Humanitarian faculties",
+      "subSubCategory": "School of International Studies"
     }
   ]
   
@@ -186,6 +182,11 @@ export class ProfileComponent implements OnInit, OnDestroy{
     const user = await this.authService.getUser();
     this.getUserPosts(user.uid);
         
+    //this.items.forEach((data) => {
+    //  this.fs.collection('posts').add({
+    //    ...data
+    //  }).then(() => console.log("Added"))
+    //})
   }
 
   // Open add post modal

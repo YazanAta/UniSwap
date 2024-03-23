@@ -22,9 +22,9 @@
                                 Category: {{ post?.category }}
                             </p>
                             <p class="mt-1">
-                                Type: {{ post?.type }}
+                                Type: {{ post?.pricing }}
                             </p>
-                            <p *ngIf="post.type === 'sale'" class="mt-1">
+                            <p *ngIf="post.pricing === 'sale'" class="mt-1">
                                 Price: {{ post?.price | currency:'JOD':'symbol':'1.2-2' }}
                             </p>
 

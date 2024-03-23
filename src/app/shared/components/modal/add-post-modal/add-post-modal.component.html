@@ -42,28 +42,31 @@
         <option *ngFor="let subSubCategory of subSubCategories" [value]="subSubCategory.name">{{ subSubCategory.name }}</option>
       </select>
     </div>
-    
-    <!-- Type Dropdown -->
+
     <div class="form-group">
-      <label for="type">Type</label>
-      <select id="type" formControlName="type" class="form-control">
-        <option *ngFor="let type of types" [value]="type">{{ type | titlecase }}</option>
+      <label for="condition">Condition</label>
+      <select id="condition" formControlName="condition" class="form-control">
+        <option *ngFor="let condition of conditions" [value]="condition">{{ condition | titlecase }}</option>
       </select>
     </div>
-
-    <!-- Statue Dropdown -->
+    
+    <!-- Pricing Dropdown -->
     <div class="form-group">
-      <label for="statue">Statue</label>
-      <select id="statue" formControlName="statue" class="form-control">
-        <option *ngFor="let statue of statues" [value]="statue">{{ statue | titlecase }}</option>
+      <label for="pricing">Pricing</label>
+      <select id="pricing" formControlName="pricing" class="form-control">
+        <option *ngFor="let pricing of pricings" [value]="pricing">{{ pricing | titlecase }}</option>
       </select>
     </div>
     
     <!-- Conditional Price Field -->
-    <div class="form-group" *ngIf="postForm.get('type').value === 'sale'">
-      <label for="price">Price</label>
-      <input type="number" id="price" formControlName="price" class="form-control" placeholder="Price">
+    <div class="form-group" *ngIf="postForm.get('pricing').value === 'paid'">
+      <label for="price">Price (in JD)</label>
+      <input type="text" id="price" formControlName="price" currencyMask [options]="{ prefix: 'JD ', thousands: ',', decimal: '.', precision: 2 }" class="form-control" placeholder="e.g., JD 1,234.56" />
+      <div *ngIf="postForm.get('price').errors?.maxValueExceeded" class="text-danger">
+        Price cannot exceed 1000 JD.
+      </div>
     </div>
+    
     
     <!-- Image Upload Field -->
     <div class="form-group">

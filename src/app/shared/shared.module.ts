@@ -34,7 +34,6 @@ import { EditPostModalComponent } from './components/modal/edit-post-modal/edit-
 import { SuccessfulRegistrationModalComponent } from './components/modal/successful-registration-modal/successful-registration-modal.component';
 import { CollectionComponent } from './components/product/collection/collection.component';
 import { ChatListComponent } from './components/chatlist/chatlist.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [
     HeaderComponent,
@@ -64,7 +63,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CarouselModule,
     BarRatingModule,
     LazyLoadImageModule,
-    NgxSkeletonLoaderModule,
+    NgxSkeletonLoaderModule
   ],
   exports: [
     CommonModule,

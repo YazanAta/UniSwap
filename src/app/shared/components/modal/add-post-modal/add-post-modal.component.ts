@@ -7,13 +7,15 @@ import { CATEGORIES, Category } from 'src/app/shared/interfaces/category.interfa
 import { PostsService } from 'src/app/services/posts/posts.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { CustomToastrService } from 'src/app/services/toastr/custom-toastr.service';
+import { CustomValidationsService } from 'src/app/services/validations/custom-validations.service';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 @Component({
   selector: 'app-add-post-modal',
   templateUrl: './add-post-modal.component.html',
   styleUrls: ['./add-post-modal.component.scss'],
   standalone: true,
-  imports: [AngularFireStorageModule, ReactiveFormsModule, CommonModule]
+  imports: [AngularFireStorageModule, ReactiveFormsModule, CommonModule, CurrencyMaskModule]
 })
 export class AddPostModalComponent implements OnInit {
   postForm: FormGroup;
@@ -52,7 +54,7 @@ export class AddPostModalComponent implements OnInit {
       pricing: ['', Validators.required],
       condition: ['', Validators.required],
       image: [null],
-      price: [{ value: '', disabled: true }, Validators.required]
+      price: [{ value: '', disabled: true }, [Validators.required, CustomValidationsService.priceValidator(1000)]],
     });
   }
 
@@ -112,6 +114,11 @@ export class AddPostModalComponent implements OnInit {
     if (this.isSubmitting || !this.postForm.valid) return;
     this.isSubmitting = true;
 
+    const formValue = this.postForm.value;
+    if (formValue.price) {
+      formValue.price = parseFloat(formValue.price.replace(/[^0-9.]/g, ''));
+    }
+    
     this.postsService
       .addPost(this.postForm.value, this.selectedFile, this.uid)
       .then(() => {

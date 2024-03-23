@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -43,4 +43,20 @@ export class CustomValidationsService {
     };
   }
 
+
+  static priceValidator(maxValue: number) {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const pricePattern = /^\d+(\.\d{1,2})?$/; // Ensure the input is a number possibly with two decimal places
+      if (!pricePattern.test(control.value)) {
+        return { invalidFormat: true }; // Invalid format
+      }
+      
+      const value = parseFloat(control.value);
+      if (value > maxValue) {
+        return { maxValueExceeded: true }; // Value exceeds the maximum limit
+      }
+      
+      return null; // Valid value
+    };
+  }
 }

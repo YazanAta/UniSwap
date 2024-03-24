@@ -20,7 +20,7 @@
                                 <div class="collection-collapse-block-content">
                                     <div class="collection-brand-filter">
                                         <ul class="category-list">
-                                            <li *ngFor="let category of categories" [ngClass]="{'selected-category': selectedCategory?.name === category.name}">
+                                            <li *ngFor="let category of categories" [ngClass]="{'selected-filter': selectedCategory?.name === category.name}">
                                                 <a (click)="selectCategory(category)">
                                                     {{ category.name }}
                                                 </a>
@@ -43,7 +43,7 @@
                                     <div class="collection-brand-filter">
                                         <ul class="category-list">
                                             <li *ngFor="let subcategory of selectedCategory.subCategory" 
-                                            [ngClass]="{'selected-subcategory': selectedSubCategory?.name === subcategory.name}">
+                                            [ngClass]="{'selected-filter': selectedSubCategory?.name === subcategory.name}">
                                                 <a (click)="selectSubCategory(subcategory)">
                                                     {{ subcategory.name }}
                                                 </a>
@@ -61,7 +61,7 @@
                                     <div class="collection-brand-filter">
                                         <ul class="category-list">
                                             <li *ngFor="let subSubcategory of selectedSubCategory.subCategory"
-                                            [ngClass]="{'selected-subcategory': selectedSubSubCategory?.name === subSubcategory.name}">
+                                            [ngClass]="{'selected-filter': selectedSubSubCategory?.name === subSubcategory.name}">
                                                 <a (click)="selectSubSubCategory(subSubcategory)">
                                                     {{ subSubcategory.name }}
                                                 </a>
@@ -82,7 +82,7 @@
                                 <li class="list-group-item" *ngFor="let pricing of ['all', 'free', 'paid']">
                                     <div type="button" class="p-0 text-decoration-none"
                                             (click)="selectPricing(pricing)"
-                                            [ngClass]="{'selected-type': selectPricing === pricing}">
+                                            [ngClass]="{'selected-filter': selectedPricing === pricing}">
                                         {{ pricing | titlecase }}
                                     </div>
                                 </li>
@@ -144,9 +144,9 @@
                 </div>
             </div>
         </div>
+        <div class="add-post-btn" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="Add new post" (click)="openModal()">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+        </div>    
     </div>
-    <div class="add-post-btn" data-bs-toggle="tooltip" data-bs-placement="left" title="Add new post" (click)="openModal()">
-        <i class="fa fa-plus" aria-hidden="true"></i>
-    </div>    
 </section>
 <!-- section End -->

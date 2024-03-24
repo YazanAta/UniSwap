@@ -516,11 +516,6 @@
             padding-top: 25px;
             padding-bottom: 25px;
         }
-        .menu-left {
-            .navbar {
-                padding: 25px 45px 25px 0;
-            }
-        }
     }
    
     .about-text {
@@ -1640,14 +1635,6 @@ background-color: $black;*/
     h2 {
         font-size: 24px;
     }
-
-    .sticky {
-        &.fixed {
-            .top-header {
-                display: block;
-            }
-        }
-    }
    
     .btn-solid {
         padding: 7px 15px;
@@ -2054,16 +2041,6 @@ background-color: $black;*/
                             line-height: 16px;
                         }
                     }
-                }
-            }
-        }
-    }
-
-    .main-menu {
-        .menu-left {
-            .navbar {
-                i {
-                    font-size: 24px;
                 }
             }
         }

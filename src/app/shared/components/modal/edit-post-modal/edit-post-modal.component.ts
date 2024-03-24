@@ -122,6 +122,10 @@ export class EditPostModalComponent {
 
     const updatedPostData = this.postForm.value;
 
+    if (updatedPostData.price) {
+      updatedPostData.price = parseFloat(updatedPostData.price.replace(/[^0-9.]/g, ''));
+    }
+
     if (this.selectedFile) {
       // If a new file is selected, update the post with the new image
       this.postsService.editPost(postId, updatedPostData, this.selectedFile, this.uid).subscribe(

@@ -20,19 +20,19 @@
       <div class="form-group">
         <label for="category">Category</label>
         <select id="category" formControlName="category" class="form-control">
-          <option *ngFor="let category of categories" [value]="category.name">{{ category.name }}</option>
+          <option *ngFor="let category of categories" [value]="category.name">{{ category.name | titlecase }}</option>
         </select>
       </div>
       <div class="form-group" *ngIf="postForm.get('category').value">
         <label for="subCategory">Sub Category</label>
         <select id="subCategory" formControlName="subCategory" class="form-control">
-          <option *ngFor="let subCategory of subCategories" [value]="subCategory.name">{{ subCategory.name }}</option>
+          <option *ngFor="let subCategory of subCategories" [value]="subCategory.name">{{ subCategory.name | titlecase }}</option>
         </select>
       </div>
       <div class="form-group" *ngIf="postForm.get('subCategory').value && subSubCategories?.length > 0">
         <label for="subSubCategory">Sub Sub Category</label>
         <select id="subSubCategory" formControlName="subSubCategory" class="form-control">
-          <option *ngFor="let subSubCategory of subSubCategories" [value]="subSubCategory.name">{{ subSubCategory.name }}</option>
+          <option *ngFor="let subSubCategory of subSubCategories" [value]="subSubCategory.name">{{ subSubCategory.name | titlecase }}</option>
         </select>
       </div>
       <div class="form-group">
@@ -44,12 +44,17 @@
       <div class="form-group">
         <label for="pricing">Pricing</label>
         <select id="pricing" formControlName="pricing" class="form-control">
-          <option *ngFor="let pricing of pricings" [value]="pricing">{{ pricing }}</option>
+          <option *ngFor="let pricing of pricings" [value]="pricing">{{ pricing | titlecase }}</option>
         </select>
       </div>
+       <!-- Conditional Price Field -->
       <div class="form-group" *ngIf="postForm.get('pricing').value === 'paid'">
-        <label for="price">Price</label>
-        <input type="number" id="price" formControlName="price" placeholder="Price" class="form-control">
+        <label for="price">Price (in JD)</label>
+        <!--<input type="text" id="price" formControlName="price" currencyMask [options]="{ suffix: ' JD ', prefix: '', align: 'left', allowNegative: false, thousands: ',', decimal: '.', precision: 2 }" class="form-control" placeholder="e.g., JD 1,234.56" />-->
+        <input type="text" id="price" formControlName="price" class="form-control" placeholder="Price in JD" />
+        <div *ngIf="postForm.get('price').errors?.maxValueExceeded" class="text-danger">
+          Price cannot exceed 1000 JD.
+        </div>
       </div>
       <div  class="form-group">
         <label for="formFile" class="form-label">Image <small>(Optional)</small></label>

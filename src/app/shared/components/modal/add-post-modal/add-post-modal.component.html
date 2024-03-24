@@ -61,7 +61,8 @@
     <!-- Conditional Price Field -->
     <div class="form-group" *ngIf="postForm.get('pricing').value === 'paid'">
       <label for="price">Price (in JD)</label>
-      <input type="text" id="price" formControlName="price" currencyMask [options]="{ prefix: 'JD ', thousands: ',', decimal: '.', precision: 2 }" class="form-control" placeholder="e.g., JD 1,234.56" />
+      <!--<input type="text" id="price" formControlName="price" currencyMask [options]="{ suffix: ' JD ', prefix: '', align: 'left', allowNegative: false, thousands: ',', decimal: '.', precision: 2 }" class="form-control" placeholder="e.g., JD 1,234.56" />-->
+      <input type="text" id="price" formControlName="price" class="form-control" placeholder="Price in JD" />
       <div *ngIf="postForm.get('price').errors?.maxValueExceeded" class="text-danger">
         Price cannot exceed 1000 JD.
       </div>

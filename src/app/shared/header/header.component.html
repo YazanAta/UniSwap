@@ -22,7 +22,7 @@
                           <ng-container *ngIf="isUser">
                             <div>
                               <button class="btn" (click)="toggleList('notification')" *ngIf="!showNotification && !showChatList">
-                                  <i class="fa fa-bell"></i>
+                                  <i class="ti-bell"></i>
                               </button>
                               <app-notifications-section *ngIf="showNotification" (toggleNotificationEvent)="toggleList('notification')"></app-notifications-section>
                             </div>
@@ -30,7 +30,7 @@
                             <!-- Chat -->
                             <div>
                               <button class="btn" (click)="toggleList('chat')" *ngIf="!showChatList && !showNotification">
-                                  <i class="fa fa-comment"></i>
+                                  <i class="ti-comment"></i>
                               </button>
                               <app-chatlist *ngIf="showChatList" (toggleChatListEvent)="toggleList('chat')"></app-chatlist>
                             </div>

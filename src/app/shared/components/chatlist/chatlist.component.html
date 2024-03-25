@@ -1,8 +1,8 @@
-<div class="container mt-4">
+<div class="chatlist container mt-4">
   <div class="card-header d-flex justify-content-between m-3">
     <h5 class="text-dark m-0">Chat List</h5>
     <button class="btn btn-link py-0 px-2" (click)="toggleChatList()">
-      <i class="fa fa-times text-primary"></i>
+      <i class="fa fa-times"></i>
     </button>
   </div>
 
@@ -15,14 +15,14 @@
 
   <!-- Chat list -->
   <ul class="list-group list-group-flush p-0 overflow-auto" *ngIf="!isLoading && chats?.length > 0">
-    <li *ngFor="let chat of chats" class="inner-chatlist list-group-item d-flex justify-content-between align-items-center border-bottom shadow-sm rounded-0"  routerLink="/pages/chats/{{ chat.id }}">
+    <li *ngFor="let chat of chats" class="inner-chatlist list-group-item border-bottom shadow-sm rounded-0"  routerLink="/pages/chats/{{ chat.id }}">
       <div class="d-flex align-items-center gap-2 p-2">
-        <i class="fa fa-comment text-primary m-2"></i>
+        <i class="ti-comment-alt m-2"></i>
         <div class="flex-grow-1">
           <div class="text-decoration-none text-dark fw-bold">
             {{ (recipientUsernames[chat.id]) | async }}
           </div>
-          <div class="mb-0 text-muted text-truncate" style="max-width: 150px;">
+          <div class="mb-0 text-muted text-truncate last-message">
             {{ lastMessages[chat.id]?.text }}
           </div>
         </div>

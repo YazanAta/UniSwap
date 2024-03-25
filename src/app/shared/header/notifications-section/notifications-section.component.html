@@ -1,7 +1,7 @@
-<div class="container p-0">
+<div class="notifications-section container p-0">
   <!-- Notification header -->
-  <div class="alert alert-light border rounded-3 d-flex justify-content-between align-items-center m-auto shadow-sm" role="alert">
-    <h4 class="m-0  text-secondary"><i class="ti-bell text-primary"></i> Notifications</h4>
+  <div class="alert alert-light border d-flex justify-content-between align-items-center m-auto shadow-sm" role="alert">
+    <h4 class="m-0  text-secondary"><i class="ti-bell"></i> Notifications</h4>
     <!-- Button to close notifications -->
     <button class="btn-close" (click)="toggleNotification()" aria-label="Close notifications"></button>
   </div>
@@ -16,11 +16,11 @@
   <!-- Notification list -->
   <div *ngIf="!isLoading && notifications?.length > 0" class="notification-list p-2">
     <!-- Loop through notifications -->
-    <div *ngFor="let notification of notifications" class="notification-item d-flex justify-content-between align-items-center p-2 mb-1 bg-white rounded shadow-sm">
+    <div *ngFor="let notification of notifications" class="notification-item p-2 mb-1 bg-white rounded shadow-sm">
       <!-- Notification content -->
-      <div class="notification-content d-flex align-items-center">
-        <i class="ti-announcement text-primary mr-2"></i>
-        <span class="notification-message">{{notification?.message}}</span> <!-- Ensure `notification.message` is sanitized -->
+      <div class="notification-content">
+        <i class="ti-announcement mr-2"></i>
+        <span class="notification-message">{{notification?.message}}</span>
       </div>
       <!-- Notification timestamp -->
       <div class="text-muted small">

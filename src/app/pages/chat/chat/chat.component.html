@@ -36,8 +36,6 @@
                 class="list-group-item d-flex justify-content-between"
                 [ngClass]="{'message-user-a': message.sender === currentUserId, 'message-user-b': message.sender !== currentUserId}">
               <span class="text-break">
-                <span *ngIf="message.sender !== currentUserId">{{ otherParticipant.firstName }} {{ otherParticipant.lastName }}:</span>
-                <span *ngIf="message.sender === currentUserId">You:</span>
                 {{ message.text }}
               </span>
               <span class="flex-shrink-0">{{ message.timestamp | date: 'short' }}</span>

@@ -72,8 +72,8 @@ export class QuickViewComponent implements OnInit, OnDestroy {
 
   async addToWishlist(id: string): Promise<void> {
     try {
-      await this.wishlistService.addToWishlist(id, this.uid);
-      this.toastrService.show('Product added to wishlist', 'Wishlist', 'success');
+      const response = await this.wishlistService.addToWishlist(id, this.uid);
+      this.toastrService.show(response, 'Wishlist', 'success');
     } catch (error) {
       this.toastrService.show(error, 'Wishlist', 'error');
     }

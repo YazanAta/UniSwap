@@ -1,32 +1,33 @@
-<table class="table table-striped">
-    <thead>
-      <tr>
-        <th> User Name </th>
-        <th> Email </th>
-        <th> Progress </th>
-        <th> Amount </th>
-        <th> Deadline </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of usersList">
-        <td class="py-1">
+<section class="manage-users p-0">
+  <div class="card-header text-white">
+    <h4 class="mb-0">{{'Users' | uppercase}}</h4>
+  </div>
+  <table class="table table-striped">
+      <thead>
+        <tr>
+          <th> User Name </th>
+          <th> Email </th>
+          <th> Points </th>
+          <th> Push Notification </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of usersList">
+          <td class="py-1">
             {{user.firstName + " " + user.lastName}}
-        </td>
-        <td> {{user.email}} </td>
-        <td>
-            <button class="btn btn-danger">Block</button>
-        </td>
-        <td> {{user.email}} </td>
-        <td> 
-            <!-- your-component.component.html -->
-            <form>
-                <label for="message">Message:</label>
-                <input type="text" id="message" name="" [(ngModel)]="message">
-            
-                <button class="btn btn-primary" type="submit">Submit</button>
-            </form>    
-        </td>
-      </tr>
-    </tbody>
-</table>
+          </td>
+          <td> {{user.email}} </td>
+          <td> {{user.points}} </td>
+          <td> 
+              <!-- your-component.component.html -->
+              <form>
+                  <label for="message">Message:</label>
+                  <input type="text" id="message" name="message" [(ngModel)]="message">
+              
+                  <button class="btn btn-primary" type="submit" (click)="sendMessage(user.id, message)">Submit</button>
+              </form>    
+          </td>
+        </tr>
+      </tbody>
+  </table>
+</section>

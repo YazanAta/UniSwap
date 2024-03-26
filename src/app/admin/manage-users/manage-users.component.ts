@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from 'src/app/services/admin/admin.service';
+import { NotificationsService } from 'src/app/services/notifications/notifications.service';
 
 @Component({
   selector: 'app-manage-users',
@@ -8,7 +9,7 @@ import { AdminService } from 'src/app/services/admin/admin.service';
 })
 export class ManageUsersComponent implements OnInit{
 
-  constructor(private adminService: AdminService){}
+  constructor(private adminService: AdminService, private notificationService: NotificationsService){}
   usersList: any;
   message: string = '';
 
@@ -16,10 +17,12 @@ export class ManageUsersComponent implements OnInit{
     this.getAllUsers()
   }
 
-  getAllUsers(){
-    this.adminService.getUsersByRole("user").subscribe((users) => {
-      this.usersList = users
-    })
+  async getAllUsers(){
+    this.usersList = await this.adminService.getUsersByRole("user")
+  }
+
+  sendMessage(recieverId: string, message: string){
+    this.notificationService.pushNotification(recieverId, message, "admin")
   }
 
 }

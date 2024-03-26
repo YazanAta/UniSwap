@@ -1,23 +1,29 @@
 <!-- post-list.component.html -->
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Image</th>
-        <th scope="col">Title</th>
-        <th scope="col">Pricing</th>
-        <th scope="col">Price</th>
-        <th scope="col">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let post of posts">
-        <td class="align-middle"><img [src]="post.image" alt="{{ post.title }} Image" style="max-width: 50px;"></td>
-        <td class="align-middle">{{ post.title |titlecase }}</td>
-        <td class="align-middle">{{ post.pricing | titlecase }}</td>
-        <td class="align-middle">{{ post.price | currency }}</td>
-        <td class="align-middle"><button class="btn btn-primary btn-sm" (click)="swapRequest(otherParticipant.uid, post)">Swap me</button></td>
-      </tr>
-      <span class="text-muted" *ngIf="!posts?.length">No Posts To Swap</span>
-    </tbody>
-</table>
+<section class="swap-list">
+  <button class="close float-end border-0" (click)="closeModal()">
+    <i class="ti-close"></i>
+  </button>
+
+  <table class="table">
+      <thead>
+        <tr>
+          <th scope="col" class="h4">Image</th>
+          <th scope="col" class="h4">Title</th>
+          <th scope="col" class="h4">Pricing</th>
+          <th scope="col" class="h4">Price</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let post of posts">
+          <td class="align-middle"><img [src]="post.image" alt="{{ post.title }} Image" style="max-width: 50px;"></td>
+          <td class="align-middle">{{ post.title |titlecase }}</td>
+          <td class="align-middle">{{ post.pricing | titlecase }}</td>
+          <td class="align-middle">{{ post.price | currency }}</td>
+          <td class="align-middle"><button class="btn-solid btn-sm" (click)="swapRequest(otherParticipant.uid, post)">Swap me</button></td>
+        </tr>
+        <span class="text-muted" *ngIf="!posts?.length">No Posts To Swap</span>
+      </tbody>
+  </table>
+</section>
   

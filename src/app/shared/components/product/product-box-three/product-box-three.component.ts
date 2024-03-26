@@ -23,8 +23,7 @@ export class ProductBoxThreeComponent implements OnInit {
     private wishlistService: WishlistService,
     private toastrService: CustomToastrService,
     private authService: AuthService,
-    private chatService: ChatService,
-    private router: Router
+    private chatService: ChatService
   ) {}
 
   ngOnInit(): void {
@@ -71,8 +70,8 @@ export class ProductBoxThreeComponent implements OnInit {
   async addToWishlist(id: string): Promise<void> {
     try {
       // Wait for the wishlist service to add the item, then show success message
-      const value = await this.wishlistService.addToWishlist(id, this.uid);
-      this.toastrService.show(value, 'Wishlist', 'success');
+      const response = await this.wishlistService.addToWishlist(id, this.uid);
+      this.toastrService.show(response, 'Wishlist', 'success');
     } catch (err) {
       // In case of an error, show the error message
       this.toastrService.show(err, "Wishlist", 'error');

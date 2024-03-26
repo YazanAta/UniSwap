@@ -55,8 +55,8 @@ export class WishlistComponent implements OnInit, OnDestroy {
 
   async removeFromWishlist(id: string): Promise<void> {
     try {
-      await this.wishlistService.removeFromWishlist(id, this.uid);
-      this.toastrService.show("Item removed from wishlist", "Wishlist", "success");
+      const response = await this.wishlistService.removeFromWishlist(id, this.uid);
+      this.toastrService.show(response, "Wishlist", "success");
     } catch (err) {
       this.toastrService.show(err, "Wishlist", "error");
     }

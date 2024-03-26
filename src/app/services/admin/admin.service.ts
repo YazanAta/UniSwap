@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Observable, catchError } from 'rxjs';
+import { Observable, catchError, lastValueFrom, take } from 'rxjs';
 import { Post } from 'src/app/shared/interfaces/post.interface';
 import { UserService } from '../user/user.service';
 
@@ -19,10 +19,13 @@ export class AdminService {
   //-------------------Users Service------------------//
 
   // Retrieves users by their role
-  getUsersByRole(role: string): Observable<any[]> {
-    return this.firestore
+  getUsersByRole(role: string): Promise<any[]> {
+    return lastValueFrom(
+      this.firestore
       .collection('users', (ref) => ref.where('role', '==', role))
       .valueChanges({idField : 'id'})
+      .pipe(take(1))
+    )
   }
 
   //-------------------Admins Service------------------//

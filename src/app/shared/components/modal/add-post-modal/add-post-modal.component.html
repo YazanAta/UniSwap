@@ -72,14 +72,14 @@
     <!-- Image Upload Field -->
     <div class="form-group">
       <label for="formFile">Image <small>(Optional, JPEG/PNG/GIF, Max 2MB)</small></label>
-      <input type="file" id="formFile" class="form-control" (change)="onFileSelected($event)" accept="image/jpeg, image/png, image/gif">
+      <input type="file" id="formFile" class="form-control form-control-lg" (change)="onFileSelected($event)" accept="image/jpeg, image/png, image/gif">
     </div>
     
     <!-- Submit Button -->
-    <button type="submit" class="btn btn-primary" [disabled]="postForm.invalid">Upload Post</button>
+    <button type="submit" class="btn-solid" [disabled]="postForm.invalid">Upload Post</button>
   </form>
 </div>
 
 <div class="modal-footer">
-  <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+  <button type="button" class="btn-solid btn-sm" (click)="activeModal.close('Close click')">Close</button>
 </div>

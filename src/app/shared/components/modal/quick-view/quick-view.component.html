@@ -3,7 +3,7 @@
       <div class="modal-body">
         <!-- Simplified close button with aria label for accessibility -->
         <button type="button" class="close float-end border-0" aria-label="Close" (click)="modal.dismiss('Cross click')">
-          &times;
+          <i class="ti-close"></i>
         </button>
         <div class="row">
           <!-- Product Image -->
@@ -30,9 +30,9 @@
               <div *ngIf="ownerInfo" class="border-product">
                 <p class="text-muted">Owner: {{ ownerInfo.firstName }} {{ ownerInfo.lastName }}</p>
               </div>
-              <div class="border-product d-flex gap-2 mt-3">
-                <button class="btn btn-outline-primary" (click)="createChat(post)"><i class="ti-comments-smiley me-2"></i>Start Chat</button>
-                <button class="btn btn-outline-warning" (click)="addToWishlist(post.id)"><i class="ti-heart me-2"></i>Add To Wishlist</button>
+              <div class="border-product quick-view-actions d-flex gap-3">
+                <button class="btn-solid" (click)="createChat(post)"><i class="ti-comment me-2"></i>Open Chat</button>
+                <button class="btn-solid" (click)="addToWishlist(post.id)"><i class="ti-heart me-2"></i>Add To Wishlist</button>
               </div>
             </div>
           </div>

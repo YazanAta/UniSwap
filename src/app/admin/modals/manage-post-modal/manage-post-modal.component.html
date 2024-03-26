@@ -14,15 +14,18 @@
                     <div class="product-right">
                         <h2>{{ post.title | titlecase }}</h2>
                         <div class="border-product">
-                            <h6 class="product-title">Item Information</h6>
+                            <h6 class="product-title">Post Information</h6>
                             <p class="mt-1">
-                                Description: {{ post.description }} .
+                                Description: {{ post.description }}
                             </p>
                             <p class="mt-1">
                                 Category: {{ post?.category }}
                             </p>
                             <p class="mt-1">
-                                Type: {{ post?.pricing }}
+                                Condition: {{ post?.condition }}
+                            </p>
+                            <p class="mt-1">
+                                Pricing: {{ post?.pricing }}
                             </p>
                             <p *ngIf="post.pricing === 'sale'" class="mt-1">
                                 Price: {{ post?.price | currency:'JOD':'symbol':'1.2-2' }}
@@ -54,12 +57,12 @@
                           
                               <!-- Conditional Text Field for Rejection Message -->
                               <div *ngIf="postStateForm.get('state').value === 'rejected' || postStateForm.get('state').value === 'approved'" class="mb-3">
-                                <label for="message" class="form-label">Enter Custom Message To the User: <small>(optional)</small></label>
+                                <label for="message" class="form-label">Custom Message <small>(optional)</small></label>
                                 <textarea id="message" class="form-control" formControlName="message"></textarea>
                               </div>
                           
                               <!-- Add a button to submit the form -->
-                              <button type="button" class="btn btn-info mt-2" (click)="updatePostState()">Change State</button>
+                              <button type="button" class="btn-outline mt-2" (click)="updatePostState()">Change State</button>
                             </form>
                         </div>
                         

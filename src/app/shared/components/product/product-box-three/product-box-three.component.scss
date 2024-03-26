@@ -10,7 +10,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 10px 5px;
     padding: 5px;
     overflow-wrap: break-word;
     border-bottom: 1px dotted black;
@@ -31,4 +30,8 @@
     flex: 1;
     padding: 10px;
     box-sizing: border-box;
+    p{
+      padding: 5px;
+      font-weight: 300;
+    }
   }

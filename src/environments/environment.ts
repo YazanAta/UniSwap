@@ -4,11 +4,9 @@
 
 export const environment = {
   production: false,
-  stripe_token: 'STRIPE_TOKEN',
-  paypal_token: 'PAYPAL_TOKEN',
-
+  
   firebaseConfig : {
-    apiKey: "AIzaSyAezIxumoLzsyflYB_TfizYbo-pjjZZPD8",
+    apiKey: "AIzaSyAcnJ3rbCUDiEIcbrmHPZhUdaGawufFho8",
     authDomain: "uniswap-e2525.firebaseapp.com",
     projectId: "uniswap-e2525",
     storageBucket: "uniswap-e2525.appspot.com",

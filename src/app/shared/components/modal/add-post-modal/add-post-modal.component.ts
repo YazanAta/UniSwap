@@ -116,7 +116,7 @@ export class AddPostModalComponent implements OnInit {
 
     const formValue = this.postForm.value;
     if (formValue.price) {
-      formValue.price = parseFloat(formValue.price.replace(/[^0-9.]/g, ''));
+      formValue.price = parseFloat(formValue.price);
     }
     
     this.postsService

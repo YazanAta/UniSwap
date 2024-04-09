@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
@@ -10,17 +9,28 @@ import { CustomToastrService } from 'src/app/services/toastr/custom-toastr.servi
 import { ChatService } from 'src/app/services/chat/chat.service';
 import { QuickViewComponent } from 'src/app/shared/components/modal/quick-view/quick-view.component';
 
+/**
+ * Component responsible for managing the user's wishlist.
+ */
 @Component({
   selector: 'app-wishlist',
   templateUrl: './wishlist.component.html',
   styleUrls: ['./wishlist.component.scss']
 })
 export class WishlistComponent implements OnInit, OnDestroy {
+  /** Array to hold the user's wishlist of posts. */
   wishlist: Post[] = [];
-  uid: string;
-  isLoading = true; // Track loading state
 
+  /** User ID of the current user. */
+  uid: string;
+
+  /** Flag to track loading state of the component. */
+  isLoading = true;
+
+  /** Reference to the QuickViewComponent for displaying post details. */
   @ViewChild('quickView') quickView: QuickViewComponent;
+
+  /** Subject to manage component destruction and unsubscribe from observables. */
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -28,9 +38,12 @@ export class WishlistComponent implements OnInit, OnDestroy {
     private toastrService: CustomToastrService,
     private authService: AuthService,
     private chatService: ChatService,
-    private router: Router
   ) {}
 
+  /**
+   * Lifecycle hook called after component initialization.
+   * Fetches the user's wishlist upon component initialization.
+   */
   async ngOnInit(): Promise<void> {
     try {
       const user = await this.authService.getUser();
@@ -41,6 +54,10 @@ export class WishlistComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Fetches the user's wishlist based on the provided user ID.
+   * @param uid The user ID whose wishlist is to be fetched.
+   */
   private getUserWishlist(uid: string): void {
     this.wishlistService.getUserWishlist(uid).pipe(
       takeUntil(this.destroy$)
@@ -53,6 +70,10 @@ export class WishlistComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Removes a post from the user's wishlist.
+   * @param id The ID of the post to be removed from the wishlist.
+   */
   async removeFromWishlist(id: string): Promise<void> {
     try {
       const response = await this.wishlistService.removeFromWishlist(id, this.uid);
@@ -62,6 +83,10 @@ export class WishlistComponent implements OnInit, OnDestroy {
     }
   }
   
+  /**
+   * Initiates a chat with the owner of a specific post.
+   * @param post The post with which to initiate the chat.
+   */
   async createChat(post: Post): Promise<void> {
     try {
       await this.chatService.createChat(post.ownerId, post.title);
@@ -70,6 +95,10 @@ export class WishlistComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Lifecycle hook called before the component is destroyed.
+   * Unsubscribes from observables to prevent memory leaks.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

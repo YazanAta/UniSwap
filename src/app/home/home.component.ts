@@ -13,34 +13,34 @@ export class HomeComponent {
 
   public isUser: boolean 
   
-  //Categories
+  // Categories
   public categories : Category[] = CATEGORIES
 
   // for unsubscribing
   private destroy$ = new Subject<void>();
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router) { }
 
   public sliders = [{
     title: 'Unleash the UniSwap Experience!',
     subTitle: 'Give, Swap, Buy',
-    image: 'assets/images/slider/slider1.png'
+    image: 'assets/images/slider/slider1.jpg'
   }, {
     title: 'More Than a Swap, It\'s a Community Sharing Platform',
     subTitle: 'UniSwap',
-    image: 'assets/images/slider/slider2.png'
+    image: 'assets/images/slider/slider2.jpg'
   }];
 
   // Collection banner
   public collections = [{
-    image: 'assets/collection1.png',
+    image: 'assets/images/collection/collection1.png',
     title: 'Give',
-    link: '/home/left-sidebar/collection/marijuana',
     class: 'p-left'
   }, {
-    image: 'assets/collection2.png',
+    image: 'assets/images/collection/collection2.png',
     title: 'Excahnge',
-    link: '/home/left-sidebar/collection/marijuana',
     class: 'p-right'
   }];
 

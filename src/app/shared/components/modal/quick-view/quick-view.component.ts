@@ -13,19 +13,43 @@ import { ChatService } from 'src/app/services/chat/chat.service';
 import { CustomToastrService } from 'src/app/services/toastr/custom-toastr.service';
 import { lastValueFrom, take } from 'rxjs';
 
+/**
+ * Component for displaying a quick view of a post.
+ */
 @Component({
   selector: 'app-quick-view',
   templateUrl: './quick-view.component.html',
   styleUrls: ['./quick-view.component.scss']
 })
 export class QuickViewComponent implements OnInit, OnDestroy {
+  /**
+   * Input property representing the post to display.
+   */
   @Input() post: Post;
+
+  /**
+   * Reference to the quick view modal template.
+   */
   @ViewChild('quickView', { static: false }) quickViewTemplateRef: TemplateRef<any>;
 
+  /**
+   * Result of the modal close operation.
+   */
   public closeResult: string;
+
+  /**
+   * Flag indicating whether the modal is currently open.
+   */
   public modalOpen = false;
 
+  /**
+   * Information about the owner of the displayed post.
+   */
   ownerInfo: User;
+
+  /**
+   * The UID of the authenticated user.
+   */
   uid: string;
 
   constructor(
@@ -39,6 +63,10 @@ export class QuickViewComponent implements OnInit, OnDestroy {
     private chatService: ChatService
   ) {}
 
+  /**
+   * Lifecycle hook called after component initialization.
+   * Initializes the component and loads owner information.
+   */
   async ngOnInit(): Promise<void> {
     try {
       const user = await this.authService.getUser();
@@ -49,12 +77,19 @@ export class QuickViewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Lifecycle hook called before component destruction.
+   * Closes the modal if it's open to prevent memory leaks.
+   */
   ngOnDestroy(): void {
     if (this.modalOpen) {
       this.modalService.dismissAll();
     }
   }
 
+  /**
+   * Opens the quick view modal.
+   */
   openModal(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.modalService.open(this.quickViewTemplateRef, { 
@@ -70,6 +105,10 @@ export class QuickViewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Adds the post to the user's wishlist.
+   * @param id The ID of the post to add to the wishlist.
+   */
   async addToWishlist(id: string): Promise<void> {
     try {
       const response = await this.wishlistService.addToWishlist(id, this.uid);
@@ -79,6 +118,10 @@ export class QuickViewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Initiates a chat with the owner of the post.
+   * @param post The post with which to initiate the chat.
+   */
   async createChat(post: Post): Promise<void> {
     try {
       await this.chatService.createChat(post.ownerId, post.title);
@@ -88,6 +131,9 @@ export class QuickViewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Loads information about the owner of the post.
+   */
   private async loadOwnerInfo(): Promise<void> {
     try {
       this.ownerInfo = await lastValueFrom(this.userService.getUserInfoById(this.post.ownerId).pipe(take(1)));
@@ -96,10 +142,18 @@ export class QuickViewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Handles the result of the modal close operation.
+   * @param result The result of the modal close operation.
+   */
   private handleModalClose(result: any): void {
     this.closeResult = `Closed with: ${result}`;
   }
 
+  /**
+   * Handles the reason for dismissing the modal.
+   * @param reason The reason for dismissing the modal.
+   */
   private handleModalDismiss(reason: any): void {
     const reasons = {
       [ModalDismissReasons.ESC]: 'by pressing ESC',

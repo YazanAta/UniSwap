@@ -1,4 +1,5 @@
-<div class="modal-header">
+<section class="post-modal p-0">
+  <div class="modal-header">
     <h4 class="modal-title">Edit Post</h4>
     <button type="button" class="close btn ti-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
   </div>
@@ -45,7 +46,7 @@
           <option *ngFor="let pricing of pricings" [value]="pricing">{{ pricing | titlecase }}</option>
         </select>
       </div>
-       <!-- Conditional Price Field -->
+      <!-- Conditional Price Field -->
       <div class="form-group" *ngIf="postForm.get('pricing').value === 'paid'">
         <label for="price">Price (in JD)</label>
         <!--<input type="text" id="price" formControlName="price" currencyMask [options]="{ suffix: ' JD ', prefix: '', align: 'left', allowNegative: false, thousands: ',', decimal: '.', precision: 2 }" class="form-control" placeholder="e.g., JD 1,234.56" />-->
@@ -68,5 +69,4 @@
   <div class="modal-footer">
     <button type="button" class="btn-solid btn-sm" (click)="activeModal.close('Close click')">Close</button>
   </div>
-  
-  
+</section>

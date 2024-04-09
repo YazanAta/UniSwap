@@ -11,20 +11,43 @@ import { Chat, Message } from 'src/app/shared/interfaces/chat.interface';
 import { User } from 'src/app/shared/interfaces/user.interface';
 import { SwapListComponent } from '../swap-list/swap-list.component';
 
+/**
+ * Component responsible for managing and displaying chat interactions.
+ */
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit {
+  /** ID of the current chat. */
   chatId: string;
-  chat: Chat | null = null;
-  messages: Message[] = [];
-  otherParticipant: User;
-  currentUserId: string;
-  isLoading: boolean = true;
-  newMessage: string = '';
 
+  /** Chat object representing the current chat. */
+  chat: Chat | null = null;
+
+  /** Array of messages within the chat. */
+  messages: Message[] = [];
+
+  /** Information about the other participant in the chat. */
+  otherParticipant: User;
+
+  /** ID of the currently authenticated user. */
+  currentUserId: string;
+
+  /** Flag to track loading state of the component. */
+  isLoading: boolean = true;
+
+  /** Text for the new message being composed. */
+  newMessage: string = '';
+  
+  /** Holds selected emoji */
+  emoji: any;
+
+  /** Flag to control visibility of emoji picker */
+  showEmojiPicker: boolean = false;
+
+  /** Reference to the chat messages container in the template. */
   @ViewChild('chatMessages') private chatMessages: ElementRef;
 
   constructor(
@@ -35,10 +58,18 @@ export class ChatComponent implements OnInit {
     private modalService: NgbModal,
   ) {}
 
+  /**
+   * Lifecycle hook called after component initialization.
+   * Initializes the chat based on the route parameter.
+   */
   ngOnInit(): void {
     this.initializeChat();
   }
 
+  /**
+   * Initializes the chat by fetching chat data based on the route parameter.
+   * Uses the current user's information to process chat data.
+   */
   private initializeChat(): void {
     this.route.paramMap.pipe(
       switchMap(params => {
@@ -54,6 +85,12 @@ export class ChatComponent implements OnInit {
     });
   }
 
+  /**
+   * Processes chat data based on the chat ID and current user information.
+   * @param chatId The ID of the chat to retrieve.
+   * @param user The current authenticated user.
+   * @returns An observable stream of messages.
+   */
   private processChatData(chatId: string, user: User): Observable<Message[]> {
     this.currentUserId = user.uid;
     this.chatId = chatId;
@@ -62,6 +99,11 @@ export class ChatComponent implements OnInit {
     );
   }
 
+  /**
+   * Retrieves chat details and messages based on the provided chat object.
+   * @param chat The chat object to process.
+   * @returns An observable stream of messages.
+   */
   private chatAndMessages(chat: Chat | null): Observable<Message[]> {
     this.chat = chat;
     if (!this.chat) return of([]);
@@ -73,40 +115,78 @@ export class ChatComponent implements OnInit {
     );
   }
 
+  /**
+   * Processes messages retrieved for the chat.
+   * @param messages An array of messages to process.
+   */
   private processMessages(messages: Message[] | null): void {
     if (!messages) return;
     this.isLoading = false;
     this.messages = messages.map(message => ({
       ...message,
-      timestamp: (message.timestamp as Timestamp).toDate()
+      timestamp: message.timestamp ? (message.timestamp instanceof Date ? message.timestamp : (message.timestamp as Timestamp).toDate()) : 'Loading...'
     }));
   }
 
+  /**
+   * Scrolls to the bottom of the chat messages container.
+   */
   ngAfterViewChecked(): void {
     this.scrollToBottom();
   }
 
+  /**
+   * Scrolls the chat messages container to the bottom.
+   */
   private scrollToBottom(): void {
     try {
       this.chatMessages.nativeElement.scrollTop = this.chatMessages.nativeElement.scrollHeight;
     } catch(err) {}
   }
 
+  /**
+   * Retrieves information about the chat recipient.
+   * @param chat The chat object containing participant IDs.
+   * @returns An observable stream of user information.
+   */
   private getRecipientUserInfo(chat: Chat): Observable<User> {
     const recipientId = chat.participants.find(id => id !== this.currentUserId);
     if (!recipientId) throw new Error("Recipient ID not found");
     return this.userService.getUserInfoById(recipientId);
   }
 
+  /**
+   * Sends a new message in the chat.
+   * If the message text is empty or the chat ID is not set, no action is taken.
+   */
   async sendMessage(): Promise<void> {
     if (!this.newMessage.trim() || !this.chatId) return;
     await this.chatService.sendMessage(this.chatId, this.newMessage.trim());
-    this.newMessage = '';    
+    this.newMessage = ''; 
+    this.showEmojiPicker = false;
   }
 
+  /**
+   * Opens the swap list modal for the chat's other participant.
+   */
   public openSwapListModal(): void {
     const modalRef = this.modalService.open(SwapListComponent);
     modalRef.componentInstance.otherParticipant = this.otherParticipant;
     modalRef.componentInstance.uid = this.currentUserId;
+  }
+
+  /**
+   * Adds an emoji to the new message being composed.
+   * @param event The emoji selection event.
+   */
+  addEmoji(event: any): void {
+    this.newMessage = this.newMessage + event.emoji.native;
+  }
+
+  /**
+   * Toggles the visibility of the emoji picker.
+   */
+  toggleEmojiPicker(): void {
+    this.showEmojiPicker = !this.showEmojiPicker;
   }
 }

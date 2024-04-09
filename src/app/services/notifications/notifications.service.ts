@@ -3,15 +3,24 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/comp
 import { Observable } from 'rxjs';
 import { Notification } from 'src/app/shared/interfaces/notification';
 
+/**
+ * Service for managing user notifications with Firestore.
+ */
 @Injectable({ providedIn: 'root' })
 export class NotificationsService {
 
   constructor(private firestore: AngularFirestore) { }
 
-  // Function to push a notification to Firestore
-  pushNotification(recieverId: string, message: string, type: string): Promise<void> {
+  /**
+   * Pushes a notification to Firestore for a specific user.
+   * @param receiverId The ID of the user receiving the notification.
+   * @param message The message content of the notification.
+   * @param type The type of notification (e.g., 'info', 'alert', 'reminder').
+   * @returns A Promise that resolves when the notification is successfully added.
+   */
+  pushNotification(receiverId: string, message: string, type: string): Promise<void> {
     // Reference to the Firestore collection for user notifications
-    const notificationsRef = this.firestore.collection('notifications').doc(recieverId).collection('userNotifications');
+    const notificationsRef = this.firestore.collection('notifications').doc(receiverId).collection('userNotifications');
     
     // Data to include in the notification document
     const notificationData: Notification = {
@@ -26,13 +35,17 @@ export class NotificationsService {
       .catch(error => console.error('Error adding notification:', error));
   }
   
-  // Function to get user notifications from Firestore
+  /**
+   * Retrieves user notifications from Firestore for a specific user.
+   * @param uid The ID of the user to fetch notifications for.
+   * @returns An Observable emitting an array of user notifications, ordered by timestamp (latest first).
+   */
   getUserNotifications(uid: string): Observable<any[]> {  
     // Reference to the Firestore collection for user notifications, ordered by timestamp
     const userNotificationsRef: AngularFirestoreCollection<any> = this.firestore
-    .collection('notifications')
-    .doc(uid)
-    .collection('userNotifications', ref => ref.orderBy('timestamp', 'desc'));
+      .collection('notifications')
+      .doc(uid)
+      .collection('userNotifications', ref => ref.orderBy('timestamp', 'desc'));
 
     // Return an Observable that emits user notifications
     return userNotificationsRef.valueChanges();

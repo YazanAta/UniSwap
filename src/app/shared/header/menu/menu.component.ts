@@ -4,20 +4,34 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { CATEGORIES, Category } from 'src/app/shared/interfaces/category.interface';
 import { Subscription } from 'rxjs';
 
+/**
+ * Angular component representing the application menu.
+ */
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })
-export class MenuComponent implements OnInit, OnDestroy{
-
+export class MenuComponent implements OnInit, OnDestroy {
+  /** Array of categories used in the menu. */
   public categories: Category[] = CATEGORIES;
-  public menuToggle: boolean = false;
-  isUser: boolean = false; // Initialized isUser to prevent undefined behavior
-  private subscriptions = new Subscription(); // To manage subscriptions for cleanup
 
+  /** Flag to toggle the visibility of the main menu. */
+  public menuToggle: boolean = false;
+
+  /** Flag indicating whether a user is authenticated. */
+  isUser: boolean = false;
+
+  /** Subscription object to manage subscriptions for cleanup. */
+  private subscriptions = new Subscription();
+
+  /**
+   * Constructs a new MenuComponent.
+   * @param router The Angular router service.
+   * @param authService The authentication service.
+   */
   constructor(private router: Router, private authService: AuthService) {
-    // Subscribe to router events and filter for NavigationEnd events to reset menuToggle only when navigation actually occurs
+    // Subscribe to router events to reset menuToggle on NavigationEnd events
     this.subscriptions.add(
       this.router.events.subscribe(event => {
         if (event instanceof NavigationEnd) {
@@ -27,31 +41,42 @@ export class MenuComponent implements OnInit, OnDestroy{
     );
   }
 
+  /**
+   * Initializes the component by subscribing to authentication changes.
+   */
   ngOnInit(): void {
-    // Subscribe to authService user observable to set isUser
     this.subscriptions.add(
-      this.authService.user$
-      .subscribe(user => {
-        this.isUser = !!user; // Simplified truthy/falsy assignment
+      this.authService.user$.subscribe(user => {
+        this.isUser = !!user;
       })
     );
   }
 
+  /**
+   * Cleans up subscriptions when the component is destroyed.
+   */
   ngOnDestroy(): void {
-    // Cleanup subscriptions to prevent memory leaks
     this.subscriptions.unsubscribe();
   }
 
+  /**
+   * Toggles the visibility of the main menu.
+   */
   mainMenuToggleFunction(): void {
     this.menuToggle = !this.menuToggle;
   }
 
-  // Click Toggle menu (Mobile)
+  /**
+   * Toggles the active state of the mobile navigation.
+   */
   active: boolean = false;
   toggleNavActive() {
     this.active = !this.active;
   }
 
+  /**
+   * Logs out the current user and navigates to the home page.
+   */
   async logout() {
     try {
       await this.authService.logout();
@@ -61,18 +86,19 @@ export class MenuComponent implements OnInit, OnDestroy{
     }
   }
 
+  /**
+   * Scrolls to the about section on the home page or navigates to the home page and scrolls.
+   */
   scrollToAboutSection() {
-    // Check if already on home page
     if (this.router.url === '') {
-      // Scroll to about section
+      // Scroll to about section if already on home page
       const aboutSection = document.getElementById('about');
       if (aboutSection) {
         aboutSection.scrollIntoView({ behavior: 'smooth' });
       }
     } else {
-      // Navigate to home page
+      // Navigate to home page and then scroll to about section
       this.router.navigate(['']).then(() => {
-        // Scroll to about section after navigation
         setTimeout(() => {
           const aboutSection = document.getElementById('about');
           if (aboutSection) {
@@ -82,5 +108,4 @@ export class MenuComponent implements OnInit, OnDestroy{
       });
     }
   }
-  
 }

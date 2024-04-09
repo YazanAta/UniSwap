@@ -7,13 +7,13 @@
         </button>
         <div class="row">
           <!-- Product Image -->
-          <div class="col-lg-6 col-xs-12">
-            <div class="quick-view-img">
-              <img [src]="post.image || '/assets/logo.png'" alt="{{post.title}}" class="img-fluid">
+          <div class="col-lg-6 col-xs-12 quick-view-img">
+            <div>
+              <img [src]="post.image || '/assets/images/posts/post-default.jpg'" alt="{{post.title}}" class="img-fluid">
             </div>
           </div>
           <!-- Product Details -->
-          <div class="col-lg-6 rtl-text">
+          <div class="col-lg-6">
             <div class="product-right">
               <h2>{{ post.title | titlecase }}</h2>
               <p class="text-muted" *ngIf="post.pricing === 'free'; else salePrice">{{ post.pricing | titlecase }}</p>
@@ -30,8 +30,8 @@
               <div *ngIf="ownerInfo" class="border-product">
                 <p class="text-muted">Owner: {{ ownerInfo.firstName }} {{ ownerInfo.lastName }}</p>
               </div>
-              <div class="border-product quick-view-actions d-flex gap-3">
-                <button class="btn-solid" (click)="createChat(post)"><i class="ti-comment me-2"></i>Open Chat</button>
+              <div class="border-product quick-view-actions d-flex gap-3" *ngIf="uid != post.ownerId">
+                <button class="btn-solid" (click)="createChat(post)"><i class="ti-comment me-2"></i>Start Chat</button>
                 <button class="btn-solid" (click)="addToWishlist(post.id)"><i class="ti-heart me-2"></i>Add To Wishlist</button>
               </div>
             </div>

@@ -25,9 +25,10 @@
 
 <!-- Categories section start -->
 
-<!--Categories 1 Section Start (If User)-->
-<section class="full-banner parallax categories-section-home" [ngStyle]="{'background-image': 'url(assets/images/slider/backimage.png)'}" *ngIf="isUser">
-  <div class="container-fluid">
+<section class="full-banner parallax categories-section-home" [ngStyle]="{'background-image': 'url(assets/images/slider/backimage.jpg)'}">
+  
+  <!-- If User -->
+  <div class="container-fluid" *ngIf="isUser else notUserSection">
       <div class="row category-border">
 
           <div class="title3 section-t-space">
@@ -48,20 +49,22 @@
           </div>
       </div>
   </div>
-</section>
-<!--Categories 1 Section End (If User)-->
 
-<!-- Section (If Not User)-->
-<section class="full-banner parallax portfolio-section" [ngStyle]="{'background-image': 'url(assets/images/slider/backimage.png)'}" *ngIf="!isUser">
-  <div class="title3 section-t-space">
-    <h4>Create Your Account Now With Your Ju Email</h4>
-    <h2 class="title-inner3">And Be Our Guest</h2>
-    <div class="line"></div>
-  </div>
+  <!-- If Not User -->
+  <ng-template #notUserSection>
+    <div class="title3 section-t-space">
+      <h4>Create Your Account Now With Your Ju Email</h4>
+      <h2 class="title-inner3">And Be Our Guest</h2>
+      <div class="line"></div>
+    </div>
+  </ng-template>
+
 </section>
+
 <!--Categories Section End-->
 
 <!-- About section start -->
+
 <section id="about">
     <div class="container">
         <div class="row">
@@ -99,5 +102,5 @@
     </div>
   </div>
 </section>
-<!-- About banner End -->
+
 <!-- About section end -->

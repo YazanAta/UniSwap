@@ -8,7 +8,7 @@ export interface Category {
   export const CATEGORIES: Category[] = [
     {
       name: 'Text Books',
-      image: 'assets/images/categories/textbooks.png',
+      image: 'assets/images/categories/textbooks.jpg',
       linkParam: 'Text Books',
       subCategory: [
         {
@@ -49,7 +49,7 @@ export interface Category {
     },
     {
       name: 'Uniforms',
-      image: 'assets/images/categories/uniforms.png',
+      image: 'assets/images/categories/uniforms.jpg',
       linkParam: 'Uniforms',
       subCategory: [
         {name: "Medical Uniforms"},
@@ -59,7 +59,7 @@ export interface Category {
     },
     {
       name: 'Tools',
-      image: 'assets/images/categories/tools.png',
+      image: 'assets/images/categories/tools.jpg',
       linkParam: 'Tools',
       subCategory: [
         {name: "Medical Tools"},

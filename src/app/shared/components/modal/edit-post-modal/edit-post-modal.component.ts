@@ -12,44 +12,110 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   templateUrl: './edit-post-modal.component.html',
   styleUrls: ['./edit-post-modal.component.scss']
 })
+/**
+ * Component for editing a post in a modal window.
+ */
 export class EditPostModalComponent {
+  /**
+   * Form group representing the post edit form.
+   */
   postForm: FormGroup;
+
+  /**
+   * Array of available categories.
+   */
   categories: Category[] = CATEGORIES;
+
+  /**
+   * Array of sub-categories based on the selected category.
+   */
   subCategories: Category[] = [];
+
+  /**
+   * Array of sub-sub-categories based on the selected sub-category.
+   */
   subSubCategories: Category[] = [];
+
+  /**
+   * The selected file for the post image.
+   */
+  selectedFile: File = null;
+
+  /**
+   * Maximum file size for the post image upload (2 MB).
+   */
+  private readonly MAX_FILE_SIZE = 2 * 1024 * 1024;
+
+  /**
+   * Allowed MIME types for the post image upload.
+   */
+  private readonly ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
+
+  /**
+   * Array of pricing options for the post.
+   */
   pricings = ['paid', 'free'];
+
+  /**
+   * Array of condition options for the post.
+   */
   conditions = ['new', 'good condition', 'fair condition', 'damaged'];
+
+  /**
+   * Flag indicating whether the form is currently submitting.
+   */
   isSubmitting = false;
+
+  /**
+   * Input property representing the post data to edit.
+   */
   @Input() post: Post;
-  uid: string
 
-  constructor(private fb: FormBuilder, public activeModal: NgbActiveModal, private postsService: PostsService, private firestore: AngularFirestore, private authService: AuthService) { }
+  /**
+   * The UID of the authenticated user.
+   */
+  uid: string;
 
+  constructor(
+    private fb: FormBuilder,
+    public activeModal: NgbActiveModal,
+    private postsService: PostsService,
+    private firestore: AngularFirestore,
+    private authService: AuthService
+  ) {}
+
+  /**
+   * Lifecycle hook called after component initialization.
+   * Initializes the post edit form and sets up form value change subscriptions.
+   */
   async ngOnInit() {
-    
     const user = await this.authService.getUser();
+    this.uid = user.uid;
 
-    this.uid = user.uid
-    
-    // Create the post form
-    // The title, description, category, and type fields are required
-    // The subcategory, sub-subcategory, and price fields are optional
-    // The subcategory and sub-subcategory fields are disabled by default
-    // The price field is disabled by default
-    // The price field is enabled if the type is Sale
+    this.initializeForm();
+    this.setupFormSubscriptions();
+  }
+
+  /**
+   * Initializes the post edit form with default values and validators.
+   */
+  private initializeForm() {
     this.postForm = this.fb.group({
       title: [this.post.title || '', Validators.required],
       description: [this.post.description || '', Validators.required],
-      category: [this.post.category || '' , Validators.required],
-      subCategory: [{value: this.post.subCategory || '', disabled: true }],
-      subSubCategory:[{ value: this.post.subSubCategory || '', disabled: true }],
-      condition: ['', Validators.required],
+      category: [this.post.category || '', Validators.required],
+      subCategory: [{ value: this.post.subCategory || '', disabled: true }],
+      subSubCategory: [{ value: this.post.subSubCategory || '', disabled: true }],
+      condition: [this.post.condition || '', Validators.required],
       pricing: [this.post.pricing || '', Validators.required],
-      price: [{value: this.post.price || '', disabled: true}, Validators.required]
+      price: [{ value: this.post.price || '', disabled: true }, Validators.required]
     });
-    // Disable the price field if the type is Free
-    // Enable the price field if the type is Sale
-    // Subscribe to the type field value changes
+  }
+
+  /**
+   * Sets up form value change subscriptions for dynamic form interactions.
+   */
+  private setupFormSubscriptions() {
     this.postForm.get('pricing').valueChanges.subscribe(value => {
       if (value === 'paid') {
         this.postForm.get('price').enable();
@@ -58,58 +124,53 @@ export class EditPostModalComponent {
       }
     });
 
-    // Get the subcategories for the selected category
-    // Reset the subcategory and sub-subcategory fields
-    // Enable the subcategory field
-    // Subscribe to the category field value changes
     this.postForm.get('category').valueChanges.subscribe(value => {
-      const category = this.categories.find(category => category.name === value);
+      const category = this.categories.find(c => c.name === value);
       this.subCategories = category ? category.subCategory : [];
+      const subCategoryControl = this.postForm.get('subCategory');
       if (this.subCategories.length > 0) {
-         // Reset subcategory and sub-subcategory fields
-        this.postForm.get('subCategory').reset(this.subCategories[0].name);
-        this.postForm.get('subSubCategory').reset();
-        
-        this.postForm.get('subCategory').enable();
+        subCategoryControl.reset(this.subCategories[0].name);
+        subCategoryControl.enable();
       } else {
-        this.postForm.get('subCategory').disable();
+        subCategoryControl.disable();
       }
-      this.postForm.get('subCategory').updateValueAndValidity();
+      subCategoryControl.updateValueAndValidity();
     });
-    
-    // Get the sub-subcategories for the selected subcategory
-    // Reset the sub-subcategory field
-    // Enable the sub-subcategory field
-    // Subscribe to the subcategory field value changes
-    // Update the value and validity of the sub-subcategory field
-    // This is necessary because the sub-subcategory field is disabled
+
     this.postForm.get('subCategory').valueChanges.subscribe(value => {
-      const category = this.categories.find(category => category.name === this.postForm.get('category').value);
-      const subCategory = category ? category.subCategory.find(sub => sub.name === value) : null;
+      const category = this.categories.find(c => c.name === this.postForm.get('category').value);
+      const subCategory = category?.subCategory.find(sub => sub.name === value);
       this.subSubCategories = subCategory ? subCategory.subCategory : [];
-      if (this.subSubCategories?.length > 0) {
-        this.postForm.get('subSubCategory').reset(this.subSubCategories[0].name);
-        this.postForm.get('subSubCategory').enable();
+      const subSubCategoryControl = this.postForm.get('subSubCategory');
+      if (this.subSubCategories.length > 0) {
+        subSubCategoryControl.reset(this.subSubCategories[0].name);
+        subSubCategoryControl.enable();
       } else {
-        this.postForm.get('subSubCategory').disable();
+        subSubCategoryControl.disable();
       }
-      this.postForm.get('subSubCategory').updateValueAndValidity();
+      subSubCategoryControl.updateValueAndValidity();
     });
   }
 
-  // Get the selected file from the input
-  // Set the selectedFile property to the selected file
-  // This will be used when the user clicks the add post button
-  // to upload the image to Firebase Storage
-  // The selectedFile property will be passed to the addPost method
-  // in the PostsService
-  selectedFile: File = null;
-  onFileSelected(event){
-    this.selectedFile = event.target.files[0];
+  /**
+   * Handles the file selection event to validate and set the selected file.
+   * @param event The file selection event.
+   */
+  onFileSelected(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (!this.ALLOWED_MIME_TYPES.includes(file.type) || file.size > this.MAX_FILE_SIZE) {
+      alert('Invalid file type or size. Please select a valid image file.');
+      return;
+    }
+    this.selectedFile = file;
   }
 
-
-  editPost(postId) {
+  /**
+   * Submits the edited post data.
+   * @param postId The ID of the post to edit.
+   */
+  editPost(postId: string) {
     if (this.isSubmitting) {
       return; // Do nothing if already submitting
     }
@@ -140,5 +201,4 @@ export class EditPostModalComponent {
       );
     }
   }
-  
 }

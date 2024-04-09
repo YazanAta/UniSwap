@@ -11,19 +11,21 @@ import { WishlistService } from './wishlist/wishlist.service';
 import { CustomValidationsService } from './validations/custom-validations.service';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { SmoothScrollDirective } from './directives/smooth-scroll.directive';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 
 
 @NgModule({
   declarations: [
-    SmoothScrollDirective
+    
   ],
   imports: [
     CommonModule,
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    AngularFireAuthModule,
+    AngularFireStorageModule
   ],
   providers: [
-    SmoothScrollDirective,
     AdminService,
     AuthService,
     ChatService,

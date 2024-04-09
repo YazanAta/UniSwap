@@ -5,6 +5,7 @@ import { catchError, map, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { Chat, Message } from 'src/app/shared/interfaces/chat.interface';
 import { Router } from '@angular/router';
+import { Timestamp, serverTimestamp } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -102,7 +103,7 @@ export class ChatService {
       const entryMessageObj = {
         text: `Hey There, I'm interested in ${postTitle}`,
         sender: userUID,
-        timestamp: new Date()
+        timestamp: serverTimestamp()
       };
 
       if (chatId) {
@@ -199,7 +200,7 @@ export class ChatService {
       const messageObj = {
         text: message,
         sender: userUID,
-        timestamp: new Date()
+        timestamp: serverTimestamp()
       };
       await this.firestore.collection(this.getMessageCollectionPath(chatId)).add(messageObj);
     } catch (error) {

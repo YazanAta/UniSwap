@@ -17,7 +17,12 @@ export interface Post {
     state?: PostState,
     swappedTo?: string,
 
-    requestId?: string
+    requestId?: string,
+
+    requestFrom?:{
+        id,
+        name,
+    } 
 }
 
 export type PostState = 'pending' | 'approved' | 'rejected' | 'waiting' | 'swapped' | 'deleted';

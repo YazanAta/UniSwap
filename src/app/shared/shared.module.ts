@@ -28,7 +28,6 @@ import { TapToTopComponent } from './components/tap-to-top/tap-to-top.component'
 import { SkeletonProductBoxComponent } from './components/product/skeleton/skeleton-product-box/skeleton-product-box.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { DashboardLayoutComponent } from './layouts/dashboard-layout/dashboard-layout.component';
-import { NotificationsModalComponent } from './components/modal/notifications-modal/notifications-modal.component';
 import { NotificationsSectionComponent } from './header/notifications-section/notifications-section.component';
 import { EditPostModalComponent } from './components/modal/edit-post-modal/edit-post-modal.component';
 import { SuccessfulRegistrationModalComponent } from './components/modal/successful-registration-modal/successful-registration-modal.component';
@@ -48,7 +47,6 @@ import { ChatListComponent } from './components/chatlist/chatlist.component';
     SkeletonProductBoxComponent,
     MainLayoutComponent,
     DashboardLayoutComponent,
-    NotificationsModalComponent,
     NotificationsSectionComponent,
     EditPostModalComponent,
     SuccessfulRegistrationModalComponent,

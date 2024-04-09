@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { switchMap, from, Observable, take} from 'rxjs';
+import { switchMap, from, Observable, take } from 'rxjs';
 import { Post, PostState } from 'src/app/shared/interfaces/post.interface';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { lastValueFrom } from 'rxjs';
 
-
+/**
+ * Service responsible for managing posts in Firestore.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -16,23 +18,37 @@ export class PostsService {
     private storage: AngularFireStorage
   ) {}
 
-  // Get posts where ownerId matches the current user's uid
+  /**
+   * Retrieves user-specific posts from Firestore based on ownerId.
+   * @param uid The ID of the user whose posts are to be retrieved.
+   * @returns An Observable emitting an array of user-specific posts.
+   */
   getUserPosts(uid: string): Observable<Post[]> {
     return this.firestore
-      .collection(`posts`, ref => ref.where('ownerId', '==', uid))
-      .valueChanges({idField: 'id'});
+      .collection<Post>('posts', ref => ref.where('ownerId', '==', uid))
+      .valueChanges({ idField: 'id' });
   }
 
-  // Get all approved posts, excluding the current user's posts
+  /**
+   * Retrieves all approved posts excluding the current user's posts.
+   * @param uid The ID of the current user.
+   * @returns A Promise resolving to an array of approved posts.
+   */
   getAllPosts(uid: string): Promise<Post[]> {
-    return lastValueFrom(this.firestore.collection('posts', (ref) =>
+    return lastValueFrom(this.firestore.collection<Post>('posts', (ref) =>
       ref.where('ownerId', '!=', uid).where('state', '==', 'approved')
     )
-      .valueChanges({idField: 'id'})
-      .pipe(take(1)))
+      .valueChanges({ idField: 'id' })
+      .pipe(take(1)));
   }
 
-  // Add a new post with or without an image
+  /**
+   * Adds a new post to Firestore with an optional image upload.
+   * @param post The post object to be added.
+   * @param image The image file associated with the post (optional).
+   * @param uid The ID of the user adding the post.
+   * @returns A Promise resolving when the post is successfully added.
+   */
   async addPost(post: Post, image: File | null, uid: string): Promise<void> {
     try {
       const filePath = image ? `posts/${new Date().getTime()}_${image.name}` : null;
@@ -43,52 +59,56 @@ export class PostsService {
         post.image = await lastValueFrom(fileRef.getDownloadURL());
       }
 
-      await this.firestore.collection(`posts`).add({
+      await this.firestore.collection('posts').add({
         ...post,
         createdAt: new Date(),
         ownerId: uid,
-        state: "pending"
+        state: 'pending'
       });
 
     } catch (error) {
-      // Handle any errors here
-      console.error("Error adding post:", error);
-      throw error; // Re-throw the error to propagate it to the caller
+      console.error('Error adding post:', error);
+      throw error;
     }
   }
-  
 
-  // Delete a post and its associated image
-  deletePost(post: Post): any {
-//    const postRef = this.firestore.doc(`posts/${post.id}`);
-//
-//    return lastValueFrom(postRef.get()).then((doc) => {
-//      const postData = doc.data() as { image?: string };
-//      
-//      // Delete the post document from Firestore
-//      return postRef.delete().then(() => {
-//        // If the post had an image, delete it from Firebase Storage
-//        if (postData && postData.image) {
-//          const storageRef = this.storage.refFromURL(postData.image);
-//          return storageRef.delete();
-//        }
-//      });
-//    });
+  /**
+   * Deletes a post from Firestore along with its associated image (if exists).
+   * @param post The post object to be deleted.
+   * @returns A Promise resolving when the post and its image (if exists) are successfully deleted.
+   */
+  async deletePost(post: Post): Promise<void> {
+    const postRef = this.firestore.doc(`posts/${post.id}`);
+
+    return lastValueFrom(postRef.get()).then((doc) => {
+      const postData = doc.data() as Post;
+
+      return postRef.delete().then(() => {
+        if (postData && postData.image) {
+          const storageRef = this.storage.refFromURL(postData.image);
+          return lastValueFrom(storageRef.delete());
+        }
+      });
+    });
   }
   
+  /**
+   * Edits an existing post in Firestore with optional image update.
+   * @param postId The ID of the post to be edited.
+   * @param updatedPost The updated post object.
+   * @param newImage The new image file for the post (optional).
+   * @param uid The ID of the user editing the post.
+   * @returns An Observable emitting when the post is successfully updated.
+   */
   editPost(postId: string, updatedPost: Post, newImage: File | null, uid: string): Observable<void> {
-    // Get the reference to the existing post document
     const postRef = this.firestore.doc(`posts/${postId}`);
 
-    // Retrieve existing post data
     return postRef.get().pipe(
       switchMap((doc) => {
         const postData = doc.data() as Post;
-        
-        // Check if the user owns the post
+
         if (postData && postData.ownerId === uid) {
           if (newImage !== null) {
-            // Update post with a new image
             const filePath = `posts/${new Date().getTime()}_${newImage.name}`;
             const fileRef = this.storage.ref(filePath);
 
@@ -96,48 +116,43 @@ export class PostsService {
               return fileRef.getDownloadURL().toPromise();
             })).pipe(
               switchMap(url => {
-                // Delete the existing image if it exists
                 if (postData.image) {
                   const existingImageRef = this.storage.refFromURL(postData.image);
                   existingImageRef.delete();
                 }
 
-                // Update post data in Firestore with the new image URL
                 return postRef.update({
                   image: url,
                   ...updatedPost,
                   createdAt: new Date(),
-                  state: "pending"
-                }).then(() => {
-                  // Additional logic if needed
+                  state: 'pending'
                 });
               })
             );
           } else {
-            // Update post without changing the image
             return postRef.update({
               ...updatedPost,
               updatedAt: new Date(),
-              state: "pending"
-            }).then(() => {
-              // Additional logic if needed
+              state: 'pending'
             });
           }
         } else {
-          // Handle the case where the user doesn't own the post
-          throw new Error("User does not have permission to edit this post.");
+          throw new Error('User does not have permission to edit this post.');
         }
       })
     );
-
-    
   }
 
-  // Change the state of a post (e.g., from 'pending' to 'approved' or 'rejected')
-  async updateState(postId: string, newState: PostState): Promise<void>{
+  /**
+   * Updates the state of a post in Firestore (e.g., 'pending' to 'approved' or 'rejected').
+   * @param postId The ID of the post to update.
+   * @param newState The new state for the post.
+   * @returns A Promise resolving when the post state is successfully updated.
+   */
+  async updateState(postId: string, newState: PostState): Promise<void> {
     await this.firestore.doc(`posts/${postId}`).update({
       state: newState
-    })
+    });
   }
 
 }

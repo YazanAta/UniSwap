@@ -7,16 +7,16 @@ import { RegisterComponent } from './account/register/register.component';
 import { ForgetPasswordComponent } from './account/forget-password/forget-password.component';
 import { ProfileComponent } from './account/profile/profile.component';
 import { ErrorComponent } from './error/error.component';
-import { authGuard } from '../services/guards/auth.guard';
-import { guestGuard } from '../services/guards/guest.guard';
-import { userGuard } from '../services/guards/user.guard';
 import { ChatComponent } from './chat/chat/chat.component';
 import { PostsComponent } from './posts/posts.component';
+
+import { authGuard } from '../services/guards/auth.guard';
+import { userGuard } from '../services/guards/user.guard';
 
 const routes: Routes = [
   { 
     path: 'wishlist', 
-    component: WishlistComponent ,
+    component: WishlistComponent,
     canActivate: [userGuard]
   },
   { 
@@ -43,7 +43,10 @@ const routes: Routes = [
     path: '404', 
     component: ErrorComponent 
   },
-  { path: 'chats/:chatId', component: ChatComponent },
+  { 
+    path: 'chats/:chatId',
+    component: ChatComponent 
+  },
   {
     path: 'posts',
     component: PostsComponent,

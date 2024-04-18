@@ -31,13 +31,16 @@ export class LoginComponent {
     private authService: AuthService,
     private formBuilder: FormBuilder
   ) {
+    this.initForm()
+  }
+
+  private initForm(): void {
     // Initialize the login form with validators
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
   }
-
   /**
    * Attempts to log in the user using the provided form data.
    * @param form The login form data containing email and password.

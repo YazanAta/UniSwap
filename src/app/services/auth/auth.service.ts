@@ -59,9 +59,9 @@ export class AuthService {
    * @param user Additional information about the user.
    * @returns Promise containing the user authentication result.
    */
-  async register(email: string, password: string, user: User): Promise<firebase.auth.UserCredential> {
+  async register(user: User): Promise<firebase.auth.UserCredential> {
     try {
-      const result = await this.registerUserWithEmailAndPassword(email, password);
+      const result = await this.registerUserWithEmailAndPassword(user.email, user.password);
       await this.addUserInformation(result.user.uid, user);
       await this.sendVerificationEmail(result.user);
       return result;

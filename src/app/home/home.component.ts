@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CATEGORIES, Category } from '../shared/interfaces/category.interface';
 import { AuthService } from '../services/auth/auth.service';
 import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, catchError, takeUntil, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -19,19 +19,19 @@ export class HomeComponent {
   // for unsubscribing
   private destroy$ = new Subject<void>();
 
-  constructor(
-    private authService: AuthService,
-    private router: Router) { }
-
   public sliders = [{
     title: 'Unleash the UniSwap Experience!',
     subTitle: 'Give, Swap, Buy',
-    image: 'assets/images/slider/slider1.jpg'
+    image: 'assets/images/slider/slider1.png'
   }, {
     title: 'More Than a Swap, It\'s a Community Sharing Platform',
     subTitle: 'UniSwap',
-    image: 'assets/images/slider/slider2.jpg'
+    image: 'assets/images/slider/slider2.png',
   }];
+  
+  constructor(
+    private authService: AuthService,
+    private router: Router) { }
 
   // Collection banner
   public collections = [{
@@ -40,21 +40,26 @@ export class HomeComponent {
     class: 'p-left'
   }, {
     image: 'assets/images/collection/collection2.png',
-    title: 'Excahnge',
+    title: 'Exchange',
     class: 'p-right'
   }];
 
   ngOnInit(): void {
-
-    this.authService.user$.pipe(takeUntil(this.destroy$))
-    .subscribe((user) => {
-      if(user){
+    this.authService.user$.pipe(
+      takeUntil(this.destroy$),
+      catchError((error) => {
+        // Handle the error appropriately (e.g., log, display message)
+        console.error('Error fetching user:', error);
+        // Return a new observable or rethrow the error
+        return throwError(error); // Re-throw the error to propagate it
+      })
+    ).subscribe((user) => {
+      if (user) {
         this.isUser = true;
-      }else{
+      } else {
         this.isUser = false;
       }
-    })
-
+    });
   }
 
   ngOnDestroy() {

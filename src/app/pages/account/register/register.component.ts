@@ -49,8 +49,8 @@ export class RegisterComponent {
     this.registrationForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email, this.customValidations.validateEmailDomain]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      email: ['', [Validators.required, Validators.email, this.customValidations.validateEmailDomain, this.customValidations.strongPasswordValidator]],
+      password: ['', [Validators.required, Validators.minLength(8), this.customValidations.strongPasswordValidator()]],
       confirmPassword: ['', Validators.required],
       gender: ['', Validators.required]
     }, { validators: this.customValidations.passwordMatchValidator("password", "confirmPassword") });
@@ -62,27 +62,33 @@ export class RegisterComponent {
    * If registration fails, displays an error message.
    */
   async register(): Promise<void> {
-    if (this.registrationForm.invalid) return; // If form is invalid, do not proceed with registration
+    if (this.registrationForm.invalid) {
+      return; // Exit if form is invalid
+    }
 
-    const data: User = this.registrationForm.value; // Extract form data as User interface
+    const userData: User = this.registrationForm.value;
 
     try {
-      // Call AuthService to register the user
-      await this.authService.register(data.email, data.password, data);
-      
-      // Open a success modal upon successful registration
+      await this.authService.register(userData);
       this.modalService.open(SuccessfulRegistrationModalComponent);
-
-      // Navigate to login page after registration
       this.router.navigate(['/pages/login']);
-
-      // Perform automatic logout after registration (if needed)
       this.authService.logout();
     } catch (error) {
-      // Handle registration error (e.g., display specific error message)
-      const errorMessage = error.code === 'auth/email-already-in-use' ?
-        'The email address is already in use by another account.' : error.message;
-      this.toastr.show(errorMessage, 'Failed', 'error');
+      this.handleRegistrationError(error);
     }
+  }
+
+  private handleRegistrationError(error: any): void {
+    let errorMessage = 'Registration failed. Please try again later.';
+    
+    if (error.code === 'auth/email-already-in-use') {
+      errorMessage = 'The email address is already in use by another account.';
+    } else if (error.code === 'auth/invalid-email') {
+      errorMessage = 'Invalid email address.';
+    } else if (error.code === 'auth/weak-password') {
+      errorMessage = 'Password should be at least 8 characters long.';
+    }
+
+    this.toastr.show(errorMessage, 'Registration Error', 'error');
   }
 }

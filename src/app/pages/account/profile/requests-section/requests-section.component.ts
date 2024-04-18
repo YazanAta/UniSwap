@@ -1,5 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { catchError, throwError } from 'rxjs';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { SwapService } from 'src/app/services/swap/swap.service';
 import { Post } from 'src/app/shared/interfaces/post.interface';
@@ -52,20 +53,34 @@ export class RequestsSectionComponent implements OnInit {
    * Initializes the current user and fetches their requests.
    */
   async initializeUser(): Promise<void> {
-    const user = await this.authService.getUser();
-    this.uid = user.uid;
-    await this.getRequests(this.uid);
+    try {
+      const user = await this.authService.getUser();
+      this.uid = user.uid;
+      await this.getRequests(this.uid);
+    } catch (error) {
+      console.error('Failed to initialize user:', error);
+      // Handle error (e.g., show error message)
+    }
   }
 
   /**
    * Fetches requests for the specified user ID.
    * @param uid The user ID whose requests are to be fetched.
    */
-  async getRequests(uid: string): Promise<void> {
-    this.swapService.getRequests(uid).subscribe((requests) => {
-      this.requestsAsPost = requests;
-    });
+  getRequests(uid: string): void {
+    this.swapService.getRequests(uid)
+      .pipe(
+        catchError((error) => {
+          console.error('Failed to fetch requests:', error);
+          // Handle error (e.g., show error message)
+          return throwError(error); // Re-throw the error to propagate it
+        })
+      )
+      .subscribe((requests) => {
+        this.requestsAsPost = requests;
+      });
   }
+
 
   /**
    * Opens the confirmation modal with the selected post for swap.
@@ -94,6 +109,8 @@ export class RequestsSectionComponent implements OnInit {
       }, 2000); // Close modal after 2 seconds (adjust as needed)
     } catch (error) {
       console.error('Failed to accept swap:', error);
+      // Handle error (e.g., show error message)
+    } finally {
       this.isSwapping = false;
     }
   }

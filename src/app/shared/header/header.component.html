@@ -19,7 +19,7 @@
                       <!-- Top Right Section -->
                       <div class="top-right">
                           <!-- Notifications -->
-                          <ng-container *ngIf="isUser">
+                          <ng-container *ngIf="isUserAuthenticated">
                             <div>
                               <button class="btn" (click)="toggleList('notification')" *ngIf="!showNotification && !showChatList">
                                   <i class="ti-bell"></i>

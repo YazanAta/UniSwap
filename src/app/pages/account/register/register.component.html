@@ -70,14 +70,18 @@
                                 <label for="password">Password</label>
                                 <input type="password" class="form-control" id="password" placeholder="Enter your password" formControlName="password">
                                 <div *ngIf="registrationForm.get('password').touched">
-                                    <div *ngIf="registrationForm.get('password').errors?.['required']" class="alert alert-danger">
+                                    <div *ngIf="registrationForm.get('password').hasError('required')" class="alert alert-danger">
                                         Password is required
                                     </div>
-                                    <div *ngIf="registrationForm.get('password').errors?.['minLength']" class="alert alert-danger">
+                                    <div *ngIf="registrationForm.get('password').hasError('minlength')" class="alert alert-danger">
                                         Password must have a minimum length of 8 characters
+                                    </div>
+                                    <div *ngIf="registrationForm.get('password').hasError('weakPassword')" class="alert alert-danger">
+                                        Password must be strong (at least 8 characters including uppercase, lowercase, and numbers)
                                     </div>
                                 </div>
                             </div>
+
 
                             <!-- Confirm Password -->
                             <div class="col-md-6">

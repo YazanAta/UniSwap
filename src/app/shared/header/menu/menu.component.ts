@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { CATEGORIES, Category } from 'src/app/shared/interfaces/category.interface';
-import { Subscription } from 'rxjs';
+import { Subscription, filter } from 'rxjs';
 
 /**
  * Angular component representing the application menu.
@@ -20,40 +20,55 @@ export class MenuComponent implements OnInit, OnDestroy {
   public menuToggle: boolean = false;
 
   /** Flag indicating whether a user is authenticated. */
-  isUser: boolean = false;
+  isUserAuthenticated = false; // Flag indicating whether a user is authenticated
 
   /** Subscription object to manage subscriptions for cleanup. */
   private subscriptions = new Subscription();
+
+  /** Flag to toggle the active state of the mobile navigation. */
+  active: boolean = false;
 
   /**
    * Constructs a new MenuComponent.
    * @param router The Angular router service.
    * @param authService The authentication service.
    */
-  constructor(private router: Router, private authService: AuthService) {
-    // Subscribe to router events to reset menuToggle on NavigationEnd events
-    this.subscriptions.add(
-      this.router.events.subscribe(event => {
-        if (event instanceof NavigationEnd) {
-          this.menuToggle = false;
-        }
-      })
-    );
-  }
+  constructor(private router: Router, private authService: AuthService) {}
 
   /**
-   * Initializes the component by subscribing to authentication changes.
+   * Subscribes to authentication changes to update `isUserAuthenticated` flag.
    */
-  ngOnInit(): void {
+  private subscribeToAuthChanges(): void {
     this.subscriptions.add(
       this.authService.user$.subscribe(user => {
-        this.isUser = !!user;
+        this.isUserAuthenticated = !!user;
       })
     );
   }
 
   /**
-   * Cleans up subscriptions when the component is destroyed.
+   * Subscribes to router events to reset `menuToggle` on NavigationEnd events.
+   */
+  private subscribeToRouterEvents(): void {
+    this.subscriptions.add(
+      this.router.events
+        .pipe(filter(event => event instanceof NavigationEnd))
+        .subscribe(() => {
+          this.menuToggle = false; // Reset menuToggle on NavigationEnd events
+        })
+    );
+  }
+
+  /**
+   * Initializes the component by subscribing to authentication changes and router events.
+   */
+  ngOnInit(): void {
+    this.subscribeToAuthChanges();
+    this.subscribeToRouterEvents();
+  }
+
+  /**
+   * Cleans up subscriptions when the component is destroyed to prevent memory leaks.
    */
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
@@ -69,7 +84,6 @@ export class MenuComponent implements OnInit, OnDestroy {
   /**
    * Toggles the active state of the mobile navigation.
    */
-  active: boolean = false;
   toggleNavActive() {
     this.active = !this.active;
   }
@@ -87,25 +101,30 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Scrolls to the about section on the home page or navigates to the home page and scrolls.
+   * Scrolls to the 'about' section on the page.
+   * If not on the home page, navigates to the home page first and then scrolls to 'about' section.
    */
-  scrollToAboutSection() {
+  scrollToAboutSection(): void {
     if (this.router.url === '') {
-      // Scroll to about section if already on home page
-      const aboutSection = document.getElementById('about');
-      if (aboutSection) {
-        aboutSection.scrollIntoView({ behavior: 'smooth' });
-      }
+      this.scrollToElementById('about');
     } else {
-      // Navigate to home page and then scroll to about section
-      this.router.navigate(['']).then(() => {
-        setTimeout(() => {
-          const aboutSection = document.getElementById('about');
-          if (aboutSection) {
-            aboutSection.scrollIntoView({ behavior: 'smooth' });
-          }
-        }, 500); // Adjust timing as needed
-      });
+      this.navigateToHomePageAndScrollToAboutSection();
     }
   }
+
+  private scrollToElementById(elementId: string): void {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  private navigateToHomePageAndScrollToAboutSection(): void {
+    this.router.navigate(['']).then(() => {
+      setTimeout(() => {
+        this.scrollToElementById('about');
+      }, 100); // Adjust timing as needed
+    });
+  }
+  
 }

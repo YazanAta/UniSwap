@@ -57,13 +57,7 @@ export class PostsComponent {
     private postsService: PostsService,
     private authService: AuthService,
     private modalService: NgbModal
-  ) {
-    // Subscribe to route query parameters to filter posts based on category selection
-    this.route.queryParams.subscribe(params => {
-      this.selectedCategory = this.categories.find(category => category.name === params.category) || null;
-      this.filterPosts();
-    });
-  }
+  ) {}
   
   /**
    * Toggles the visibility of the mobile sidebar.
@@ -75,25 +69,39 @@ export class PostsComponent {
   /**
    * Initializes the component by fetching posts and applying initial filters.
    */
-  async ngOnInit(): Promise<void> {
-    const user = await this.authService.getUser();
-    await this.getAllPosts(user.uid);
-    this.filterPosts();
+  async ngOnInit() {
+    await this.initializeComponent();
+    // Subscribe to route query parameters to filter posts based on category selection
+    this.route.queryParams.subscribe(params => {
+      this.selectedCategory = this.categories.find(category => category.name === params.category) || null;
+      this.filterPosts();
+    });
+  }
+
+  private async initializeComponent(): Promise<void> {
+    try {
+      const user = await this.authService.getUser();
+      await this.getAllPosts(user.uid);
+    } catch (error) {
+      console.error('Error initializing component:', error);
+      // Handle error gracefully and inform the user
+    } finally {
+      this.loader = false;
+    }
   }
 
   /**
    * Retrieves all posts for the specified user.
    * @param uid The ID of the user whose posts are to be retrieved.
    */
-  async getAllPosts(uid: string): Promise<void> {
+  private async getAllPosts(uid: string): Promise<void> {
     try {
-      const posts = await this.postsService.getAllPosts(uid);
-      this.posts = posts;
+      this.posts = await this.postsService.getAllPosts(uid);
       if (this.filteredPosts.length === 0) {
-        this.filteredPosts = this.posts;
+        this.filteredPosts = [...this.posts];
       }
     } catch (error) {
-      console.error(error);
+      console.error('Failed to fetch posts:', error);
     }
   }
 
@@ -101,9 +109,10 @@ export class PostsComponent {
    * Selects a category and filters posts based on the selected category.
    * @param category The category to be selected for filtering posts.
    */
-  selectCategory(category: Category): void {
-    this.resetSelections();
+  public selectCategory(category: Category): void {
     this.selectedCategory = category;
+    this.selectedSubCategory = null;
+    this.selectedSubSubCategory = null;
     this.filterPosts();
   }
 
@@ -111,7 +120,7 @@ export class PostsComponent {
    * Selects a sub-category and re-applies filtering based on the selected sub-category.
    * @param subCategory The sub-category to be selected for further filtering.
    */
-  selectSubCategory(subCategory: Category): void {
+  public selectSubCategory(subCategory: Category): void {
     this.selectedSubCategory = subCategory;
     this.selectedSubSubCategory = null;
     this.filterPosts();
@@ -121,17 +130,25 @@ export class PostsComponent {
    * Selects a sub-sub-category and re-applies filtering based on the selected sub-sub-category.
    * @param subSubCategory The sub-sub-category to be selected for further filtering.
    */
-  selectSubSubCategory(subSubCategory: Category): void {
+  public selectSubSubCategory(subSubCategory: Category): void {
     this.selectedSubSubCategory = subSubCategory;
     this.filterPosts();
   }
 
   /**
-   * Resets category selections (sub-category and sub-sub-category).
+   * Updates the selected pricing type and re-filters posts accordingly.
+   * @param pricing The selected pricing type ('all', 'free', or 'paid').
    */
-  private resetSelections(): void {
-    this.selectedSubCategory = null;
-    this.selectedSubSubCategory = null;
+  public selectPricing(pricing: 'all' | 'free' | 'paid'): void {
+    this.selectedPricing = pricing;
+    this.filterPosts();
+  }
+
+  /**
+   * Opens the add post modal dialog.
+   */
+  openModal(): void {
+    this.modalService.open(AddPostModalComponent);
   }
 
   /**
@@ -145,21 +162,5 @@ export class PostsComponent {
       const matchesPricing = this.selectedPricing === 'all' || post.pricing === this.selectedPricing;
       return matchesCategory && matchesSubCategory && matchesSubSubCategory && matchesPricing;
     });
-  }
-  
-  /**
-   * Updates the selected pricing type and re-filters posts accordingly.
-   * @param pricing The selected pricing type ('all', 'free', or 'paid').
-   */
-  selectPricing(pricing: 'all' | 'free' | 'paid'): void {
-    this.selectedPricing = pricing;
-    this.filterPosts();
-  }
-
-  /**
-   * Opens the add post modal dialog.
-   */
-  openModal(): void {
-    this.modalService.open(AddPostModalComponent);
   }
 }

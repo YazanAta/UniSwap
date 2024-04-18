@@ -15,10 +15,10 @@ import { Subscription } from 'rxjs';
 export class FooterComponent implements OnInit, OnDestroy {
 
   /** Theme logo path for the footer. Defaults to 'assets/images/logos/logo.png'. */
-  @Input() themeLogo: string = 'assets/images/logos/logo.png';
+  @Input() themeLogo: string = 'assets/images/logos/logo2.png';
 
   /** Flag indicating whether a user is authenticated. */
-  public isUser: boolean = false;
+  public isUserAuthenticated = false;
 
   /** Array of categories used in the footer. */
   public categories: Category[] = CATEGORIES;
@@ -38,12 +38,7 @@ export class FooterComponent implements OnInit, OnDestroy {
    * Subscribes to the authService's user observable to determine authentication state.
    */
   ngOnInit(): void {
-    this.subscriptions.add(
-      this.authService.user$
-        .subscribe(user => {
-          this.isUser = !!user; // Set isUser based on user existence
-        })
-    );
+   this.subscribeToUserAuthentication();
   }
 
   /**
@@ -54,27 +49,39 @@ export class FooterComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  private subscribeToUserAuthentication(): void {
+    this.subscriptions.add(
+      this.authService.user$.subscribe(user => {
+        this.isUserAuthenticated = !!user; // Update authentication state based on user existence
+      })
+    );
+  }
+
   /**
    * Scrolls to the 'about' section on the page.
    * If not on the home page, navigates to the home page first and then scrolls to 'about' section.
    */
   scrollToAboutSection(): void {
     if (this.router.url === '') {
-      // Already on home page, scroll to 'about' section
-      const aboutSection = document.getElementById('about');
-      if (aboutSection) {
-        aboutSection.scrollIntoView({ behavior: 'smooth' });
-      }
+      this.scrollToElementById('about');
     } else {
-      // Navigate to home page and then scroll to 'about' section
-      this.router.navigate(['/']).then(() => {
-        setTimeout(() => {
-          const aboutSection = document.getElementById('about');
-          if (aboutSection) {
-            aboutSection.scrollIntoView({ behavior: 'smooth' });
-          }
-        }, 1000); // Adjust timing as needed
-      });
+      this.navigateToHomePageAndScrollToAboutSection();
     }
   }
+
+  private scrollToElementById(elementId: string): void {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  private navigateToHomePageAndScrollToAboutSection(): void {
+    this.router.navigate(['']).then(() => {
+      setTimeout(() => {
+        this.scrollToElementById('about');
+      }, 1000); // Adjust timing as needed
+    });
+  }
+  
 }

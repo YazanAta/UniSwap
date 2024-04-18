@@ -1704,6 +1704,11 @@ ngx-loading-bar {
         flex-direction: column;
         height: 100%;
         gap: 50px;
+        transition: transform 0.3s ease;
+        cursor: pointer;
+        &:hover {
+            transform: scale(1.1);
+        }
         img {
             max-width: 100%;
             max-height: 200px;
@@ -2394,4 +2399,33 @@ ngx-loading-bar {
 
 .emoji-picker-container section{
     padding: 0px;
+}
+
+.points-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+
+    .points {
+        font-size: 36px;
+        font-weight: bold;
+        color: #007bff;
+        margin-bottom: 5px;
+    }
+    
+    .points-label {
+        font-size: 14px;
+        color: #6c757d;
+    }
+    
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
 }

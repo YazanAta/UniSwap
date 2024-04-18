@@ -15,7 +15,6 @@ export interface Post {
     ownerId?: string,
 
     state?: PostState,
-    swappedTo?: string,
 
     requestId?: string,
 

@@ -1,8 +1,8 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Timestamp } from 'firebase/firestore';
-import { Observable, from, of, switchMap } from 'rxjs';
+import { Observable, Subject, from, of, switchMap } from 'rxjs';
 
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { ChatService } from 'src/app/services/chat/chat.service';
@@ -19,7 +19,7 @@ import { SwapListComponent } from '../swap-list/swap-list.component';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
   /** ID of the current chat. */
   chatId: string;
 
@@ -47,6 +47,8 @@ export class ChatComponent implements OnInit {
   /** Flag to control visibility of emoji picker */
   showEmojiPicker: boolean = false;
 
+  private destroy$ = new Subject<void>();
+
   /** Reference to the chat messages container in the template. */
   @ViewChild('chatMessages') private chatMessages: ElementRef;
 
@@ -64,6 +66,11 @@ export class ChatComponent implements OnInit {
    */
   ngOnInit(): void {
     this.initializeChat();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
@@ -126,22 +133,21 @@ export class ChatComponent implements OnInit {
       ...message,
       timestamp: message.timestamp ? (message.timestamp instanceof Date ? message.timestamp : (message.timestamp as Timestamp).toDate()) : 'Loading...'
     }));
-  }
-
-  /**
-   * Scrolls to the bottom of the chat messages container.
-   */
-  ngAfterViewChecked(): void {
-    this.scrollToBottom();
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 50)
   }
 
   /**
    * Scrolls the chat messages container to the bottom.
    */
+
   private scrollToBottom(): void {
     try {
       this.chatMessages.nativeElement.scrollTop = this.chatMessages.nativeElement.scrollHeight;
-    } catch(err) {}
+    } catch(err) {
+      console.error('Error scrolling to bottom:', err);
+    }
   }
 
   /**
@@ -161,9 +167,15 @@ export class ChatComponent implements OnInit {
    */
   async sendMessage(): Promise<void> {
     if (!this.newMessage.trim() || !this.chatId) return;
-    await this.chatService.sendMessage(this.chatId, this.newMessage.trim());
-    this.newMessage = ''; 
-    this.showEmojiPicker = false;
+    try {
+      await this.chatService.sendMessage(this.chatId, this.newMessage.trim());
+      this.newMessage = '';
+      this.showEmojiPicker = false;
+    } catch (error) {
+      console.error('Error sending message:', error);
+    } finally {
+      this.scrollToBottom();
+    }
   }
 
   /**

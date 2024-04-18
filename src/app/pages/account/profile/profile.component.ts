@@ -1,11 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { NgbModal, NgbTooltip, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, Subject, throwError } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 import { User } from 'src/app/shared/interfaces/user.interface';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { PostsService } from 'src/app/services/posts/posts.service';
 import { AddPostModalComponent } from 'src/app/shared/components/modal/add-post-modal/add-post-modal.component';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { PointsDescriptionModalComponent } from 'src/app/shared/components/modal/points-description-modal/points-description-modal.component';
 
 /**
  * Component representing the user profile page.
@@ -15,7 +17,7 @@ import { AddPostModalComponent } from 'src/app/shared/components/modal/add-post-
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit, OnDestroy {
+export class ProfileComponent implements OnInit, OnDestroy { 
 
   /** Observable holding the user data. */
   public userData$: Observable<User | null> = this.authService.user$;
@@ -25,6 +27,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   /** Subject to manage component destruction and unsubscribe from observables. */
   private destroy$ = new Subject<void>();
+
 
   /**
    * Creates an instance of ProfileComponent.
@@ -42,38 +45,28 @@ export class ProfileComponent implements OnInit, OnDestroy {
    * Lifecycle hook called after component initialization.
    * Fetches user posts upon component initialization.
    */
-  async ngOnInit(): Promise<void> {
-    // Get current user's ID and fetch their posts
-    const user = await this.authService.getUser();
-    this.getUserPosts(user.uid);
-  }
+  ngOnInit(): void {
 
-  /**
-   * Fetches user posts based on the provided user ID.
-   * @param uid The user ID whose posts are to be fetched.
-   */
-  public getUserPosts(uid: string): void {
-    this.postsService.getUserPosts(uid)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (posts: any[]) => {
-          this.posts = posts;
-        },
-        error: (err) => {
-          console.error('Failed to fetch user posts:', err);
-          // Handle the error here (e.g., display error message)
+  //  this.postst.map((post) => {
+  //    return (
+  //      this.fs.collection('posts').add({
+  //        ...post
+  //      }).then(() => console.log("Done"))
+  //    );
+  //  })
+    this.authService.getUser()
+      .then(user => {
+        if (user) {
+          this.getUserPosts(user.uid);
         }
+      })
+      .catch(err => {
+        console.error('Failed to fetch user:', err);
+        // Handle error (e.g., show error message)
       });
   }
 
-  /**
-   * Opens the add post modal.
-   */
-  public openModal(): void {
-    this.modalService.open(AddPostModalComponent);
-  }
-
-  /**
+    /**
    * Lifecycle hook called before the component is destroyed.
    * Unsubscribes from observables to prevent memory leaks.
    */
@@ -82,5 +75,37 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     // Complete the subject to release resources
     this.destroy$.complete();
+  }
+
+  /**
+   * Fetches user posts based on the provided user ID.
+   * @param uid The user ID whose posts are to be fetched.
+   */
+  getUserPosts(uid: string): void {
+    this.postsService.getUserPosts(uid)
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError((error) => {
+          console.error('Failed to fetch user posts:', error);
+          // Handle error (e.g., show error message)
+          return throwError(error); // Re-throw the error to propagate it
+        })
+      )
+      .subscribe({
+        next: (posts: any[]) => {
+          this.posts = posts;
+        }
+      });
+  }
+
+  /**
+   * Opens the add post modal.
+   */
+  public openAddPostModal(): void {
+    this.modalService.open(AddPostModalComponent);
+  }
+
+  public openPointsDescriptionModal(): void {
+    this.modalService.open(PointsDescriptionModalComponent)
   }
 }

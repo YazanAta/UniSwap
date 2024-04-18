@@ -31,8 +31,15 @@ export class WishlistComponent implements OnInit, OnDestroy {
   @ViewChild('quickView') quickView: QuickViewComponent;
 
   /** Subject to manage component destruction and unsubscribe from observables. */
-  private destroy$ = new Subject<void>();
+  private destroy$: Subject<void> = new Subject<void>();
 
+  /**
+   * Constructs an instance of WishlistComponent.
+   * @param wishlistService The service for managing user wishlists.
+   * @param toastrService The service for displaying toast messages.
+   * @param authService The authentication service for user-related operations.
+   * @param chatService The service for managing chat operations.
+   */
   constructor(
     private wishlistService: WishlistService,
     private toastrService: CustomToastrService,
@@ -42,36 +49,59 @@ export class WishlistComponent implements OnInit, OnDestroy {
 
   /**
    * Lifecycle hook called after component initialization.
-   * Fetches the user's wishlist upon component initialization.
+   * Initializes the component by fetching user data and wishlist.
    */
   async ngOnInit(): Promise<void> {
+    this.getUserData();
+  }
+
+  /**
+   * Lifecycle hook called before the component is destroyed.
+   * Unsubscribes from observables to prevent memory leaks.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
+   * Fetches user data (current user ID) upon component initialization.
+   * If successful, fetches the user's wishlist.
+   * Displays error message if user data fetching fails.
+   */
+  private async getUserData(): Promise<void> {
     try {
       const user = await this.authService.getUser();
       this.uid = user.uid;
-      this.getUserWishlist(this.uid);
+      this.fetchUserWishlist();
     } catch (error) {
-      this.toastrService.show("Error fetching user data", "Error", "error");
+      this.toastrService.show('Error fetching user data', 'Error', 'error');
     }
   }
 
   /**
-   * Fetches the user's wishlist based on the provided user ID.
-   * @param uid The user ID whose wishlist is to be fetched.
+   * Fetches the user's wishlist based on the current user ID.
+   * Sets the wishlist array and updates the loading state.
+   * Displays error message if wishlist fetching fails.
    */
-  private getUserWishlist(uid: string): void {
-    this.wishlistService.getUserWishlist(uid).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: (posts) => {
-        this.wishlist = posts;
-        this.isLoading = false; // Update loading state
-      },
-      error: (error) => this.toastrService.show("Error fetching wishlist", "Error", "error")
-    });
+  private fetchUserWishlist(): void {
+    this.wishlistService.getUserWishlist(this.uid)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (posts: Post[]) => {
+          this.wishlist = posts;
+          this.isLoading = false;
+        },
+        error: () => {
+          this.toastrService.show('Error fetching wishlist', 'Error', 'error');
+          this.isLoading = false; // Set loading state to false on error
+        }
+      });
   }
 
   /**
-   * Removes a post from the user's wishlist.
+   * Removes a post from the user's wishlist based on the provided post ID.
+   * Displays success or error message upon removal completion.
    * @param id The ID of the post to be removed from the wishlist.
    */
   async removeFromWishlist(id: string): Promise<void> {
@@ -85,6 +115,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
   
   /**
    * Initiates a chat with the owner of a specific post.
+   * Displays error message if chat initiation fails.
    * @param post The post with which to initiate the chat.
    */
   async createChat(post: Post): Promise<void> {
@@ -93,14 +124,5 @@ export class WishlistComponent implements OnInit, OnDestroy {
     } catch (error) {
       this.toastrService.show("Failed to create chat", "Chat", 'error');
     }
-  }
-
-  /**
-   * Lifecycle hook called before the component is destroyed.
-   * Unsubscribes from observables to prevent memory leaks.
-   */
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

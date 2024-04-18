@@ -16,7 +16,7 @@
       <li>
         <a routerLink="" (click)="scrollToAboutSection()" class="nav-link">About</a>
       </li>
-      <ng-container *ngIf="isUser">
+      <ng-container *ngIf="isUserAuthenticated">
         <li>
           <a href="javascript:void(0)" class="nav-link" (click)="toggleNavActive()">
             Categories
@@ -40,7 +40,7 @@
           <a type="button" class="nav-link" (click)="logout()">Logout</a>
         </li>
       </ng-container>
-      <li *ngIf="!isUser">
+      <li *ngIf="!isUserAuthenticated">
         <a routerLink="/pages/login" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Login</a>
       </li>
     </ul>

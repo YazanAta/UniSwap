@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, Input, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { Router } from '@angular/router';
 
 import { Post } from 'src/app/shared/interfaces/post.interface';
 import { User } from 'src/app/shared/interfaces/user.interface';
@@ -54,7 +53,6 @@ export class QuickViewComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private router: Router,
     private modalService: NgbModal,
     private authService: AuthService,
     private userService: UserService,
@@ -67,14 +65,13 @@ export class QuickViewComponent implements OnInit, OnDestroy {
    * Lifecycle hook called after component initialization.
    * Initializes the component and loads owner information.
    */
-  async ngOnInit(): Promise<void> {
-    try {
-      const user = await this.authService.getUser();
+  ngOnInit(): void {
+    this.authService.getUser().then(user => {
       this.uid = user.uid;
-      await this.loadOwnerInfo();
-    } catch (error) {
+      this.loadOwnerInfo();
+    }).catch(error => {
       console.error('Error fetching user info', error);
-    }
+    });
   }
 
   /**

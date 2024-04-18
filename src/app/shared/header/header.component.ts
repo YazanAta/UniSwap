@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
 /**
@@ -9,19 +10,21 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
 
   /** Flag indicating whether a user is authenticated. */
-  isUser: boolean = false;
+  isUserAuthenticated = false;
 
   /** Theme logo path for the header. Defaults to 'assets/images/logos/logo.png'. */
-  themeLogo: string = 'assets/images/logos/logo.png';
+  themeLogo: string = 'assets/images/logos/logo3.png';
 
   /** Flag to control the visibility of notifications. */
   showNotification: boolean = false;
 
   /** Flag to control the visibility of the chat list. */
   showChatList: boolean = false;
+
+  private userSubscription: Subscription; // Subscription to manage observable subscriptions
 
   /**
    * Constructs a new HeaderComponent.
@@ -34,8 +37,16 @@ export class HeaderComponent implements OnInit {
    * Subscribes to the authService's user observable to determine authentication state.
    */
   ngOnInit(): void {
-    this.authService.user$?.subscribe((user) => {
-      this.isUser = !!user; // Set isUser based on user existence
+    this.subscribeToUserAuthentication();
+  }
+  
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
+  }
+  
+  private subscribeToUserAuthentication(): void {
+    this.userSubscription = this.authService.user$.subscribe(user => {
+      this.isUserAuthenticated = !!user; // Update authentication state based on user existence
     });
   }
 

@@ -87,10 +87,14 @@ export class AddPostModalComponent implements OnInit {
   /**
    * Lifecycle hook called after component initialization.
    */
-  async ngOnInit() {
-    this.uid = (await this.authService.getUser()).uid;
-    this.initializeForm();
-    this.setupFormSubscriptions();
+  ngOnInit() {
+    this.authService.getUser().then(user => {
+      this.uid = user.uid;
+      this.initializeForm();
+    }).catch(error => {
+      console.error('Error retrieving user:', error);
+      // Handle error, e.g., display an error message to the user
+    });
   }
 
   /**
@@ -108,35 +112,16 @@ export class AddPostModalComponent implements OnInit {
       image: [null],
       price: [{ value: '', disabled: true }, [Validators.required, CustomValidationsService.priceValidator(1000)]],
     });
+
+    this.setupFormSubscriptions();
   }
 
   /**
    * Sets up form value change subscriptions.
    */
-  private setupFormSubscriptions() {
-    this.handlePricingChanges();
-    this.handleCategoryChanges();
-    this.handleSubCategoryChanges();
-  }
-
-  /**
-   * Subscribes to changes in the pricing control.
-   */
-  private handlePricingChanges() {
+  setupFormSubscriptions(): void {
     this.postForm.get('pricing').valueChanges.subscribe(value => this.togglePriceField(value));
-  }
-
-  /**
-   * Subscribes to changes in the category control.
-   */
-  private handleCategoryChanges() {
     this.postForm.get('category').valueChanges.subscribe(value => this.updateSubCategories(value));
-  }
-
-  /**
-   * Subscribes to changes in the sub-category control.
-   */
-  private handleSubCategoryChanges() {
     this.postForm.get('subCategory').valueChanges.subscribe(value => this.updateSubSubCategories(value));
   }
 
@@ -144,29 +129,30 @@ export class AddPostModalComponent implements OnInit {
    * Toggles the price field based on the selected pricing option.
    * @param value The selected pricing option ('paid' or 'free').
    */
-  private togglePriceField(value: string) {
+  private togglePriceField(value: string) : void{
     value === 'paid' ? this.postForm.get('price').enable() : this.postForm.get('price').disable();
   }
 
   /**
    * Updates the sub-categories based on the selected category.
-   * @param value The selected category value.
+   * @param categoryName The selected category value.
    */
-  private updateSubCategories(value: string) {
-    const category = this.categories.find(c => c.name === value);
+  private updateSubCategories(categoryName: string) {
+    const category = this.categories.find(c => c.name === categoryName);
     this.subCategories = category ? category.subCategory : [];
-    this.resetAndToggleField(this.subCategories.length > 0, 'subCategory');
+    this.resetAndToggleFormControl('subCategory');
   }
 
   /**
    * Updates the sub-sub-categories based on the selected sub-category.
-   * @param value The selected sub-category value.
+   * @param subCategoryName The selected sub-category value.
    */
-  private updateSubSubCategories(value: string) {
-    const category = this.categories.find(c => c.name === this.postForm.get('category').value);
-    const subCategory = category?.subCategory.find(sub => sub.name === value);
+  private updateSubSubCategories(subCategoryName: string) {
+    const selectedCategoryName = this.postForm.get('category').value;
+    const category = this.categories.find(c => c.name === selectedCategoryName);
+    const subCategory = category?.subCategory.find(sub => sub.name === subCategoryName);
     this.subSubCategories = subCategory ? subCategory.subCategory : [];
-    this.resetAndToggleField(this.subSubCategories.length > 0, 'subSubCategory');
+    this.resetAndToggleFormControl('subSubCategory');
   }
 
   /**
@@ -174,48 +160,61 @@ export class AddPostModalComponent implements OnInit {
    * @param condition The condition to check.
    * @param fieldName The name of the form control.
    */
-  private resetAndToggleField(condition: boolean, fieldName: string) {
-    const control = this.postForm.get(fieldName);
+  resetAndToggleFormControl(controlName: string): void {
+    const control = this.postForm.get(controlName);
     control.reset();
-    condition ? control.enable() : control.disable();
-    control.updateValueAndValidity();
+    control.enable({ emitEvent: false });
   }
 
   /**
    * Handles the file selection event.
    * @param event The file selection event.
    */
-  onFileSelected(event) {
+  onFileSelected(event): void {
     const file = event.target.files[0];
-    if (!file) return;
+    if (!file) {
+      return;
+    }
+
     if (!this.ALLOWED_MIME_TYPES.includes(file.type) || file.size > this.MAX_FILE_SIZE) {
       alert('Invalid file type or size. Please select a valid image file.');
       return;
     }
+
     this.selectedFile = file;
   }
 
   /**
    * Adds a new post based on the form data.
    */
-  addPost() {
-    if (this.isSubmitting || !this.postForm.valid) return;
-    this.isSubmitting = true;
+  addPost() : void{
+    if (this.isSubmitting || !this.postForm.valid) {
+      return;
+    }
 
+    this.isSubmitting = true;
     const formValue = this.postForm.value;
+    
     if (formValue.price) {
       formValue.price = parseFloat(formValue.price);
     }
     
-    this.postsService
-      .addPost(this.postForm.value, this.selectedFile, this.uid)
+    this.postsService.addPost(formValue, this.selectedFile, this.uid)
       .then(() => {
-        this.toastr.show('Your post has been successfully uploaded and is currently under review by the administrator, You can review your post and it\'s current state from your profile page','Success', 'success', {
-          timeOut: 10000,
-        })
+        this.toastr.show(
+          'Your post has been successfully uploaded and is currently under review by the administrator.',
+          'Success',
+          'success',
+          { timeOut: 10000 }
+        );
         this.activeModal.close()
       })
-      .catch(error => console.error(error))
-      .finally(() => (this.isSubmitting = false));
+      .catch(error => {
+        console.error('Error adding post:', error);
+        this.toastr.show('Failed to add post. Please try again.', 'Error', 'error');
+      })
+      .finally(() => {
+        this.isSubmitting = false;
+      });
   }
 }

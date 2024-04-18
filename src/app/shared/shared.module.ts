@@ -33,6 +33,8 @@ import { EditPostModalComponent } from './components/modal/edit-post-modal/edit-
 import { SuccessfulRegistrationModalComponent } from './components/modal/successful-registration-modal/successful-registration-modal.component';
 import { CollectionComponent } from './components/product/collection/collection.component';
 import { ChatListComponent } from './components/chatlist/chatlist.component';
+import { PointsDescriptionModalComponent } from './components/modal/points-description-modal/points-description-modal.component';
+import { SwapConfirmationComponent } from './components/modal/swap-confirmation/swap-confirmation.component';
 @NgModule({
   declarations: [
     HeaderComponent,
@@ -50,7 +52,9 @@ import { ChatListComponent } from './components/chatlist/chatlist.component';
     NotificationsSectionComponent,
     EditPostModalComponent,
     SuccessfulRegistrationModalComponent,
-    ChatListComponent
+    ChatListComponent,
+    PointsDescriptionModalComponent,
+    SwapConfirmationComponent
   ],
   imports: [
     CommonModule,

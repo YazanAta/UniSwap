@@ -10,8 +10,8 @@
           <th scope="col" class="h4">Image</th>
           <th scope="col" class="h4">Title</th>
           <th scope="col" class="h4">Pricing</th>
-          <th scope="col" class="h4">Price</th>
-          <th scope="col">Action</th>
+          <th scope="col" class="h4">Price / JD</th>
+          <th scope="col" class="h4">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -19,7 +19,7 @@
           <td class="align-middle"><img [src]="post.image || '/assets/images/posts/post-default.jpg'" alt="{{ post.title }} Image" style="max-width: 50px;"></td>
           <td class="align-middle">{{ post.title |titlecase }}</td>
           <td class="align-middle">{{ post.pricing | titlecase }}</td>
-          <td class="align-middle">{{ post.price | currency }}</td>
+          <td class="align-middle">{{ post.price }}</td>
           <td class="align-middle"><button class="btn-solid btn-sm" (click)="swapRequest(post)">Swap me</button></td>
         </tr>
         <span class="text-muted" *ngIf="!posts?.length">No Posts To Swap</span>

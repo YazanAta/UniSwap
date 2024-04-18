@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +53,21 @@ export class CustomValidationsService {
       }
     };
   }
+
+  strongPasswordValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (!control.value) {
+        return null; // Don't validate empty value to allow required validator handle this case
+      }
+
+      // Password must contain at least 8 characters, including uppercase, lowercase, and numbers
+      const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+      const isValid = strongPasswordRegex.test(control.value);
+
+      return isValid ? null : { 'weakPassword': true };
+    };
+  }
+
 
   /**
    * Validator function to validate a price input against a maximum value.

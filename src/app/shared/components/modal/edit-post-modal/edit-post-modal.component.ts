@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CATEGORIES, Category } from 'src/app/shared/interfaces/category.interface';
 import { Post } from 'src/app/shared/interfaces/post.interface';
 import { PostsService } from 'src/app/services/posts/posts.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { catchError, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-edit-post-modal',
@@ -80,7 +80,6 @@ export class EditPostModalComponent {
     private fb: FormBuilder,
     public activeModal: NgbActiveModal,
     private postsService: PostsService,
-    private firestore: AngularFirestore,
     private authService: AuthService
   ) {}
 
@@ -88,12 +87,15 @@ export class EditPostModalComponent {
    * Lifecycle hook called after component initialization.
    * Initializes the post edit form and sets up form value change subscriptions.
    */
-  async ngOnInit() {
-    const user = await this.authService.getUser();
-    this.uid = user.uid;
-
-    this.initializeForm();
-    this.setupFormSubscriptions();
+  ngOnInit() {
+    this.authService.getUser().then(user => {
+      this.uid = user.uid;
+      this.initializeForm();
+      this.setupFormSubscriptions();
+    }).catch(error => {
+      console.error('Error retrieving user:', error);
+      // Handle error, e.g., display an error message to the user
+    });
   }
 
   /**
@@ -117,10 +119,11 @@ export class EditPostModalComponent {
    */
   private setupFormSubscriptions() {
     this.postForm.get('pricing').valueChanges.subscribe(value => {
+      const priceControl = this.postForm.get('price');
       if (value === 'paid') {
-        this.postForm.get('price').enable();
+        priceControl.enable();
       } else {
-        this.postForm.get('price').disable();
+        priceControl.disable();
       }
     });
 
@@ -156,9 +159,11 @@ export class EditPostModalComponent {
    * Handles the file selection event to validate and set the selected file.
    * @param event The file selection event.
    */
-  onFileSelected(event) {
+  onFileSelected(event): void {
     const file = event.target.files[0];
-    if (!file) return;
+    if (!file) {
+      return;
+    }
     if (!this.ALLOWED_MIME_TYPES.includes(file.type) || file.size > this.MAX_FILE_SIZE) {
       alert('Invalid file type or size. Please select a valid image file.');
       return;
@@ -171,15 +176,10 @@ export class EditPostModalComponent {
    * @param postId The ID of the post to edit.
    */
   editPost(postId: string) {
-    if (this.isSubmitting) {
-      return; // Do nothing if already submitting
+    if (this.isSubmitting || !this.postForm.valid) {
+      return;
     }
     this.isSubmitting = true;
-
-    const onComplete = () => {
-      this.isSubmitting = false;
-      this.activeModal.close();
-    };
 
     const updatedPostData = this.postForm.value;
 
@@ -187,18 +187,23 @@ export class EditPostModalComponent {
       updatedPostData.price = parseFloat(updatedPostData.price.replace(/[^0-9.]/g, ''));
     }
 
+    let updatePost$;
+
     if (this.selectedFile) {
-      // If a new file is selected, update the post with the new image
-      this.postsService.editPost(postId, updatedPostData, this.selectedFile, this.uid).subscribe(
-        onComplete,
-        onComplete // Handle errors
-      );
+      updatePost$ = this.postsService.editPost(postId, updatedPostData, this.selectedFile, this.uid);
     } else {
-      // If no new file is selected, update the post without changing the image
-      this.postsService.editPost(postId, updatedPostData, null, this.uid).subscribe(
-        onComplete,
-        onComplete // Handle errors
-      );
+      updatePost$ = this.postsService.editPost(postId, updatedPostData, null, this.uid);
     }
+
+    updatePost$.pipe(
+      catchError(error => {
+        console.error('Error updating post:', error);
+        this.isSubmitting = false;
+        return throwError('Failed to update post. Please try again.');
+      })
+    ).subscribe(() => {
+      this.isSubmitting = false;
+      this.activeModal.close();
+    });
   }
 }

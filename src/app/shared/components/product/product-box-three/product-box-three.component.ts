@@ -46,17 +46,27 @@ export class ProductBoxThreeComponent implements OnInit {
    */
   private async initializeComponent(): Promise<void> {
     this.showLoader();
-    const user = await this.authService.getUser();
-    this.uid = user.uid;
+    try {
+      const user = await this.authService.getUser();
+      this.uid = user.uid;
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      this.toastrService.show('Error fetching user information', 'Error', 'error');
+    } finally {
+      this.hideLoader();
+    }
   }
 
-  /**
-   * Displays the loader for a specified duration to simulate loading.
-   */
   private showLoader(): void {
     if (this.loader) {
-      setTimeout(() => { this.loader = false; }, 2000);
+      setTimeout(() => {
+        this.loader = false;
+      }, 2000);
     }
+  }
+
+  private hideLoader(): void {
+    this.loader = false;
   }
 
   /**
@@ -78,15 +88,20 @@ export class ProductBoxThreeComponent implements OnInit {
    */
   private calculateTimeDifference(currentDate: Date, postDate: Date): string {
     const timeDifference = currentDate.getTime() - postDate.getTime();
-    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+    const seconds = Math.floor(timeDifference / 1000);
 
-    if (days > 0) return `${days} d`;
-    if (hours > 0) return `${hours} hrs`;
-    if (minutes > 0) return `${minutes} min`;
-    return `${seconds} s`;
+    if (seconds < 60) {
+      return `${seconds} s`;
+    } else if (seconds < 3600) {
+      const minutes = Math.floor(seconds / 60);
+      return `${minutes} min`;
+    } else if (seconds < 86400) {
+      const hours = Math.floor(seconds / 3600);
+      return `${hours} hrs`;
+    } else {
+      const days = Math.floor(seconds / 86400);
+      return `${days} d`;
+    }
   }
 
   /**

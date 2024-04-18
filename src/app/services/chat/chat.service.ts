@@ -5,7 +5,7 @@ import { catchError, map, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { Chat, Message } from 'src/app/shared/interfaces/chat.interface';
 import { Router } from '@angular/router';
-import { Timestamp, serverTimestamp } from '@angular/fire/firestore';
+import { serverTimestamp } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'

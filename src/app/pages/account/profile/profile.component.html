@@ -26,8 +26,16 @@
                                     <div>{{ userData.gender | titlecase }}</div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <div class="fw-bold">Points</div>
-                                    <div>{{ userData.points }}</div>
+                                    <div class="fw-bold d-flex justify-content-between align-items-center">
+                                        <span>Points</span>
+                                        <button (click)="openPointsDescriptionModal()" class="btn btn-sm btn-link">
+                                            <i class="fa fa-question-circle"></i>
+                                        </button>
+                                    </div>
+                                    <div class="points-display">
+                                        <span class="points">{{ userData.points }}</span>
+                                        <span class="points-label">Total Points</span>
+                                    </div>
                                 </div>
                             </ng-container>
                         </div>
@@ -47,7 +55,7 @@
                             <h2>My Posts</h2>
                         </div>
                         <div class="add-post-btn">
-                            <h4 (click)="openModal()">Add Post <i class="ti-plus p-1"></i></h4>
+                            <h4 (click)="openAddPostModal()">Add Post <i class="ti-plus p-1"></i></h4>
                         </div>
                     </div>
                 </div>

@@ -16,14 +16,14 @@ export class NotificationsSectionComponent implements OnInit, OnDestroy {
   /** Array containing the notifications to display. */
   notifications: Notification[] = [];
 
-  /** Subscription object to manage subscriptions for cleanup. */
-  private subscriptions: Subscription = new Subscription();
-
   /** Flag indicating whether notifications are currently being loaded. */
   isLoading: boolean = true;
 
   /** Event emitter to toggle the visibility of notifications in the parent component. */
   @Output() toggleNotificationEvent = new EventEmitter<void>();
+
+  /** Subscription object to manage subscriptions for cleanup. */
+  private subscriptions: Subscription = new Subscription();
 
   /**
    * Constructs a new NotificationsSectionComponent.
@@ -47,24 +47,35 @@ export class NotificationsSectionComponent implements OnInit, OnDestroy {
    */
   async ngOnInit(): Promise<void> {
     try {
-      this.isLoading = true;
       const user = await this.authService.getUser();
       if (user) {
-        this.getUserNotifications(user.uid);
+        this.fetchUserNotifications(user.uid);
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
+      // Handle error appropriately, e.g., show a toast notification
     }
   }
 
   /**
-   * Fetches user notifications using the provided UID and subscribes to the observable.
+   * Fetches user notifications using the provided UID.
    * @param uid The user ID used to fetch notifications.
    */
-  private getUserNotifications(uid: string): void {
+  private fetchUserNotifications(uid: string): void {
+    this.isLoading = true;
     const subscription = this.notificationsService.getUserNotifications(uid).subscribe({
-      next: (notifications) => this.processNotifications(notifications),
-      error: (error) => console.error('Error fetching notifications:', error)
+      next: (notifications) => {
+        this.processNotifications(notifications);
+        this.isLoading = false; // Toggle loading flag on successful response
+      },
+      error: (error) => {
+        console.error('Error fetching notifications:', error);
+        // Handle error appropriately, e.g., show a toast notification
+        this.isLoading = false; // Set isLoading to false on error
+      },
+      complete: () => {
+        this.isLoading = false; // Set isLoading to false when subscription completes
+      }
     });
     this.subscriptions.add(subscription);
   }
@@ -76,9 +87,8 @@ export class NotificationsSectionComponent implements OnInit, OnDestroy {
   private processNotifications(notifications: Notification[]): void {
     this.notifications = notifications.map(notification => ({
       ...notification,
-      timestamp: (notification.timestamp as any).toDate()
+      timestamp: (notification.timestamp as any).toDate() // Convert Firestore Timestamp to Date
     }));
-    this.isLoading = false;
   }
 
   /**

@@ -1,16 +1,16 @@
-<div class="collection-block" *ngIf="!loader" (click)="quickView.openModal()">
+<div class="collection-block" *ngIf="!loader">
     <!--
         [defaultImage]="'/assets/logo.png'"
         [lazyLoad]="post.image"-->
     <img 
         [src]="post.image || '/assets/images/posts/post-default.jpg'"
-        class="img-fluid" alt="">
+        class="img-fluid" alt="" (click)="quickView.openModal()">
     <div class="collection-content">
         <h4>{{ "State : " + post.state }}</h4>
         <h3>{{ post.title| titlecase }}</h3>
         <div class="d-flex justify-content-between">
             <button class="btn btn-outline btn-sm" style="letter-spacing: 5px;" (click)="openEditModal()" *ngIf="post.state === 'pending'">Edit</button>
-            <button class="btn btn-outline btn-sm"(click)="openDeleteConfirmationModal(post, post?.title)" *ngIf="post.state === 'pending'">Delete</button>
+            <button class="btn btn-outline btn-sm"(click)="openDeleteConfirmationModal(post, post?.title)" *ngIf="post.state === 'pending' || post.state === 'approved'">Delete</button>
         </div>
     </div>
 </div>

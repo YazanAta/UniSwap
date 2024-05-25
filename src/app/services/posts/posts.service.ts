@@ -4,6 +4,7 @@ import { switchMap, from, Observable, take } from 'rxjs';
 import { Post, PostState } from 'src/app/shared/interfaces/post.interface';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { lastValueFrom } from 'rxjs';
+import { UserService } from '../user/user.service';
 
 /**
  * Service responsible for managing posts in Firestore.
@@ -15,7 +16,8 @@ export class PostsService {
 
   constructor(
     private firestore: AngularFirestore,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    private userService: UserService
   ) {}
 
   /**
@@ -80,16 +82,24 @@ export class PostsService {
   async deletePost(post: Post): Promise<void> {
     const postRef = this.firestore.doc(`posts/${post.id}`);
 
-    return lastValueFrom(postRef.get()).then((doc) => {
+    try {
+      const doc = await lastValueFrom(postRef.get());
       const postData = doc.data() as Post;
 
-      return postRef.delete().then(() => {
-        if (postData && postData.image) {
-          const storageRef = this.storage.refFromURL(postData.image);
-          return lastValueFrom(storageRef.delete());
-        }
-      });
-    });
+      if (postData && postData.pricing === 'free') {
+        await this.userService.decrementPoints(postData.ownerId);
+      }
+
+      await postRef.delete();
+
+      if (postData && postData.image) {
+        const storageRef = this.storage.refFromURL(postData.image);
+        await lastValueFrom(storageRef.delete());
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      throw error;
+    }
   }
   
   /**

@@ -50,7 +50,7 @@
                             <h5 class="product-title py-2">Post State</h5>
                           
                             <form [formGroup]="postStateForm">
-                              <div class="form-check" *ngFor="let state of ['Pending', 'Approved', 'Rejected', 'Deleted']">
+                              <div class="form-check" *ngFor="let state of ['Pending', 'Approved', 'Rejected']">
                                 <input class="form-check-input" type="radio" [id]="state.toLowerCase()" [value]="state.toLowerCase()" formControlName="state">
                                 <label class="form-check-label" [for]="state.toLowerCase()">{{ state }}</label>
                               </div>

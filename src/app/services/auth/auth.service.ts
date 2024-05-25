@@ -83,6 +83,15 @@ export class AuthService {
         const uid = userCredential.user.uid;
         const userData = await lastValueFrom(this.fs.doc(`users/${uid}`).get());
         const userRole = userData.get('role');
+        const userBlockedState = userData.get('blocked');
+
+        
+        if (userBlockedState === true) {
+          this.toastr.show("Your account is blocked. Please contact support.", "Error", "error");
+          await this.logout();
+          return;
+        }
+
         if (userCredential.user.emailVerified) {
           if (userRole === 'user') {
             this.router.navigate(['']);
@@ -132,7 +141,8 @@ export class AuthService {
       email: user.email,
       gender: user.gender,
       role: "user",
-      points: 0
+      points: 3,
+      blocked: false
     };
     await userRef.set(data, { merge: true });
   }

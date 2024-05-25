@@ -9,6 +9,7 @@
           <th> Email </th>
           <th> Points </th>
           <th> Push Notification </th>
+          <th>Blocked</th>
         </tr>
       </thead>
       <tbody>
@@ -19,13 +20,14 @@
           <td> {{user.email}} </td>
           <td> {{user.points}} </td>
           <td> 
-              <!-- your-component.component.html -->
-              <form>
-                  <label for="message">Message:</label>
-                  <input type="text" id="message" name="message" [(ngModel)]="message">
-              
-                  <button class="btn btn-primary" type="submit" (click)="sendMessage(user.id, message)">Submit</button>
-              </form>    
+            <form (ngSubmit)="sendMessage(user.id)">
+              <label for="message-{{user.id}}">Message:</label>
+              <input type="text" id="message-{{user.id}}" name="message-{{user.id}}" [(ngModel)]="userMessages[user.id]">
+              <button class="btn btn-primary" type="submit">Submit</button>
+            </form>
+          </td>
+          <td>
+            <input type="checkbox" [checked]="user.blocked" (change)="toggleBlockedState(user.id, $event.target.checked)">
           </td>
         </tr>
       </tbody>

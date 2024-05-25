@@ -4,6 +4,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable, catchError, lastValueFrom, take } from 'rxjs';
 import { Post } from 'src/app/shared/interfaces/post.interface';
 import { UserService } from '../user/user.service';
+import { CustomToastrService } from '../toastr/custom-toastr.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ export class AdminService {
   constructor(
     private firestore: AngularFirestore,
     private auth: AngularFireAuth,
-    private userService: UserService
+    private userService: UserService,
+    private toastr: CustomToastrService
   ) {}
 
   //-------------------Users Service------------------//
@@ -32,6 +34,21 @@ export class AdminService {
     );
   }
 
+    /**
+   * Updates the blocked state of a user.
+   * @param userId The ID of the user to update.
+   * @param blocked The new blocked state.
+   * @returns A Promise that resolves when the update is successful.
+   */
+    async updateUserBlockedState(userId: string, blocked: boolean): Promise<void> {
+      try {
+        await this.firestore.doc(`users/${userId}`).update({ blocked });
+        this.toastr.show(`User ${userId} blocked state updated to ${blocked}`, "Info", "success");
+      } catch (error) {
+        this.toastr.show("Error updating user blocked state:", "Error", "error");
+        throw error;
+      }
+    }
   //-------------------Admins Service------------------//
 
   /**

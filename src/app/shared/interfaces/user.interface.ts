@@ -6,5 +6,6 @@ export interface User {
     gender?: string,
     password?: string,
     points?: number,
-    role?: string
+    role?: string,
+    blocked?: boolean
 }

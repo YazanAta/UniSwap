@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 import { Notification } from 'src/app/shared/interfaces/notification';
+import { CustomToastrService } from '../toastr/custom-toastr.service';
 
 /**
  * Service for managing user notifications with Firestore.
@@ -9,7 +10,7 @@ import { Notification } from 'src/app/shared/interfaces/notification';
 @Injectable({ providedIn: 'root' })
 export class NotificationsService {
 
-  constructor(private firestore: AngularFirestore) { }
+  constructor(private firestore: AngularFirestore, private toastr: CustomToastrService) { }
 
   /**
    * Pushes a notification to Firestore for a specific user.
@@ -31,8 +32,8 @@ export class NotificationsService {
   
     // Return a Promise that resolves when the notification is successfully added
     return notificationsRef.add(notificationData)
-      .then(() => console.log('Notification added successfully'))
-      .catch(error => console.error('Error adding notification:', error));
+      .then(() => this.toastr.show('Notification added successfully', 'success', 'success'))
+      .catch(error => this.toastr.show('Error adding notification:', 'error', 'error'));
   }
   
   /**

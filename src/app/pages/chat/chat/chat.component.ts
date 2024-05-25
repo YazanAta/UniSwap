@@ -102,7 +102,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.currentUserId = user.uid;
     this.chatId = chatId;
     return this.chatService.getChat(chatId, user.uid).pipe(
-      switchMap(chat => this.chatAndMessages(chat))
+      switchMap(chat => this.getchatAndMessages(chat))
     );
   }
 
@@ -111,7 +111,7 @@ export class ChatComponent implements OnInit, OnDestroy {
    * @param chat The chat object to process.
    * @returns An observable stream of messages.
    */
-  private chatAndMessages(chat: Chat | null): Observable<Message[]> {
+  private getchatAndMessages(chat: Chat | null): Observable<Message[]> {
     this.chat = chat;
     if (!this.chat) return of([]);
     return this.getRecipientUserInfo(this.chat).pipe(

@@ -13,7 +13,7 @@ import { AppComponent } from './app.component';
 import { PagesComponent } from './pages/pages.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
-
+import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/compat/analytics';
 
 @NgModule({
   declarations: [
@@ -34,10 +34,11 @@ import { environment } from 'src/environments/environment';
     }),
     SharedModule,
     AppRoutingModule,
-    AngularFireModule.initializeApp(environment.firebaseConfig)
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireAnalyticsModule,
   ],
   exports: [],
-  providers: [],
+  providers: [ScreenTrackingService, UserTrackingService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

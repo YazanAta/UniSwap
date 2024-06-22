@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-lg-6 col-xs-12">
                     <div class="quick-view-img">
-                        <img [src]="post.image" class="img-fluid">
+                        <img [src]="post.image || '/assets/images/posts/post-default.jpg'" class="img-fluid">
                     </div>
                 </div>
                 <div class="col-lg-6 rtl-text">
@@ -27,7 +27,7 @@
                             <p class="mt-1">
                                 Pricing: {{ post?.pricing }}
                             </p>
-                            <p *ngIf="post.pricing === 'sale'" class="mt-1">
+                            <p *ngIf="post.pricing === 'paid'" class="mt-1">
                                 Price: {{ post?.price | currency:'JOD':'symbol':'1.2-2' }}
                             </p>
 
